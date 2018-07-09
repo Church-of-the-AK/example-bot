@@ -1,0 +1,6 @@
+export let token = ''
+export let ownerId = ''
+export let prefix = 'm!'
+export let twitch = ''
+export let code = ''
+export let youtubeKey = ''

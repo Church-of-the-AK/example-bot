@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es6",
+    "outDir": "out",
+    "rootDir": "",
+    "lib": [
+      "es6"
+    ],
+    "sourceMap": true
+  },
+  "include": [
+    "commandArgTypes",
+    "handlers",
+    "commands",
+    "index.ts",
+    "config.ts",
+    "util",
+    "types"
+  ],
+  "exclude": [
+    "node_modules",
+    "out"
+  ]
+}
