@@ -12,10 +12,10 @@ module.exports = class SuggestCommand extends commando.Command {
       memberName: 'suggest',
       description: 'Make a suggestion, and have it voted on.',
       details: oneLine`
-                This command is used to add a suggestion to the #suggestions channel.
-                Members can either agree with or disagree with the suggestion.
+        This command is used to add a suggestion to the #suggestions channel.
+        Members can either agree with or disagree with the suggestion.
 			`,
-      examples: ['suggest [suggestion'],
+      examples: ['suggest [suggestion]'],
       guildOnly: true,
 
       args: [{
