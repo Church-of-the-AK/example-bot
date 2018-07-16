@@ -44,7 +44,7 @@ module.exports = class DailiesCommand extends commando.Command {
 
     await axios({
       method: 'put',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      headers: { 'Content-Type': 'application/json;charset=utf-8' },
       url: `http://localhost:8000/users/${msg.author.id}&code=${code}`,
       data: user
     })
