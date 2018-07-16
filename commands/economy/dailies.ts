@@ -44,11 +44,10 @@ module.exports = class DailiesCommand extends commando.Command {
 
     await axios({
       method: 'put',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       url: `http://localhost:8000/users/${msg.author.id}&code=${code}`,
       data: user
     })
-
-    console.log(user)
 
     return msg.delete()
   }
