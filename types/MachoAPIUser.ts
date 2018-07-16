@@ -34,11 +34,11 @@ export interface MachoAPIUser {
     /**
      * The amount of XP the user has, resets every level-up.
      */
-    xp: string, 
+    xp: string,
     /**
      * The user's level.
      */
-    level: string, 
+    level: string,
     /**
      * The last time the user sent a message, in ms since epoch.
      */
@@ -51,11 +51,11 @@ export interface MachoAPIUser {
     /**
      * How much the user is worth.
      */
-    networth: string, 
+    networth: string,
     /**
      * The amount of credits the user has.
      */
-    balance: string, 
+    balance: string,
     /**
      * The date of the user's last valid use of the `dailies` command, in ms since epoch.
      */

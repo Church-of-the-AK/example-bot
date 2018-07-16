@@ -1,8 +1,8 @@
 import * as commando from 'discord.js-commando'
 import { oneLine } from 'common-tags'
-import * as request from 'request'
-import { Message } from 'discord.js'
+import { Message, User } from 'discord.js'
 import { MachoAPIUser } from '../../types/MachoAPIUser'
+import axios from 'axios'
 
 module.exports = class CreditsCommand extends commando.Command {
   constructor(client) {
@@ -29,28 +29,19 @@ module.exports = class CreditsCommand extends commando.Command {
     })
   }
 
-  async run(msg: commando.CommandMessage, { mention }): Promise<Message> {
-    request.get(
-      `http://localhost:8000/users/${
-        mention != 1 ? mention.id : msg.author.id
-      }`,
-      async function optionalCallback(err, httpResponse, body) {
-        if (body === '[]' || body === '' || body === 'Error' || body === '{}') {
-          return msg.reply(
-            `${
-              mention != 1
-                ? `I don't have that user in the database. Wait until they send a message.`
-                : `It seems as if I didn't have you in the database. Please try again.`
-            }`
-          )
-        }
-        let user: MachoAPIUser = JSON.parse(body)
-        msg.channel.send(
-          `**${user.name}** has **${user.balance.balance}** credits.`
-        )
-      }
-    )
-    msg.delete()
-    return undefined
+  async run(msg: commando.CommandMessage, { mention }: { mention: User | number }): Promise<Message | Message[]> {
+    const { data: user }: { data: MachoAPIUser } = await axios.get(`http://localhost:8000/users/${mention instanceof User ? mention.id : msg.author.id}`)
+
+    if (JSON.stringify(user) === '') {
+      return msg.reply(
+        `${mention != 1 ? `I don't have that user in the database. Wait until they send a message.`
+          : `It seems as if I didn't have you in the database. Please try again.`
+        }`
+      )
+    }
+
+    msg.channel.send(`**${user.name}** has **${user.balance.balance}** credits.`)
+
+    return msg.delete()
   }
 }
