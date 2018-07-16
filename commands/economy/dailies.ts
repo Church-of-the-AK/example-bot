@@ -42,7 +42,13 @@ module.exports = class DailiesCommand extends commando.Command {
       return msg.channel.send(`**${user.name}**, you still have **${waitTime}** hours until you can claim your dailies again.`)
     }
 
-    axios.put(`http://localhost:8000/users/${msg.author.id}&code=${code}`, user)
+    await axios({
+      method: 'put',
+      url: `http://localhost:8000/users/${msg.author.id}&code=${code}`,
+      data: user
+    })
+
+    console.log(user)
 
     return msg.delete()
   }
