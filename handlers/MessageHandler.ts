@@ -111,7 +111,7 @@ function handleUserExp(user: MachoAPIUser, msg: Message) {
 function handleUserMessage(msg: Message) {
   request.get(`http://localhost:8000/users/${msg.author.id}`, function (error, response, body) {
     if (error) return console.log(error)
-    let user: MachoAPIUser = body
+    let user: MachoAPIUser = JSON.parse(body)
     user = handleUserExp(user, msg)
     user.datelastmessage = `${new Date().getTime()}`
     user.avatarurl = msg.author.avatarURL
