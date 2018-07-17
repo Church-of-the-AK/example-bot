@@ -36,9 +36,8 @@ module.exports = class SuggestCommand extends commando.Command {
       }
 
       const embed = new RichEmbed()
-        .setAuthor(msg.author.username)
-        .setThumbnail(msg.author.displayAvatarURL)
-        .setImage(this.client.user.displayAvatarURL)
+        .setAuthor(msg.author.username, msg.author.displayAvatarURL)
+        .setThumbnail(this.client.user.displayAvatarURL)
         .setTimestamp(new Date())
         .setColor('BLUE')
         .setTitle('New Suggestion')
