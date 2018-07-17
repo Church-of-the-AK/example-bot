@@ -2,8 +2,7 @@ import * as commando from 'discord.js-commando'
 import { oneLine, stripIndents } from 'common-tags'
 import { queue } from '../../index'
 import { CommandMessage } from 'discord.js-commando'
-import { Message } from 'discord.js';
-const ec = require('embed-creator')
+import { Message, MessageEmbed } from 'discord.js';
 
 module.exports = class QueueCommand extends commando.Command {
   constructor(client) {
@@ -21,7 +20,7 @@ module.exports = class QueueCommand extends commando.Command {
       guildOnly: true,
 
       args: [{
-        key: 'arg',
+        key: 'pageNum',
         label: 'page',
         prompt: 'What page would you like to look at?',
         type: 'integer',
@@ -31,16 +30,18 @@ module.exports = class QueueCommand extends commando.Command {
     })
   }
 
-  async run(msg: CommandMessage, { arg }): Promise<Message> {
-    let pageNum = arg
+  async run(msg: CommandMessage, { pageNum }: { pageNum: number }): Promise<Message> {
+
     const serverQueue = queue.get(msg.guild.id)
     if (!serverQueue) {
       msg.channel.send('There is nothing playing.')
       return msg.delete()
     }
-    let songs = serverQueue.songs.map(song => `**-** ${song.title}`)
-    let pages = new Map()
+
+    const songs = serverQueue.songs.map(song => `**-** ${song.title}`)
+    const pages: Map<number, string> = new Map()
     let page = 1
+
     for (let i = 0; i < songs.length; i++) {
       if (pages.has(page)) {
         pages.set(page, pages.get(page) + songs[i] + "\n")
@@ -48,31 +49,29 @@ module.exports = class QueueCommand extends commando.Command {
         pages.set(page, songs[i] + "\n")
       }
       if ((i + 1) % 10 == 0) {
-        page = page + 1
+        page++
       }
     }
-    if (pages.get(pageNum) == undefined) {
+
+    if (!pages.get(pageNum)) {
       msg.channel.send("There aren't that many pages!")
       return msg.delete()
     }
-    let realDesc = stripIndents`
+
+    const description = stripIndents`
 			${pages.get(pageNum)}
       **Now playing:** ${serverQueue.songs[0].title}
     `
-    const commandoGuild = msg.guild as commando.CommandoGuild
-    msg.channel.send(ec(
-      "#4286F4", {
-        "name": msg.author.username,
-        "icon_url": this.client.user.displayAvatarURL,
-        "url": null
-      }, 'Song Queue:', realDesc, [], {
-        "text": `Page ${pageNum}/${pages.size}. View different pages with ${commandoGuild.commandPrefix}queue [number].`,
-        "icon_url": null
-      }, {
-        "thumbnail": null,
-        "image": null
-      }, false
-    ))
+
+    const embed = new MessageEmbed()
+      .setColor('BLUE')
+      .setAuthor(msg.author.username, msg.author.displayAvatarURL(), `http://192.243.102.112:8000/users/${msg.author.id}`)
+      .setTitle('Song Queue')
+      .setDescription(description)
+      .setFooter(`Page ${pageNum}/${pages.size}. View different pages with ${msg.guild.commandPrefix}queue [number].`)
+      .setThumbnail(this.client.user.displayAvatarURL())
+
+    msg.channel.send(embed)
     return msg.delete()
   }
 }

@@ -1,7 +1,6 @@
 import * as commando from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import { Message, MessageEmbed, ColorResolvable } from 'discord.js';
-import * as materialColors from 'material-colors'
 
 module.exports = class AddNumbersCommand extends commando.Command {
   constructor(client) {
