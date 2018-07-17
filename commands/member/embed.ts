@@ -49,7 +49,7 @@ module.exports = class AddNumbersCommand extends commando.Command {
       const description: string = content.substring(descParam + 6, colorParam)
       const color: ColorResolvable = content.substring(colorParam + 8, content.length).toUpperCase()
 
-      embed.setColor(color)
+      embed.setColor(color.toUpperCase())
       embed.setDescription(description)
     } else {
       const description = content.substring(descParam + 6, content.length)
