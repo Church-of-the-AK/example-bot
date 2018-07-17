@@ -38,8 +38,7 @@ module.exports = class AddNumbersCommand extends commando.Command {
 
     const title: string = content.substring(titleParam + 7, descParam)
     const embed = new MessageEmbed()
-      .setAuthor(msg.author.username, msg.author.displayAvatarURL())
-      .setURL(`http://192.243.102.112:8000/users/${msg.author.id}`)
+      .setAuthor(msg.author.username, msg.author.displayAvatarURL(), `http://192.243.102.112:8000/users/${msg.author.id}`)
       .setTitle(title)
       .setFooter('Macho')
       .setThumbnail(this.client.user.displayAvatarURL())
