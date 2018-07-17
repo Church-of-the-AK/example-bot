@@ -1,4 +1,4 @@
-import * as request from 'request'
+import axios from 'axios'
 import { code } from '../config'
 import { Message, TextChannel } from 'discord.js'
 import { MachoAPIUser } from '../types/MachoAPIUser'
@@ -14,7 +14,7 @@ import { MachoAPIUser } from '../types/MachoAPIUser'
  * 
  * @param msg The message to handle.
  */
-export function handleMessage(msg: Message) {
+export async function handleMessage(msg: Message) {
   if (msg.author.bot) {
     return false
   }
@@ -26,21 +26,21 @@ export function handleMessage(msg: Message) {
       return msg.delete()
     }
   }
-  request
-    .get(`http://localhost:8000/users/${msg.author.id}`, function optionalCallback(err, httpResponse, body) {
-      if (body === '[]' || body === '' || body === "Error") {
-        createUser(msg)
-      } else {
-        handleUserMessage(msg)
-      }
-    })
+
+  const { data: user } = await axios.get(`http://localhost:8000/users/${msg.author.id}`)
+
+  if (user === '[]' || user === '' || user === "Error") {
+    await createUser(msg)
+  } else {
+    await handleUserMessage(msg)
+  }
 }
 
 /**
  * Creates a user using MachoAPI.
  * @param msg The message used to create the user.
  */
-function createUser(msg: Message) {
+async function createUser(msg: Message) {
   const user: MachoAPIUser = {
     id: msg.author.id,
     name: msg.author.username,
@@ -62,18 +62,21 @@ function createUser(msg: Message) {
     accesstoken: null
   }
 
-  let options = {
-    method: 'POST',
-    url: `http://localhost:8000/users&code=${code}`,
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
-    },
-    form: user
-  }
+  await axios.post(`http://localhost:8000/users&code=${code}`, user)
+}
 
-  request(options, function (error, response, body) {
-    if (error) throw new Error(error)
-  })
+/**
+ * Handles a user's message as explained in `function handleMessage`.
+ * @param msg The message to handle.
+ */
+async function handleUserMessage(msg: Message) {
+  let { data: user }: { data: MachoAPIUser } = await axios.get(`http://localhost:8000/users/${msg.author.id}`)
+
+  user = handleUserExp(user, msg)
+  user.datelastmessage = `${new Date().getTime()}`
+  user.avatarurl = msg.author.avatarURL
+
+  axios.put(`http://localhost:8000/users/${msg.author.id}&code=${code}`, user)
 }
 
 /**
@@ -89,11 +92,14 @@ function handleUserExp(user: MachoAPIUser, msg: Message) {
   } else {
     diffMins = 2
   }
+
   if (diffMins >= 1) {
     user.level.timestamp = `${new Date().getTime()}`
     user.level.xp = `${parseInt(user.level.xp) + randomIntFromInterval(15, 25)}`
+
     if (parseInt(user.level.xp) >= expToLevelUp(parseInt(user.level.level))) {
       let creditsEarned = randomIntFromInterval(45, 50) + Math.floor(parseInt(user.level.level) * 0.5)
+
       user.level.xp = `${parseInt(user.level.xp) - expToLevelUp(parseInt(user.level.level))}`
       user.level.level = `${parseInt(user.level.level) + 1}`
       user.balance.balance = `${parseInt(user.balance.balance) + creditsEarned}`
@@ -101,34 +107,8 @@ function handleUserExp(user: MachoAPIUser, msg: Message) {
       msg.channel.send(`Congrats **${user.name}**! You have reached level **${user.level.level}** and earned **${creditsEarned}** credits!`)
     }
   }
+
   return user
-}
-
-/**
- * Handles a user's message as explained in `function handleMessage`.
- * @param msg The message to handle.
- */
-function handleUserMessage(msg: Message) {
-  request.get(`http://localhost:8000/users/${msg.author.id}`, function (error, response, body) {
-    if (error) return console.log(error)
-    let user: MachoAPIUser = JSON.parse(body)
-    user = handleUserExp(user, msg)
-    user.datelastmessage = `${new Date().getTime()}`
-    user.avatarurl = msg.author.avatarURL
-
-    let options = {
-      method: 'PUT',
-      url: `http://localhost:8000/users/${msg.author.id}&code=${code}`,
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
-      form: user
-    }
-
-    request(options, function (error, response, body) {
-      if (error) throw new Error(error)
-    })
-  })
 }
 
 function expToLevelUp(level: number): number {
