@@ -2,6 +2,7 @@ import * as commando from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import { Message, User } from 'discord.js'
 import { MachoAPIUser } from '../../types/MachoAPIUser'
+import { getUser } from "../../util/API"
 import axios from 'axios'
 
 module.exports = class CreditsCommand extends commando.Command {
@@ -30,7 +31,7 @@ module.exports = class CreditsCommand extends commando.Command {
   }
 
   async run(msg: commando.CommandMessage, { mention }: { mention: User | number }): Promise<Message | Message[]> {
-    const { data: user }: { data: MachoAPIUser } = await axios.get(`http://localhost:8000/users/${mention instanceof User ? mention.id : msg.author.id}`)
+    const user: MachoAPIUser = await getUser(mention instanceof User ? mention.id : msg.author.id)
 
     if (JSON.stringify(user) === '') {
       return msg.reply(

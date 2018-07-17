@@ -5,6 +5,7 @@ import { code } from '../../config'
 import { MachoAPIUser } from '../../types/MachoAPIUser'
 import * as numeral from 'numeral'
 import axios from 'axios'
+import { getUser } from '../../util/API';
 
 module.exports = class DailiesCommand extends commando.Command {
   constructor(client) {
@@ -23,7 +24,7 @@ module.exports = class DailiesCommand extends commando.Command {
   }
 
   async run(msg: commando.CommandMessage): Promise<Message | Message[]> {
-    let { data: user }: { data: MachoAPIUser } = await axios.get(`http://localhost:8000/users/${msg.author.id}`)
+    let user: MachoAPIUser = await getUser(msg.author.id)
     let diffHrs
 
     if (user.balance.dateclaimeddailies) {
@@ -32,15 +33,13 @@ module.exports = class DailiesCommand extends commando.Command {
       diffHrs = 24
     }
 
-    if (diffHrs >= 24) {
-      user = this.claimDailies(user)
-
-      msg.channel.send(`**${user.name}**, you have claimed your **200** daily credits!`)
-    } else {
+    if (diffHrs < 24) {
       const waitTime = parseFloat(numeral(24 - diffHrs).format('0.00'))
-
       return msg.channel.send(`**${user.name}**, you still have **${waitTime}** hours until you can claim your dailies again.`)
     }
+
+    user = this.claimDailies(user)
+    msg.channel.send(`**${user.name}**, you have claimed your **200** daily credits!`)
 
     await axios.put(`http://localhost:8000/users/${msg.author.id}&code=${code}`, user)
 
