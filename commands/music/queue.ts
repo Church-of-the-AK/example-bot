@@ -59,7 +59,7 @@ module.exports = class QueueCommand extends commando.Command {
 			${pages.get(pageNum)}
       **Now playing:** ${serverQueue.songs[0].title}
     `
-    const commandoGuild = msg.guild as commando.GuildExtension
+    const commandoGuild = msg.guild as commando.CommandoGuild
     msg.channel.send(ec(
       "#4286F4", {
         "name": msg.author.username,

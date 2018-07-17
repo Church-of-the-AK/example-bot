@@ -64,7 +64,7 @@ module.exports = class PlayCommand extends commando.Command {
         msg.channel.send('▶ Resumed the music for you!')
         return msg.delete()
       } else {
-        msg.reply(`Nothing is paused. Use \`${(msg.guild as commando.GuildExtension).commandPrefix}play <youtube link or search term>\` to play music.`)
+        msg.reply(`Nothing is paused. Use \`${(msg.guild as commando.CommandoGuild).commandPrefix}play <youtube link or search term>\` to play music.`)
         return undefined
       }
     }
