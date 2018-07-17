@@ -2,7 +2,7 @@ import * as commando from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import * as Logger from '../../util/Logger'
 import * as moment from 'moment'
-import { Message, TextChannel } from 'discord.js';
+import { Message, TextChannel, GuildChannel, User, Role } from 'discord.js';
 
 module.exports = class RemoveRoleCommand extends commando.Command {
   constructor(client) {
@@ -37,33 +37,30 @@ module.exports = class RemoveRoleCommand extends commando.Command {
     })
   }
 
-  async run(msg: commando.CommandMessage, { username, role }): Promise<Message> {
-    if (msg.member.hasPermission("ADMINISTRATOR")) {
-      let rank = role
-      let user = msg.guild.member(username)
-      if (rank != null) {
-        try {
-          user.removeRole(rank)
-          let channel = msg.guild.channels.find('name', 'machobot-audit') as TextChannel
-          if (channel) {
-            channel.send(`${msg.author.username} has removed ${rank.name} from ${user.displayName}.`)
-          }
-          let time = moment().format('YYYY-MM-DD HH:mm:ss Z')
-          Logger.log(`\r\n[${time}] ${msg.author.username} has removed ${rank.name} from ${user.displayName}.`)
-          const reply = await msg.reply(`Removed rank ${rank.name} from ${user.displayName}.`) as Message
-          reply.delete(3000)
-          msg.delete()
-        } catch (err) {
-          const reply = await msg.reply("I couldn't complete your request, sorry 'bout that.") as Message
-          reply.delete(3000)
-          msg.delete()
-        }
-      }
-    } else {
-      const reply = await msg.reply("FeelsBad(Wo)Man (it's 2018") as Message
-      reply.delete(3000)
-      msg.delete()
+  async run(msg: commando.CommandMessage, { username, role }: { username: User, role: Role }): Promise<Message | Message[]> {
+    if (!msg.member.hasPermission("ADMINISTRATOR")) {
+      await msg.reply("FeelsBad(Wo)Man (it's 2018)") as Message
+      return msg.delete()
     }
-    return undefined
+
+    const user = msg.guild.member(username)
+    try {
+      const channel = msg.guild.channels.find((channel: GuildChannel) => channel.name === 'machobot-audit') as TextChannel
+
+      user.roles.remove(role)
+
+      if (channel) {
+        channel.send(`${msg.author.username} has removed ${role.name} from ${user.displayName}.`)
+      }
+
+      const time = moment().format('YYYY-MM-DD HH:mm:ss Z')
+      Logger.log(`\r\n[${time}] ${msg.author.username} has removed ${role.name} from ${user.displayName}.`)
+
+      await msg.reply(`Removed rank ${role.name} from ${user.displayName}.`) as Message
+      return msg.delete()
+    } catch (err) {
+      await msg.reply("I couldn't complete your request, sorry 'bout that.") as Message
+      return msg.delete()
+    }
   }
 }

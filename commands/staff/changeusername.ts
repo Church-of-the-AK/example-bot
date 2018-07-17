@@ -2,7 +2,7 @@ import * as commando from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import * as Logger from '../../util/Logger'
 import * as moment from 'moment'
-import { Message, TextChannel } from 'discord.js';
+import { Message, TextChannel, GuildChannel } from 'discord.js';
 
 module.exports = class ChangeUsernameCommand extends commando.Command {
   constructor(client) {
@@ -28,27 +28,34 @@ module.exports = class ChangeUsernameCommand extends commando.Command {
     })
   }
 
-  async run(msg: commando.CommandMessage, { name }): Promise<Message> {
-    if (msg.author.id == "176785428450377728") {
-      this.client.user.setUsername(name)
-      let channel = msg.guild.channels.find('name', 'machobot-audit') as TextChannel
-      if (channel) {
-        channel.send(`${msg.author.username} has changed ${this.client.user.username}'s name to ${name}.`)
-      }
-      let time = moment().format('YYYY-MM-DD HH:mm:ss Z')
-      Logger.log(`\r\n[${time}] ${msg.author.username} has changed ${this.client.user.username}'s name to ${name}.`)
-      const reply = await msg.reply(`Succesfully changed my username to ${name}!`) as Message
-      reply.delete(3000)
+  async run(msg: commando.CommandMessage, { name }: { name: string }): Promise<Message> {
+    if (!(msg.author.id == "176785428450377728")) {
+      await msg.reply("Sorry, but you can't do that.")
+
       if (msg.channel.type == 'text') {
-        msg.delete()
+        return msg.delete()
       }
-    } else {
-      const reply = await msg.reply("Sorry, but you can't do that.") as Message
-      reply.delete(3000)
-      if (msg.channel.type == 'text') {
-        msg.delete()
-      }
+
+      return
     }
-    return undefined
+
+    const channel = msg.guild.channels.find((channel: GuildChannel) => channel.name === 'machobot-audit') as TextChannel
+
+    this.client.user.setUsername(name)
+
+    if (channel) {
+      channel.send(`${msg.author.username} has changed ${this.client.user.username}'s name to ${name}.`)
+    }
+
+    let time = moment().format('YYYY-MM-DD HH:mm:ss Z')
+    Logger.log(`\r\n[${time}] ${msg.author.username} has changed ${this.client.user.username}'s name to ${name}.`)
+
+    await msg.reply(`Succesfully changed my username to ${name}!`)
+
+    if (msg.channel.type == 'text') {
+      return msg.delete()
+    }
+
+    return
   }
 }

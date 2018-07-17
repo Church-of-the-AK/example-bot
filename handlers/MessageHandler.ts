@@ -18,9 +18,11 @@ export async function handleMessage(msg: Message) {
   if (msg.author.bot) {
     return false
   }
+
   if (!(msg.channel instanceof TextChannel)) {
     return false
   }
+
   if (msg.channel.name == 'accept-rules' && msg.content != '/accept') {
     if (!(msg.member.hasPermission("MANAGE_MESSAGES"))) {
       return msg.delete()
@@ -74,7 +76,7 @@ async function handleUserMessage(msg: Message) {
 
   user = handleUserExp(user, msg)
   user.datelastmessage = `${new Date().getTime()}`
-  user.avatarurl = msg.author.avatarURL
+  user.avatarurl = msg.author.avatarURL()
 
   axios.put(`http://localhost:8000/users/${msg.author.id}&code=${code}`, user)
 }

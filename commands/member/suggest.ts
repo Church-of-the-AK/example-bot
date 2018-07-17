@@ -1,6 +1,6 @@
 import * as commando from 'discord.js-commando'
 import { oneLine } from 'common-tags'
-import { Message, TextChannel, RichEmbed } from 'discord.js';
+import { Message, TextChannel, MessageEmbed, GuildChannel } from 'discord.js';
 
 module.exports = class SuggestCommand extends commando.Command {
   constructor(client) {
@@ -28,16 +28,16 @@ module.exports = class SuggestCommand extends commando.Command {
 
   async run(msg: commando.CommandMessage, { suggestion }): Promise<Message | Message[]> {
     try {
-      const channel = msg.guild.channels.find('name', 'suggestions') as TextChannel
+      const channel = msg.guild.channels.find((channel: GuildChannel) => channel.name === 'suggestions') as TextChannel
 
       if (!channel) {
         await msg.reply("This server has no #suggestions channel.")
         return msg.delete()
       }
 
-      const embed = new RichEmbed()
-        .setAuthor(msg.author.username, msg.author.displayAvatarURL, `http://192.243.102.112:8000/users/${msg.author.id}`)
-        .setThumbnail(this.client.user.displayAvatarURL)
+      const embed = new MessageEmbed()
+        .setAuthor(msg.author.username, msg.author.displayAvatarURL(), `http://192.243.102.112:8000/users/${msg.author.id}`)
+        .setThumbnail(this.client.user.displayAvatarURL())
         .setTimestamp(new Date())
         .setColor('BLUE')
         .setTitle('New Suggestion')

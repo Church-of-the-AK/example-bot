@@ -6,6 +6,7 @@ import * as sqlite from 'sqlite'
 import * as config from './config'
 import { ServerQueue } from './types/ServerQueue';
 import { handleMessage } from './handlers/MessageHandler'
+import { Role } from 'discord.js';
 
 export const queue: Map<string, ServerQueue> = new Map()
 
@@ -29,9 +30,14 @@ client
     if (member.user.bot) {
       return
     }
-    member.addRole(member.guild.roles.find('name', 'Accept Rules')).catch(err => {
-      member.addRole(member.guild.roles.find('name', 'Commoner') ? member.guild.roles.find('name', 'Commoner') : member.guild.roles.find('name', 'Member')).catch(err => {
 
+    const commonerRole = member.guild.roles.find((role: Role) => role.name.toLowerCase() === 'commoner')
+    const memberRole = member.guild.roles.find((role: Role) => role.name.toLowerCase() === 'member')
+    const acceptRulesRole = member.guild.roles.find((role: Role) => role.name.toLowerCase() === 'accept rules')
+
+    member.roles.add(acceptRulesRole).catch(() => {
+      member.roles.add(commonerRole ? commonerRole : memberRole).catch(() => {
+        // eat the error, not important
       })
     })
   })

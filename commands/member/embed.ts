@@ -1,7 +1,6 @@
 import * as commando from 'discord.js-commando'
 import { oneLine } from 'common-tags'
-import ec = require('embed-creator')
-import { Message } from 'discord.js';
+import { Message, MessageEmbed, ColorResolvable } from 'discord.js';
 import * as materialColors from 'material-colors'
 
 module.exports = class AddNumbersCommand extends commando.Command {
@@ -28,84 +27,43 @@ module.exports = class AddNumbersCommand extends commando.Command {
     })
   }
 
-  async run(msg: commando.CommandMessage, { content }): Promise<Message> {
-    // find these thingys
-    let titleParam: number = content.toLowerCase().indexOf("--title")
-    let descParam: number = content.toLowerCase().indexOf("--desc")
-    let colorParam: number = content.toLowerCase().indexOf("--color")
+  async run(msg: commando.CommandMessage, { content }: { content: string }): Promise<Message | Message[]> {
+    const titleParam: number = content.toLowerCase().indexOf("--title")
+    const descParam: number = content.toLowerCase().indexOf("--desc")
+    const colorParam: number = content.toLowerCase().indexOf("--color")
 
-    // gotta check if the title and description are there, doi
-    if (titleParam > -1 && descParam > -1) {
-      // gotta get that title String
-      let realTitle: string = content.substring(titleParam + 7, descParam)
+    if (!(titleParam > -1 && descParam > -1)) {
+      await msg.reply("Use `m!help embed` for usage instructions.")
+      return msg.delete()
+    }
 
-      // do we have a color parameter? yes.
-      if (colorParam > -1) {
-        // get the description
-        let realDesc: string = content.substring(descParam + 6, colorParam)
-        // color String
-        let realColor: string = content.substring(colorParam + 8, content.length)
-        try {
-          // check if it's a real color
-          let colorThing: string = materialColors[realColor || 'blue']['500']
-          // send a good ol' embed if it is real
-          msg.channel.send(ec(
-            colorThing, {
-              "name": msg.author.username,
-              "icon_url": msg.author.displayAvatarURL,
-              "url": null
-            }, realTitle, realDesc, [], {
-              "text": "Macho",
-              "icon_url": null
-            }, {
-              "thumbnail": null,
-              "image": null
-            }, false
-          ))
-        } catch (err) {
-          // i guess it wasn't real, make one anyways
-          msg.channel.send(ec(
-            "#FEAFEA", {
-              "name": msg.author.username,
-              "icon_url": msg.author.displayAvatarURL,
-              "url": null
-            }, realTitle, realDesc, [], {
-              "text": "Macho",
-              "icon_url": null
-            }, {
-              "thumbnail": null,
-              "image": null
-            }, false
-          ))
-        }
+    const title: string = content.substring(titleParam + 7, descParam)
+    const embed = new MessageEmbed()
+      .setAuthor(msg.author.username, msg.author.displayAvatarURL())
+      .setURL(`http://192.243.102.112:8000/users/${msg.author.id}`)
+      .setTitle(title)
+      .setFooter('Macho')
+      .setThumbnail(this.client.user.displayAvatarURL())
 
-      }
-      // nevermind, we don't (have a color parameter).
-      else {
-        // get that description
-        let realDesc = content.substring(descParam + 6, content.length)
-        // do the same thing except that gosh darn color is like pink or whatever
-        msg.channel.send(ec(
-          "#FEAFEA", {
-            "name": msg.author.username,
-            "icon_url": msg.author.displayAvatarURL,
-            "url": null
-          }, realTitle, realDesc, [], {
-            "text": "Macho",
-            "icon_url": null
-          }, {
-            "thumbnail": null,
-            "image": null
-          }, false
-        ))
-      }
+    if (colorParam > -1) {
+      const description: string = content.substring(descParam + 6, colorParam)
+      const color: ColorResolvable = content.substring(colorParam + 8, content.length).toUpperCase()
+
+      embed.setColor(color)
+      embed.setDescription(description)
     } else {
-      msg.reply("Use `m!help embed` for usage instructions.")
+      const description = content.substring(descParam + 6, content.length)
+
+      embed.setColor('BLUE')
+      embed.setDescription(description)
     }
-    // delete that gosh darn message, it's cloggin up the beautiful embed
+
+    msg.channel.send(embed)
+
     if (msg.channel.type == 'text') {
-      msg.delete()
+      return msg.delete()
     }
+
     return undefined
   }
 }

@@ -18,12 +18,10 @@ module.exports = class InviteCommand extends commando.Command {
     })
   }
 
-  async run(msg: commando.CommandMessage): Promise<Message> {
+  async run(msg: commando.CommandMessage): Promise<Message | Message[]> {
     const channel = msg.channel as TextChannel
-    const invite = await channel.createInvite({ maxAge: 0 }, `${msg.author.tag} asked for one.`)
+    const invite = await channel.createInvite({ maxAge: 0, reason: `${msg.author.tag} asked for one.` })
     
-    msg.reply(`Here is an invite to the server: ${invite.url}`)
-
-    return undefined
+    return msg.reply(`Here is an invite to the server: ${invite.url}`)
   }
 }

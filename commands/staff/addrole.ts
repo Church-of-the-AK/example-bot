@@ -2,7 +2,7 @@ import * as commando from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import * as Logger from '../../util/Logger'
 import * as moment from 'moment'
-import { Message, TextChannel } from 'discord.js';
+import { Message, TextChannel, Role, User, GuildChannel } from 'discord.js';
 
 module.exports = class AddRoleCommand extends commando.Command {
   constructor(client) {
@@ -37,38 +37,33 @@ module.exports = class AddRoleCommand extends commando.Command {
     })
   }
 
-  async run(msg: commando.CommandMessage, { username, role }): Promise<Message> {
-    if (msg.channel.type != "text") {
-      const reply = await msg.reply("This command can only be used in a server.") as Message
-      reply.delete(3000)
+  async run(msg: commando.CommandMessage, { username, role }: { username: User, role: Role }): Promise<Message | Message[]> {
+    if (!msg.member.hasPermission("ADMINISTRATOR")) {
+      await msg.reply("Too bad, so sad. Very sad.")
+      return msg.delete()
     }
-    if (msg.member.hasPermission("ADMINISTRATOR")) {
-      let rank = role
-      let user = msg.guild.member(username)
-      if (rank != null) {
-        try {
-          user.addRole(rank)
-          let channel = msg.guild.channels.find('name', 'machobot-audit') as TextChannel
-          if (channel) {
-            channel.send(`${msg.author.username} has added ${rank.name} to ${user.displayName}.`)
-          }
-          let time = moment().format('YYYY-MM-DD HH:mm:ss Z')
-          Logger.log(`\r\n[${time}] ${msg.author.username} has added ${rank.name} to ${user.displayName}.`)
-          const reply = await msg.reply(`Added rank ${rank.name} to ${user.displayName}.`) as Message
-          reply.delete(3000)
-          msg.delete()
-        } catch (err) {
-          console.log(err)
-          const reply = await msg.reply("I couldn't complete your request, sorry 'bout that.") as Message
-          reply.delete(3000)
-          msg.delete()
-        }
+
+    const user = msg.guild.member(username)
+
+    try {
+      const channel = msg.guild.channels.find((channel: GuildChannel) => channel.name === 'machobot-audit') as TextChannel
+
+      user.roles.add(role)
+
+      if (channel) {
+        channel.send(`${msg.author.username} has added ${role.name} to ${user.displayName}.`)
       }
-    } else {
-      const reply = await msg.reply("Too bad, so sad. Very sad.") as Message
-      reply.delete(3000)
+
+      const time = moment().format('YYYY-MM-DD HH:mm:ss Z')
+      Logger.log(`\r\n[${time}] ${msg.author.username} has added ${role.name} to ${user.displayName}.`)
+
+      await msg.reply(`Added rank ${role.name} to ${user.displayName}.`)
       msg.delete()
+    } catch (err) {
+      console.log(err)
+
+      await msg.reply("I couldn't complete your request, sorry 'bout that.")
+      return msg.delete()
     }
-    return undefined
   }
 }
