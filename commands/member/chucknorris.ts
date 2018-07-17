@@ -1,6 +1,6 @@
 import * as commando from 'discord.js-commando'
 import { oneLine } from 'common-tags'
-import * as request from 'request'
+import axios from 'axios'
 import { AllHtmlEntities } from 'html-entities'
 import { Message } from 'discord.js';
 
@@ -20,25 +20,12 @@ module.exports = class ChuckNorrisCommand extends commando.Command {
     })
   }
 
-  async run(msg: commando.CommandMessage): Promise<Message> {
-    request.get({
-      url: 'http://api.icndb.com/jokes/random',
-      json: true,
-      headers: {
-        'User-Agent': 'request'
-      }
-    }, (err, res, data) => {
-      if (err) {
-        console.log('Error:', err);
-      } else if (res.statusCode !== 200) {
-        console.log('Status:', res.statusCode);
-      } else {
-        let joke = AllHtmlEntities.decode(data.value.joke)
+  async run(msg: commando.CommandMessage): Promise<Message | Message[]> {
+    const { data: joke } = await axios.get('http://api.icndb.com/jokes/random')
+    const decoded = AllHtmlEntities.decode(joke.value.joke)
 
-        msg.reply(joke)
-      }
-    });
-    msg.delete()
-    return undefined
+    msg.reply(decoded)
+
+    return msg.delete()
   }
 }
