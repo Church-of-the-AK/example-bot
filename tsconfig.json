@@ -10,7 +10,6 @@
     "sourceMap": true
   },
   "include": [
-    "commandArgTypes",
     "handlers",
     "commands",
     "index.ts",

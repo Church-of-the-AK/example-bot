@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import * as commando from 'discord.js-commando'
 import * as path from 'path'
 import { oneLine } from 'common-tags'
@@ -6,7 +5,6 @@ import * as sqlite from 'sqlite'
 import * as config from './config'
 import { ServerQueue } from './types/ServerQueue';
 import { handleMessage } from './handlers/MessageHandler'
-import { Role } from 'discord.js';
 
 export const queue: Map<string, ServerQueue> = new Map()
 
@@ -31,9 +29,9 @@ client
       return
     }
 
-    const commonerRole = member.guild.roles.find((role: Role) => role.name.toLowerCase() === 'commoner')
-    const memberRole = member.guild.roles.find((role: Role) => role.name.toLowerCase() === 'member')
-    const acceptRulesRole = member.guild.roles.find((role: Role) => role.name.toLowerCase() === 'accept rules')
+    const commonerRole = member.guild.roles.find(role => role.name.toLowerCase() === 'commoner')
+    const memberRole = member.guild.roles.find(role => role.name.toLowerCase() === 'member')
+    const acceptRulesRole = member.guild.roles.find(role => role.name.toLowerCase() === 'accept rules')
 
     member.roles.add(acceptRulesRole).catch(() => {
       member.roles.add(commonerRole ? commonerRole : memberRole).catch(() => {
@@ -92,7 +90,6 @@ client.registry
     ['economy', 'Money Commands']
   ])
   .registerDefaults()
-  .registerTypesIn(path.join(__dirname, 'commandArgTypes'))
   .registerCommandsIn(path.join(__dirname, 'commands'))
 
 client.login(config.token)
