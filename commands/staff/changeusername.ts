@@ -33,7 +33,7 @@ module.exports = class ChangeUsernameCommand extends commando.Command {
     if (msg.author.id !== ownerId) {
       await msg.reply("Sorry, but you can't do that.")
 
-      if (msg.channel.type == 'text') {
+      if (msg.channel.type === 'text') {
         return msg.delete()
       }
 

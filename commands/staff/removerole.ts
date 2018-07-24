@@ -57,6 +57,7 @@ module.exports = class RemoveRoleCommand extends commando.Command {
 
     if (!removeRoleResponse) {
       await msg.reply('I can\'t remove roles.')
+      return msg.delete()
     }
 
     if (channel) {

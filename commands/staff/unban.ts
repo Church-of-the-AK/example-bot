@@ -41,7 +41,7 @@ module.exports = class UnbanCommand extends commando.Command {
     })
 
     if (!unbanResponse) {
-      await msg.reply('I can\'t ban that user.')
+      await msg.reply('I can\'t unban that user.')
       return msg.delete()
     }
 
@@ -52,7 +52,7 @@ module.exports = class UnbanCommand extends commando.Command {
     const time = moment().format('YYYY-MM-DD HH:mm:ss Z')
     Logger.log(`\r\n[${time}] ${msg.author.username} has unbanned ${id} from ${msg.guild.name}.`)
 
-    await msg.reply("Member unbanned!")
+    await msg.reply("Member unbanned.")
     return msg.delete()
   }
 }

@@ -39,6 +39,7 @@ module.exports = class BanCommand extends commando.Command {
 
     if (msg.member.roles.highest.comparePositionTo(member.roles.highest) < 0) {
       await msg.reply('You can\'t ban that user.')
+      return msg.delete()
     }
 
     const channel = msg.guild.channels.find((channel: GuildChannel) => channel.name === 'machobot-audit') as TextChannel
