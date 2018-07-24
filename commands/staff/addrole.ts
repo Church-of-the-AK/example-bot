@@ -2,7 +2,7 @@ import * as commando from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import * as Logger from '../../util/Logger'
 import * as moment from 'moment'
-import { Message, TextChannel, Role, User, GuildChannel, MessageAttachment } from 'discord.js';
+import { Message, TextChannel, Role, User, GuildChannel } from 'discord.js';
 
 module.exports = class AddRoleCommand extends commando.Command {
   constructor(client) {

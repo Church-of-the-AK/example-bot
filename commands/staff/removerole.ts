@@ -2,7 +2,7 @@ import * as commando from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import * as Logger from '../../util/Logger'
 import * as moment from 'moment'
-import { Message, TextChannel, GuildChannel, User, Role, RoleStore, GuildMember } from 'discord.js';
+import { Message, TextChannel, GuildChannel, Role, GuildMember } from 'discord.js';
 
 module.exports = class RemoveRoleCommand extends commando.Command {
   constructor(client) {
