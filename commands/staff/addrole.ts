@@ -45,8 +45,8 @@ module.exports = class AddRoleCommand extends commando.Command {
 
     const member = msg.guild.member(user)
 
-    if (msg.member.roles.highest.comparePositionTo(role) < 0) {
-      await msg.reply('You can\'t add roles that are higher than yours.')
+    if (msg.member.roles.highest.comparePositionTo(role) <= 0) {
+      await msg.reply('You can\'t add roles that are higher than or equal to yours.')
       return msg.delete()
     }
 

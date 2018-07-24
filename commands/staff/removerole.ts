@@ -2,7 +2,7 @@ import * as commando from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import * as Logger from '../../util/Logger'
 import * as moment from 'moment'
-import { Message, TextChannel, GuildChannel, User, Role, RoleStore } from 'discord.js';
+import { Message, TextChannel, GuildChannel, User, Role, RoleStore, GuildMember } from 'discord.js';
 
 module.exports = class RemoveRoleCommand extends commando.Command {
   constructor(client) {
@@ -23,7 +23,7 @@ module.exports = class RemoveRoleCommand extends commando.Command {
         key: 'username',
         label: 'username',
         prompt: 'Who would you like to remove the role from?',
-        type: 'user',
+        type: 'member',
         infinite: false
       },
       {
@@ -37,16 +37,14 @@ module.exports = class RemoveRoleCommand extends commando.Command {
     })
   }
 
-  async run(msg: commando.CommandMessage, { user, role }: { user: User, role: Role }): Promise<Message | Message[]> {
+  async run(msg: commando.CommandMessage, { member, role }: { member: GuildMember, role: Role }): Promise<Message | Message[]> {
     if (!msg.member.hasPermission('MANAGE_ROLES')) {
       await msg.reply('You can\'t remove roles.')
       return msg.delete()
     }
 
-    const member = msg.guild.member(user)
-
-    if (msg.member.roles.highest.comparePositionTo(role) < 0) {
-      await msg.reply('You can\'t remove roles that are higher than yours.')
+    if (msg.member.roles.highest.comparePositionTo(role) <= 0) {
+      await msg.reply('You can\'t remove roles that are higher than or equal to yours.')
       return msg.delete()
     }
 
