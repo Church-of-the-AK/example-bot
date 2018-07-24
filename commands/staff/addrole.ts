@@ -4,7 +4,7 @@ import * as Logger from '../../util/Logger'
 import * as moment from 'moment'
 import { Message, TextChannel, Role, User, GuildChannel } from 'discord.js';
 
-module.exports = class AddRoleCommand extends commando.Command {
+export default class AddRoleCommand extends commando.Command {
   constructor(client) {
     super(client, {
       name: 'addrole',

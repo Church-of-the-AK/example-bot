@@ -4,7 +4,7 @@ import * as Logger from '../../util/Logger'
 import * as moment from 'moment'
 import { Message, TextChannel, GuildChannel, Role, GuildMember } from 'discord.js';
 
-module.exports = class RemoveRoleCommand extends commando.Command {
+export default class RemoveRoleCommand extends commando.Command {
   constructor(client) {
     super(client, {
       name: 'removerole',
@@ -20,8 +20,8 @@ module.exports = class RemoveRoleCommand extends commando.Command {
       guildOnly: true,
 
       args: [{
-        key: 'username',
-        label: 'username',
+        key: 'member',
+        label: 'user',
         prompt: 'Who would you like to remove the role from?',
         type: 'member',
         infinite: false
