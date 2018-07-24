@@ -63,15 +63,15 @@ module.exports = class PlayCommand extends commando.Command {
         msg.channel.send('▶ Resumed the music for you!')
         return msg.delete()
       } else {
-        msg.reply(`Nothing is paused. Use \`${(msg.guild as commando.CommandoGuild).commandPrefix}play <youtube link or search term>\` to play music.`)
+        msg.reply(`Nothing is paused. Use \`${msg.guild.commandPrefix}play <youtube link or search term>\` to play music.`)
         return undefined
       }
     }
 
     if (url.match(/^https?:\/\/(www.youtube.com|youtube.com)\/playlist(.*)$/)) {
       const playlist = await youtube.getPlaylist(url)
-      const responseMsg = await msg.channel.send(`🕙 Adding playlist **${playlist.title}** to the queue...`) as Message
-      const videos = await playlist.getVideos()
+      const videos: any[] = await playlist.getVideos()
+      const responseMsg = await msg.channel.send(`🕙 Adding playlist **${playlist.title}** to the queue... ${videos.length >= 100 ? 'This may take a while.' : ''}`) as Message
       for (const video of videos) {
         if (video.description != 'This video is private.' && video.description != 'This video is unavailable.') {
           try {
@@ -187,6 +187,5 @@ function play(guild: Guild, song: Song) {
     .on('error', error => console.error(error))
 
   dispatcher.setVolumeLogarithmic(serverQueue.volume / 5)
-
   serverQueue.textChannel.send(`🎶 Started playing: **${song.title}**`)
 }
