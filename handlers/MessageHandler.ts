@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { CommandoGuild, CommandoClient } from "discord.js-commando";
 import { code } from '../config'
 import { Message, TextChannel } from 'discord.js'
 import { MachoAPIUser } from '../types/MachoAPIUser'
@@ -24,7 +25,7 @@ export async function handleMessage(msg: Message) {
     return false
   }
 
-  if (msg.channel.name == 'accept-rules' && msg.content != '/accept') {
+  if (msg.channel.name == 'accept-rules' && msg.content != `${(msg.guild as CommandoGuild).commandPrefix || (msg.client as CommandoClient).commandPrefix}accept`) {
     if (!(msg.member.hasPermission("MANAGE_MESSAGES"))) {
       return msg.delete()
     }
