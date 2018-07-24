@@ -12,8 +12,8 @@ module.exports = class SkipCommand extends commando.Command {
       memberName: 'skip',
       description: 'Skip a song from the bot\'s queue.',
       details: oneLine`
-                This command is used to skip a song in the current queue
-                of songs.
+        This command is used to skip a song in the current queue
+        of songs.
 			`,
       examples: ['skip'],
       guildOnly: true,
@@ -24,7 +24,7 @@ module.exports = class SkipCommand extends commando.Command {
     const serverQueue = queue.get(msg.guild.id)
     const song = serverQueue.songs[0]
 
-    if ((msg.member.id !== song.member.id) && msg.member.hasPermission('MANAGE_MESSAGES')) {
+    if ((msg.member.id !== song.member.id) && !msg.member.hasPermission('MANAGE_MESSAGES')) {
       msg.channel.send('You need to have the Manage Messages permission to delete other user\'s songs.')
     }
 
