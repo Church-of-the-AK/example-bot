@@ -47,7 +47,7 @@ export default class QueueCommand extends commando.Command {
       } else {
         pages.set(page, songs[i] + "\n")
       }
-      if ((i + 1) % 10 == 0) {
+      if ((i + 1) % 10 === 0) {
         page++
       }
     }

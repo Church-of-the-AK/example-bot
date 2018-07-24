@@ -58,7 +58,7 @@ export default class AddNumbersCommand extends commando.Command {
 
     msg.channel.send(embed)
 
-    if (msg.channel.type == 'text') {
+    if (msg.channel.type === 'text') {
       return msg.delete()
     }
 

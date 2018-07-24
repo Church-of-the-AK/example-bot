@@ -5,7 +5,7 @@ import { code } from '../../config'
 import { MachoAPIUser } from '../../types/MachoAPIUser'
 import * as numeral from 'numeral'
 import axios from 'axios'
-import { getUser } from '../../util/API';
+import { getUser } from '../../util';
 
 export default class DailiesCommand extends commando.Command {
   constructor(client) {

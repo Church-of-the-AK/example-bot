@@ -75,7 +75,7 @@ client
 			${guild ? `in guild ${guild.name} (${guild.id})` : 'globally'}.
 		`)
   })
-  .on('message', (msg) => {
+  .on('message', (msg: commando.CommandMessage) => {
     handleMessage(msg)
   })
   .setProvider(

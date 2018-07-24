@@ -1,6 +1,6 @@
 import * as commando from 'discord.js-commando'
 import { oneLine } from 'common-tags'
-import * as Logger from '../../util/Logger'
+import { log } from '../../util'
 import * as moment from 'moment'
 import { Message, TextChannel, Role, User, GuildChannel } from 'discord.js';
 
@@ -65,7 +65,7 @@ export default class AddRoleCommand extends commando.Command {
     }
 
     const time = moment().format('YYYY-MM-DD HH:mm:ss Z')
-    Logger.log(`\r\n[${time}] ${msg.author.username} has added role ${role.name} to ${member.displayName}.`)
+    log(`\r\n[${time}] ${msg.author.username} has added role ${role.name} to ${member.displayName}.`)
 
     await msg.reply(`Added role ${role.name} to ${member.displayName}.`)
     return msg.delete()

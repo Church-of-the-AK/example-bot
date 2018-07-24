@@ -19,7 +19,7 @@ export default class AcceptCommand extends commando.Command {
   }
 
   async run(msg: commando.CommandMessage): Promise<Message | Message[]> {
-    const acceptRules = msg.guild.roles.find((role: Role) => role.name == 'Accept Rules')
+    const acceptRules = msg.guild.roles.find((role: Role) => role.name === 'Accept Rules')
     const commoner = msg.guild.roles.find((role: Role) => role.name === 'Commoner')
     const member = msg.guild.roles.find((role: Role) => role.name === 'Member')
 
