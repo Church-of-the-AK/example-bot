@@ -63,7 +63,7 @@ async function handleUserMessage(msg: Message): Promise<MachoAPIUser> {
 function handleUserExp(user: MachoAPIUser, msg: Message) {
   let diffMins
   if (user.level.timestamp) {
-    let diffMs = (new Date().getTime() - parseInt(user.level.timestamp))
+    const diffMs = (new Date().getTime() - parseInt(user.level.timestamp))
     diffMins = ((diffMs % 86400000) % 3600000) / 60000
   } else {
     diffMins = 2
@@ -74,7 +74,7 @@ function handleUserExp(user: MachoAPIUser, msg: Message) {
     user.level.xp = `${parseInt(user.level.xp) + randomIntFromInterval(15, 25)}`
 
     if (parseInt(user.level.xp) >= expToLevelUp(parseInt(user.level.level))) {
-      let creditsEarned = randomIntFromInterval(45, 50) + Math.floor(parseInt(user.level.level) * 0.5)
+      const creditsEarned = randomIntFromInterval(45, 50) + Math.floor(parseInt(user.level.level) * 0.5)
 
       user.level.xp = `${parseInt(user.level.xp) - expToLevelUp(parseInt(user.level.level))}`
       user.level.level = `${parseInt(user.level.level) + 1}`
