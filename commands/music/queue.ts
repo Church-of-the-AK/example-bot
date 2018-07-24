@@ -24,15 +24,14 @@ module.exports = class QueueCommand extends commando.Command {
         label: 'page',
         prompt: 'What page would you like to look at?',
         type: 'integer',
-        infinite: false,
         default: 1
       }]
     })
   }
 
   async run(msg: CommandMessage, { pageNum }: { pageNum: number }): Promise<Message> {
-
     const serverQueue = queue.get(msg.guild.id)
+
     if (!serverQueue) {
       msg.channel.send('There is nothing playing.')
       return msg.delete()
@@ -68,7 +67,7 @@ module.exports = class QueueCommand extends commando.Command {
       .setAuthor(msg.author.username, msg.author.displayAvatarURL(), `http://192.243.102.112:8000/users/${msg.author.id}`)
       .setTitle('Song Queue')
       .setDescription(description)
-      .setFooter(`Page ${pageNum}/${pages.size}. View different pages with ${msg.guild.commandPrefix}queue [number].`)
+      .setFooter(`Page ${pageNum}/${pages.size}. View different pages with ${msg.guild.commandPrefix}queue <number>.`)
       .setThumbnail(this.client.user.displayAvatarURL())
 
     msg.channel.send(embed)

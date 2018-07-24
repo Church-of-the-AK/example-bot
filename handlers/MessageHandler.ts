@@ -25,7 +25,7 @@ export async function handleMessage(msg: Message) {
     return false
   }
 
-  if (msg.channel.name == 'accept-rules' && msg.content != `${(msg.guild as CommandoGuild).commandPrefix || (msg.client as CommandoClient).commandPrefix}accept`) {
+  if (msg.channel.name == 'accept-rules' && msg.content !== `${(msg.guild as CommandoGuild).commandPrefix || (msg.client as CommandoClient).commandPrefix}accept`) {
     if (!(msg.member.hasPermission("MANAGE_MESSAGES"))) {
       return msg.delete()
     }

@@ -3,6 +3,7 @@ import { oneLine } from 'common-tags'
 import * as Logger from '../../util/Logger'
 import * as moment from 'moment'
 import { Message, TextChannel, GuildChannel } from 'discord.js';
+import { ownerId } from "../../config";
 
 module.exports = class ChangeUsernameCommand extends commando.Command {
   constructor(client) {
@@ -28,8 +29,8 @@ module.exports = class ChangeUsernameCommand extends commando.Command {
     })
   }
 
-  async run(msg: commando.CommandMessage, { name }: { name: string }): Promise<Message> {
-    if (!(msg.author.id == "176785428450377728")) {
+  async run(msg: commando.CommandMessage, { name }: { name: string }): Promise<Message | Message[]> {
+    if (msg.author.id !== ownerId) {
       await msg.reply("Sorry, but you can't do that.")
 
       if (msg.channel.type == 'text') {
@@ -55,7 +56,5 @@ module.exports = class ChangeUsernameCommand extends commando.Command {
     if (msg.channel.type == 'text') {
       return msg.delete()
     }
-
-    return
   }
 }

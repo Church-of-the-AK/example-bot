@@ -1,3 +1,5 @@
+import { GuildMember } from "discord.js";
+
 export interface Song {
   /**
    * The ID of the YouTube video, e.g. https://www.youtube.com/watch?v=`song.id`
@@ -10,5 +12,9 @@ export interface Song {
   /**
    * The url of the song, e.g. https://www.youtube.com/watch?v=dQw4w9WgXcQ
    */
-  url: string
+  url: string,
+  /**
+   * The member that requested the song.
+   */
+  member: GuildMember
 }

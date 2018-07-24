@@ -23,16 +23,25 @@ module.exports = class ClearCommand extends commando.Command {
 
   async run(msg: commando.CommandMessage): Promise<Message> {
     const serverQueue: ServerQueue = queue.get(msg.guild.id)
+
+    if (!msg.member.hasPermission('MANAGE_MESSAGES')) {
+      msg.channel.send('This command requires you to have the Manage Messages permission.')
+      return msg.delete()
+    }
+
     if (!msg.member.voiceChannel) {
       msg.channel.send('You are not in a voice channel!')
       return msg.delete()
     }
+
     if (!serverQueue) {
-      msg.channel.send('There is nothing playing that I could stop for you.')
+      msg.channel.send('The queue is already empty.')
       return msg.delete()
     }
+
     serverQueue.songs = []
-    serverQueue.connection.dispatcher.end('Stop command has been used!')
+    serverQueue.connection.dispatcher.end('Clear command has been used.')
+
     msg.channel.send("Cleared the queue.")
     return msg.delete()
   }

@@ -20,7 +20,7 @@ module.exports = class KickCommand extends commando.Command {
       guildOnly: true,
 
       args: [{
-        key: 'mention',
+        key: 'user',
         label: 'mention',
         prompt: 'Who would you like to kick?',
         type: 'user',
@@ -29,30 +29,36 @@ module.exports = class KickCommand extends commando.Command {
     })
   }
 
-  async run(msg: commando.CommandMessage, { mention }: { mention: User }): Promise<Message | Message[]> {
+  async run(msg: commando.CommandMessage, { user }: { user: User }): Promise<Message | Message[]> {
     if (!msg.member.hasPermission("KICK_MEMBERS")) {
-      await msg.reply("Sorry, but you're a nerd and can't kick members.")
+      await msg.reply("You can't kick members.")
       return msg.delete()
     }
 
-    const memberKicked = msg.guild.member(mention)
+    const member = msg.guild.member(user)
 
-    try {
-      memberKicked.kick()
-      const channel = msg.guild.channels.find((channel: GuildChannel) => channel.name === 'machobot-audit') as TextChannel
+    if (msg.member.roles.highest.comparePositionTo(member.roles.highest) < 0) {
+      await msg.reply('You can\'t kick that user.')
+    }
 
-      if (channel) {
-        channel.send(`${msg.author.username} has kicked ${memberKicked} from ${msg.guild.name}.`)
-      }
+    const channel = msg.guild.channels.find((channel: GuildChannel) => channel.name === 'machobot-audit') as TextChannel
+    const kickReponse = await member.kick().catch(() => {
+      return
+    })
 
-      const time = moment().format('YYYY-MM-DD HH:mm:ss Z')
-      Logger.log(`\r\n[${time}] ${msg.author.username} has kicked ${memberKicked} from ${msg.guild.name}.`)
-    } catch (err) {
-      await msg.reply(`Yo ${msg.author} I couldn't kick because of this stupid thing: ${err}`)
+    if (!kickReponse) {
+      await msg.reply('I can\'t kick that member.')
       return msg.delete()
     }
 
-    await msg.reply(mention.tag + " has been kicked!")
+    if (channel) {
+      channel.send(`${msg.author.username} has kicked ${member} from ${msg.guild.name}.`)
+    }
+
+    const time = moment().format('YYYY-MM-DD HH:mm:ss Z')
+    Logger.log(`\r\n[${time}] ${msg.author.username} has kicked ${member} from ${msg.guild.name}.`)
+
+    await msg.reply(user.tag + " has been kicked!")
     return msg.delete()
   }
 }

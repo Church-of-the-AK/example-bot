@@ -1,6 +1,7 @@
 import * as commando from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import { queue } from '../../index'
+import { Message } from 'discord.js';
 
 module.exports = class NowPlayingCommand extends commando.Command {
   constructor(client) {
@@ -19,11 +20,14 @@ module.exports = class NowPlayingCommand extends commando.Command {
     })
   }
 
-  async run(msg: commando.CommandMessage) {
+  async run(msg: commando.CommandMessage): Promise<Message | Message[]> {
     const serverQueue = queue.get(msg.guild.id)
+
     if (!serverQueue) {
-      return msg.channel.send('There is nothing playing.')
+      msg.channel.send('There is nothing playing.')
+      return msg.delete()
     }
+
     msg.channel.send(`🎶 Now playing: **${serverQueue.songs[0].title}**`)
     return msg.delete()
   }

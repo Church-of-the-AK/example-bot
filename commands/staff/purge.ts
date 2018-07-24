@@ -31,29 +31,31 @@ module.exports = class PurgeCommand extends commando.Command {
 
   async run(msg: commando.CommandMessage, { deleteCount }: { deleteCount: number }): Promise<Message> {
     if (!(msg.member.hasPermission("MANAGE_MESSAGES"))) {
-      await msg.reply("Thoust mayst notst doest thatst.")
+      await msg.reply("You can't delete messages.")
       return msg.delete()
     }
 
     if (!deleteCount || deleteCount < 2 || deleteCount > 100) {
-      await msg.reply("Gimme a number between 2 and 100 you human.")
+      await msg.reply("I need a number between 2 and 100. Try again.")
       return msg.delete()
     }
 
-    try {
-      msg.channel.bulkDelete(deleteCount)
-      const logChannel = msg.guild.channels.find((channel: GuildChannel) => channel.name === 'machobot-audit') as TextChannel
-      const channel = msg.channel as TextChannel
+    const logChannel = msg.guild.channels.find((channel: GuildChannel) => channel.name === 'machobot-audit') as TextChannel
+    const channel = msg.channel as TextChannel
+    const deleteResponse = await msg.channel.bulkDelete(deleteCount).catch(() => {
+      return
+    })
 
-      if (logChannel) {
-        logChannel.send(`${msg.author.username} has purged ${deleteCount} messages from ${channel.name}.`)
-      }
-
-      const time = moment().format('YYYY-MM-DD HH:mm:ss Z')
-      Logger.log(`\r\n[${time}] ${msg.author.username} has purged ${deleteCount} messages from ${channel.name}.`)
-    } catch (err) {
-      await msg.reply(`I couldn't delete le messages because of this stupid shiz: ${err}`)
+    if (!deleteResponse) {
+      await msg.reply('I encountered an error whilst deleting messages. Do I have the Manage Messages permission?')
       return msg.delete()
     }
+
+    if (logChannel) {
+      logChannel.send(`${msg.author.username} has purged ${deleteCount} messages from ${channel.name}.`)
+    }
+
+    const time = moment().format('YYYY-MM-DD HH:mm:ss Z')
+    Logger.log(`\r\n[${time}] ${msg.author.username} has purged ${deleteCount} messages from ${channel.name}.`)
   }
 }

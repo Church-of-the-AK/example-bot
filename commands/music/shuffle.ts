@@ -14,28 +14,30 @@ module.exports = class ShuffleCommand extends commando.Command {
       details: oneLine`
         This command is used to shuffle the current queue.
 			`,
-      examples: ['shuffle', 'shufflesongs', 'mix']
+      examples: ['shuffle', 'shufflesongs', 'mix'],
+      guildOnly: true
     })
   }
 
-  async run(msg: commando.CommandMessage): Promise<Message> {
-    if (msg.channel.type != 'text') {
-      msg.reply(`This command can only be used in a server!`)
-      return undefined
-    }
+  async run(msg: commando.CommandMessage): Promise<Message | Message[]> {
     const serverQueue = queue.get(msg.guild.id)
-    if (serverQueue) {
-      let songs2 = []
-      for (let i = 1; i < serverQueue.songs.length; i++) {
-        songs2.push(serverQueue.songs[i])
-      }
-      songs2 = shuffle(songs2)
-      songs2.unshift(serverQueue.songs[0])
-      serverQueue.songs = songs2
-      msg.channel.send('🔀 Shuffled the music for you!')
+
+    if (!serverQueue) {
+      msg.channel.send('There is no queue to shuffle.')
       return msg.delete()
     }
-    msg.channel.send('There is no queue to shuffle, you nerd.')
+
+    let shuffled = []
+
+    for (let i = 1; i < serverQueue.songs.length; i++) {
+      shuffled.push(serverQueue.songs[i])
+    }
+
+    shuffled = shuffle(shuffled)
+    shuffled.unshift(serverQueue.songs[0])
+    serverQueue.songs = shuffled
+
+    msg.channel.send('🔀 Shuffled the music for you!')
     return msg.delete()
   }
 }

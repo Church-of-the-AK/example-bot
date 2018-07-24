@@ -74,10 +74,13 @@ module.exports = class PlayCommand extends commando.Command {
       const responseMsg = await msg.channel.send(`🕙 Adding playlist **${playlist.title}** to the queue... ${videos.length >= 100 ? 'This may take a while.' : ''}`) as Message
       for (const video of videos) {
         if (video.description !== 'This video is private.' && video.description !== 'This video is unavailable.') {
-          try {
-            const video2 = await youtube.getVideoByID(video.id)
+          const video2 = await youtube.getVideoByID(video.id).catch(() => {
+            return
+          })
+
+          if (video2) {
             await handleVideo(video2, msg, voiceChannel, true)
-          } catch (err) { }
+          }
         }
       }
 
@@ -141,7 +144,8 @@ async function handleVideo(video, msg: commando.CommandMessage, voiceChannel: Vo
   const song: Song = {
     id: video.id,
     title: Util.escapeMarkdown(video.title),
-    url: `https://www.youtube.com/watch?v=${video.id}`
+    url: `https://www.youtube.com/watch?v=${video.id}`,
+    member: msg.member
   }
 
   if (!serverQueue) {

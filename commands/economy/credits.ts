@@ -34,7 +34,7 @@ module.exports = class CreditsCommand extends commando.Command {
 
     if (JSON.stringify(user) === '') {
       return msg.reply(
-        `${mention != 1 ? `I don't have that user in the database. Wait until they send a message.`
+        `${mention !== 1 ? `I don't have that user in the database. Wait until they send a message.`
           : `It seems as if I didn't have you in the database. Please try again.`
         }`
       )
