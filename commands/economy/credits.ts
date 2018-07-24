@@ -4,7 +4,7 @@ import { Message, User } from 'discord.js'
 import { MachoAPIUser } from '../../types/MachoAPIUser'
 import { getUser } from "../../util/API"
 
-module.exports = class CreditsCommand extends commando.Command {
+export default class CreditsCommand extends commando.Command {
   constructor(client) {
     super(client, {
       name: 'credits',

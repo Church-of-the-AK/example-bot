@@ -3,7 +3,7 @@ import { oneLine } from 'common-tags'
 import { queue } from '../../index'
 import { Message } from 'discord.js';
 
-module.exports = class SkipCommand extends commando.Command {
+export default class SkipCommand extends commando.Command {
   constructor(client) {
     super(client, {
       name: 'skip',

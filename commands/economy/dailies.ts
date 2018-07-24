@@ -7,7 +7,7 @@ import * as numeral from 'numeral'
 import axios from 'axios'
 import { getUser } from '../../util/API';
 
-module.exports = class DailiesCommand extends commando.Command {
+export default class DailiesCommand extends commando.Command {
   constructor(client) {
     super(client, {
       name: 'dailies',

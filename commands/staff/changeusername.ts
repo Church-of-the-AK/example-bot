@@ -5,7 +5,7 @@ import * as moment from 'moment'
 import { Message, TextChannel, GuildChannel } from 'discord.js';
 import { ownerId } from "../../config";
 
-module.exports = class ChangeUsernameCommand extends commando.Command {
+export default class ChangeUsernameCommand extends commando.Command {
   constructor(client) {
     super(client, {
       name: 'changeusername',

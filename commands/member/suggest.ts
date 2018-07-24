@@ -2,7 +2,7 @@ import * as commando from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import { Message, TextChannel, MessageEmbed, GuildChannel } from 'discord.js';
 
-module.exports = class SuggestCommand extends commando.Command {
+export default class SuggestCommand extends commando.Command {
   constructor(client) {
     super(client, {
       name: 'suggest',

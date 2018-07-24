@@ -4,7 +4,7 @@ import { queue } from '../../index'
 import { Message } from 'discord.js';
 import { ServerQueue } from '../../types/ServerQueue';
 
-module.exports = class ClearCommand extends commando.Command {
+export default class ClearCommand extends commando.Command {
   constructor(client) {
     super(client, {
       name: 'clear',

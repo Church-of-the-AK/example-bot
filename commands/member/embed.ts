@@ -2,7 +2,7 @@ import * as commando from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import { Message, MessageEmbed, ColorResolvable } from 'discord.js';
 
-module.exports = class AddNumbersCommand extends commando.Command {
+export default class AddNumbersCommand extends commando.Command {
   constructor(client) {
     super(client, {
       name: 'embed',

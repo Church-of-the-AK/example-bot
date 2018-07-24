@@ -4,7 +4,7 @@ import { queue } from '../../index'
 import { CommandMessage } from 'discord.js-commando'
 import { Message, MessageEmbed } from 'discord.js';
 
-module.exports = class QueueCommand extends commando.Command {
+export default class QueueCommand extends commando.Command {
   constructor(client) {
     super(client, {
       name: 'queue',

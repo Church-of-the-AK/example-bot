@@ -10,7 +10,7 @@ import { ServerQueue, Song } from '../../types'
 
 const youtube = new YouTube(youtubeKey)
 
-module.exports = class PlayCommand extends commando.Command {
+export default class PlayCommand extends commando.Command {
   constructor(client) {
     super(client, {
       name: 'play',

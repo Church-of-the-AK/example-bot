@@ -4,7 +4,7 @@ import * as Logger from '../../util/Logger'
 import * as moment from 'moment'
 import { Message, TextChannel, GuildChannel, User } from 'discord.js';
 
-module.exports = class BanCommand extends commando.Command {
+export default class BanCommand extends commando.Command {
   constructor(client) {
     super(client, {
       name: 'ban',
