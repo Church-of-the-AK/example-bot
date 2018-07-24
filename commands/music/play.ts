@@ -1,13 +1,12 @@
 import * as commando from 'discord.js-commando'
 import { oneLine, stripIndents } from 'common-tags'
 import { queue } from '../../index'
-import { Util, VoiceChannel, TextChannel, Guild, MessageEmbed } from 'discord.js'
+import { Util, VoiceChannel, TextChannel, Guild, MessageEmbed, Collection } from 'discord.js'
 import * as ytdl from 'ytdl-core'
 import * as YouTube from 'simple-youtube-api'
 import { youtubeKey } from '../../config'
 import { Message } from 'discord.js'
-import { ServerQueue } from '../../types/ServerQueue'
-import { Song } from '../../types/Song';
+import { ServerQueue, Song } from '../../types'
 
 const youtube = new YouTube(youtubeKey)
 
@@ -37,7 +36,7 @@ module.exports = class PlayCommand extends commando.Command {
     })
   }
 
-  async run(msg: commando.CommandMessage, { link }: { link: string | number }): Promise<Message> {
+  async run(msg: commando.CommandMessage, { link }: { link: string | number }): Promise<Message | Message[]> {
     const url = link && typeof link === 'string' ? link.replace(/<(.+)>/g, '$1') : ''
     const searchString = link
     const voiceChannel = msg.member.voiceChannel
@@ -85,43 +84,47 @@ module.exports = class PlayCommand extends commando.Command {
       responseMsg.edit(`✅ Playlist: **${playlist.title}** has been added to the queue!`)
       return msg.delete()
     } else {
-      try {
-        var video = await youtube.getVideo(url)
-      } catch (error) {
-        try {
-          const videos = await youtube.searchVideos(searchString, 10)
-          let index = 0
-          const description = stripIndents`${videos.map(video2 => `**${++index} -** ${video2.title}`).join('\n')}`
-          const embed = new MessageEmbed()
-            .setColor('BLUE')
-            .setAuthor(msg.author.username, msg.author.displayAvatarURL(), `http://192.243.102.112:8000/users/${msg.author.id}`)
-            .setTitle('Song Selection')
-            .setFooter('Please provide a value to select one of the search results ranging from 1-10.')
-            .setDescription(description)
-            .setThumbnail(this.client.user.displayAvatarURL())
+      let video = await youtube.getVideo(url).catch(() => {
+        return
+      })
 
-          msg.channel.send(embed)
-          try {
-            var response = await msg.channel.awaitMessages(msg2 => msg2.content > 0 && msg2.content < 11, {
-              max: 1,
-              time: 10000,
-              errors: ['time']
-            })
-          } catch (err) {
-            msg.channel.send('No or invalid value entered, cancelling video selection.')
-            try {
-              return msg.delete()
-            } catch (err) {
-              return
-            }
-          }
-          const videoIndex = parseInt(response.first().content)
-          var video = await youtube.getVideoByID(videos[videoIndex - 1].id)
-        } catch (err) {
-          console.error(err)
-          msg.channel.send('🆘 I could not obtain any search results.')
-          return msg.delete()
+      if (!video) {
+        const videos = await youtube.searchVideos(searchString, 10).catch(() => {
+          return
+        })
+
+        if (!videos) {
+          return msg.channel.send('🆘 I could not obtain any search results.')
         }
+
+        let index = 0
+        const description = stripIndents`${videos.map(video2 => `**${++index} -** ${video2.title}`).join('\n')}`
+        const embed = new MessageEmbed()
+          .setColor('BLUE')
+          .setAuthor(msg.author.username, msg.author.displayAvatarURL(), `http://192.243.102.112:8000/users/${msg.author.id}`)
+          .setTitle('Song Selection')
+          .setFooter('Please provide a value to select one of the search results ranging from 1-10.')
+          .setDescription(description)
+          .setThumbnail(this.client.user.displayAvatarURL())
+
+        msg.channel.send(embed)
+
+        const response: Collection<string, Message> | void = await msg.channel.awaitMessages(msg2 => msg2.content > 0 && msg2.content < 11, {
+          max: 1,
+          time: 10000,
+          errors: ['time']
+        }).catch(() => {
+          return
+        })
+
+        if (!response) {
+          if (msg.deletable) await msg.delete()
+          msg.channel.send('No or invalid value entered, cancelling video selection.')
+          return
+        }
+
+        const videoIndex = parseInt(response.first().content)
+        video = await youtube.getVideoByID(videos[videoIndex - 1].id)
       }
       handleVideo(video, msg, voiceChannel)
       return msg.delete()
@@ -136,6 +139,7 @@ async function handleVideo(video, msg: commando.CommandMessage, voiceChannel: Vo
     title: Util.escapeMarkdown(video.title),
     url: `https://www.youtube.com/watch?v=${video.id}`
   }
+
   if (!serverQueue) {
     const queueConstruct: ServerQueue = {
       textChannel: msg.channel as TextChannel,
@@ -145,6 +149,7 @@ async function handleVideo(video, msg: commando.CommandMessage, voiceChannel: Vo
       volume: 5,
       playing: true
     }
+
     queue.set(msg.guild.id, queueConstruct)
     queueConstruct.songs.push(song)
 

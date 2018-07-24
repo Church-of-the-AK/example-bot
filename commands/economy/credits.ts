@@ -3,7 +3,6 @@ import { oneLine } from 'common-tags'
 import { Message, User } from 'discord.js'
 import { MachoAPIUser } from '../../types/MachoAPIUser'
 import { getUser } from "../../util/API"
-import axios from 'axios'
 
 module.exports = class CreditsCommand extends commando.Command {
   constructor(client) {
