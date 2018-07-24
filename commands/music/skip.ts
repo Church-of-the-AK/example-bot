@@ -26,6 +26,7 @@ module.exports = class SkipCommand extends commando.Command {
 
     if ((msg.member.id !== song.member.id) && !msg.member.hasPermission('MANAGE_MESSAGES')) {
       msg.channel.send('You need to have the Manage Messages permission to delete other user\'s songs.')
+      return msg.delete()
     }
 
     if (!msg.member.voiceChannel) {
