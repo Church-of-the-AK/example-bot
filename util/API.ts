@@ -8,6 +8,7 @@ import { code } from "../config";
   * @param msg The message used to create the user.
   */
 export async function createUser(msg: CommandMessage) {
+  console.log('Creating user...')
   const user: MachoAPIUser = {
     id: msg.author.id,
     name: msg.author.username,
@@ -30,6 +31,7 @@ export async function createUser(msg: CommandMessage) {
   }
 
   await axios.post(`http://localhost:8000/users/${msg.author.id}&code=${code}`, user)
+  console.log('Created user.')
 }
 
 export async function getUser(id: string) {
