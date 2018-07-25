@@ -2,7 +2,7 @@ import * as  commando from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import { Message, Role } from 'discord.js';
 
-module.exports = class AcceptCommand extends commando.Command {
+export default class AcceptCommand extends commando.Command {
   constructor(client) {
     super(client, {
       name: 'accept',
@@ -19,7 +19,7 @@ module.exports = class AcceptCommand extends commando.Command {
   }
 
   async run(msg: commando.CommandMessage): Promise<Message | Message[]> {
-    const acceptRules = msg.guild.roles.find((role: Role) => role.name == 'Accept Rules')
+    const acceptRules = msg.guild.roles.find((role: Role) => role.name === 'Accept Rules')
     const commoner = msg.guild.roles.find((role: Role) => role.name === 'Commoner')
     const member = msg.guild.roles.find((role: Role) => role.name === 'Member')
 

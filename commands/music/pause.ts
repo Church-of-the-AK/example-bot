@@ -3,7 +3,7 @@ import { oneLine } from 'common-tags'
 import { queue } from '../../index'
 import { Message } from 'discord.js'
 
-module.exports = class PauseCommand extends commando.Command {
+export default class PauseCommand extends commando.Command {
   constructor(client) {
     super(client, {
       name: 'pause',
@@ -19,16 +19,23 @@ module.exports = class PauseCommand extends commando.Command {
     })
   }
 
-  async run(msg: commando.CommandMessage): Promise<Message> {
+  async run(msg: commando.CommandMessage): Promise<Message | Message[]> {
     const serverQueue = queue.get(msg.guild.id)
-    if (serverQueue && serverQueue.playing) {
-      serverQueue.playing = false
-      serverQueue.connection.dispatcher.pause()
-      msg.channel.send('⏸ Paused the music for you!')
-      return undefined
+
+    if (!serverQueue) {
+      msg.channel.send('There is nothing playing.')
+      return msg.delete()
     }
-    msg.channel.send('There is nothing playing.')
-    msg.delete()
-    return undefined
+
+    if (!serverQueue.playing) {
+      msg.channel.send('The music is already paused.')
+      return msg.delete()
+    }
+
+    serverQueue.playing = false
+    serverQueue.connection.dispatcher.pause()
+
+    msg.channel.send('⏸ Paused the music for you!')
+    return msg.delete()
   }
 }

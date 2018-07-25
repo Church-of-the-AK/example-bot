@@ -1,10 +1,10 @@
 import * as commando from 'discord.js-commando'
 import { oneLine } from 'common-tags'
-import * as Logger from '../../util/Logger'
+import { log } from '../../util'
 import * as moment from 'moment'
-import { Message, TextChannel, GuildChannel } from 'discord.js';
+import { Message, TextChannel, GuildChannel } from 'discord.js'
 
-module.exports = class UnbanCommand extends commando.Command {
+export default class UnbanCommand extends commando.Command {
   constructor(client) {
     super(client, {
       name: 'unban',
@@ -30,27 +30,29 @@ module.exports = class UnbanCommand extends commando.Command {
   }
 
   async run(msg: commando.CommandMessage, { id }: { id: string }): Promise<Message> {
-    if (!msg.member.hasPermission("BAN_MEMBERS")) {
-      await msg.reply("You can't do that, dude. No.") as Message
+    if (!msg.member.hasPermission('BAN_MEMBERS')) {
+      await msg.reply("You can't unban members.")
       return msg.delete()
     }
 
-    try {
-      msg.guild.members.unban(id)
-      const channel = msg.guild.channels.find((channel: GuildChannel) => channel.name === 'machobot-audit') as TextChannel
+    const channel = msg.guild.channels.find((channel: GuildChannel) => channel.name === 'machobot-audit') as TextChannel
+    const unbanResponse = await msg.guild.members.unban(id).catch(() => {
+      return
+    })
 
-      if (channel) {
-        channel.send(`\`${msg.author.username}\` has unbanned \`${id}\` from ${msg.guild.name}.`)
-      }
-
-      const time = moment().format('YYYY-MM-DD HH:mm:ss Z')
-      Logger.log(`\r\n[${time}] ${msg.author.username} has unbanned ${id} from ${msg.guild.name}.`)
-
-      await msg.reply("Member unbanned!") as Message
-      return msg.delete()
-    } catch (err) {
-      await msg.reply(`Yo ${msg.author} I couldn't unban because of this stupid thing: ${err}`) as Message
+    if (!unbanResponse) {
+      await msg.reply('I can\'t unban that user.')
       return msg.delete()
     }
+
+    if (channel) {
+      channel.send(`\`${msg.author.username}\` has unbanned \`${id}\` from ${msg.guild.name}.`)
+    }
+
+    const time = moment().format('YYYY-MM-DD HH:mm:ss Z')
+    log(`\r\n[${time}] ${msg.author.username} has unbanned ${id} from ${msg.guild.name}.`)
+
+    await msg.reply("Member unbanned.")
+    return msg.delete()
   }
 }

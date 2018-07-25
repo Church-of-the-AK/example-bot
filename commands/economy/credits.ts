@@ -2,9 +2,9 @@ import * as commando from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import { Message, User } from 'discord.js'
 import { MachoAPIUser } from '../../types/MachoAPIUser'
-import { getUser } from "../../util/API"
+import { getUser } from "../../util"
 
-module.exports = class CreditsCommand extends commando.Command {
+export default class CreditsCommand extends commando.Command {
   constructor(client) {
     super(client, {
       name: 'credits',
@@ -30,14 +30,15 @@ module.exports = class CreditsCommand extends commando.Command {
   }
 
   async run(msg: commando.CommandMessage, { mention }: { mention: User | number }): Promise<Message | Message[]> {
-    const user: MachoAPIUser = await getUser(mention instanceof User ? mention.id : msg.author.id)
+    const user = await getUser(mention instanceof User ? mention.id : msg.author.id)
 
-    if (JSON.stringify(user) === '') {
-      return msg.reply(
-        `${mention != 1 ? `I don't have that user in the database. Wait until they send a message.`
+    if (!user) {
+      msg.reply(
+        `${mention !== 1 ? `I don't have that user in the database. Wait until they send a message.`
           : `It seems as if I didn't have you in the database. Please try again.`
         }`
       )
+      return msg.delete()
     }
 
     msg.channel.send(`**${user.name}** has **${user.balance.balance}** credits.`)

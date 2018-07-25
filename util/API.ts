@@ -1,4 +1,4 @@
-import { Message } from "discord.js";
+import { CommandMessage } from "discord.js-commando";
 import { MachoAPIUser } from "../types/MachoAPIUser";
 import axios from 'axios'
 import { code } from "../config";
@@ -7,7 +7,8 @@ import { code } from "../config";
   * Creates a user using MachoAPI.
   * @param msg The message used to create the user.
   */
-export async function createUser(msg: Message) {
+export async function createUser(msg: CommandMessage) {
+  console.log(`Creating user ${msg.author.username} (${msg.author.id})...`)
   const user: MachoAPIUser = {
     id: msg.author.id,
     name: msg.author.username,
@@ -29,11 +30,12 @@ export async function createUser(msg: Message) {
     accesstoken: null
   }
 
-  await axios.post(`http://localhost:8000/users/${msg.author.id}&code=${code}`, user)
+  await axios.post(`http://localhost:8000/users&code=${code}`, user)
+  console.log('Created user.')
 }
 
 export async function getUser(id: string) {
-  const { data: user }: { data: MachoAPIUser } = await axios.get(`http://localhost:8000/users/${id}`)
+  const { data: user }: { data: MachoAPIUser | '' } = await axios.get(`http://localhost:8000/users/${id}`)
 
   return user
 }

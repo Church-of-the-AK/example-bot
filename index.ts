@@ -21,7 +21,8 @@ client
   .on('ready', () => {
     console.log(`Client ready; logged in as ${client.user.username}#${client.user.discriminator} (${client.user.id})`)
     client.user.setActivity('Macho, the bot for everything (soon).', {
-      url: config.twitch
+      url: config.twitch,
+      type: 'STREAMING'
     })
   })
   .on('guildMemberAdd', member => {
@@ -75,7 +76,7 @@ client
 			${guild ? `in guild ${guild.name} (${guild.id})` : 'globally'}.
 		`)
   })
-  .on('message', (msg) => {
+  .on('message', (msg: commando.CommandMessage) => {
     handleMessage(msg)
   })
   .setProvider(

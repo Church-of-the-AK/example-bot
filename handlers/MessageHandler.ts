@@ -1,9 +1,9 @@
 import axios from 'axios'
-import { CommandoGuild, CommandoClient } from "discord.js-commando";
+import { CommandMessage } from "discord.js-commando";
 import { code } from '../config'
-import { Message, TextChannel } from 'discord.js'
+import { TextChannel } from 'discord.js'
 import { MachoAPIUser } from '../types/MachoAPIUser'
-import * as API from '../util/API'
+import * as API from '../util'
 
 /**
  * Handles a message sent by a user. If that user is a bot, it does nothing.
@@ -16,7 +16,7 @@ import * as API from '../util/API'
  * 
  * @param msg The message to handle.
  */
-export async function handleMessage(msg: Message) {
+export async function handleMessage(msg: CommandMessage) {
   if (msg.author.bot) {
     return false
   }
@@ -25,7 +25,7 @@ export async function handleMessage(msg: Message) {
     return false
   }
 
-  if (msg.channel.name == 'accept-rules' && msg.content != `${(msg.guild as CommandoGuild).commandPrefix || (msg.client as CommandoClient).commandPrefix}accept`) {
+  if (msg.channel.name === 'accept-rules' && msg.command.name !== 'accept') {
     if (!(msg.member.hasPermission("MANAGE_MESSAGES"))) {
       return msg.delete()
     }
@@ -33,7 +33,7 @@ export async function handleMessage(msg: Message) {
 
   const { data: user } = await axios.get(`http://localhost:8000/users/${msg.author.id}`)
 
-  if (user === '[]' || user === '' || user === "Error") {
+  if (user === '' || user.length <= 10) {
     await API.createUser(msg)
   } else {
     await handleUserMessage(msg)
@@ -44,12 +44,13 @@ export async function handleMessage(msg: Message) {
   * Handles a user's message as explained in `function handleMessage`.
   * @param msg The message to handle.
   */
-async function handleUserMessage(msg: Message): Promise<MachoAPIUser> {
+async function handleUserMessage(msg: CommandMessage): Promise<MachoAPIUser> {
   let { data: user }: { data: MachoAPIUser } = await axios.get(`http://localhost:8000/users/${msg.author.id}`)
 
   user = handleUserExp(user, msg)
+  user.name = msg.author.username
   user.datelastmessage = `${new Date().getTime()}`
-  user.avatarurl = msg.author.avatarURL()
+  user.avatarurl = msg.author.displayAvatarURL({ size: 512 })
 
   await axios.put(`http://localhost:8000/users/${msg.author.id}&code=${code}`, user)
   return user
@@ -60,8 +61,9 @@ async function handleUserMessage(msg: Message): Promise<MachoAPIUser> {
  * @param user The MachoAPI user to handle the xp of.
  * @param msg The message to handle.
  */
-function handleUserExp(user: MachoAPIUser, msg: Message) {
+function handleUserExp(user: MachoAPIUser, msg: CommandMessage) {
   let diffMins
+
   if (user.level.timestamp) {
     const diffMs = (new Date().getTime() - parseInt(user.level.timestamp))
     diffMins = ((diffMs % 86400000) % 3600000) / 60000

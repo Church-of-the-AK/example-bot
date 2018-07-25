@@ -3,7 +3,7 @@ import { oneLine } from 'common-tags'
 import { queue } from '../../index'
 import { Message } from 'discord.js';
 
-module.exports = class ResumeCommand extends commando.Command {
+export default class ResumeCommand extends commando.Command {
   constructor(client) {
     super(client, {
       name: 'resume',
@@ -21,13 +21,16 @@ module.exports = class ResumeCommand extends commando.Command {
 
   async run(msg: commando.CommandMessage): Promise<Message> {
     const serverQueue = queue.get(msg.guild.id)
-    if (serverQueue && !serverQueue.playing) {
-      serverQueue.playing = true
-      serverQueue.connection.dispatcher.resume()
-      msg.channel.send('▶ Resumed the music for you!')
+
+    if (!serverQueue || serverQueue.playing) {
+      msg.channel.send('There is nothing paused.')
       return msg.delete()
     }
-    msg.channel.send('There is nothing paused.')
+
+    serverQueue.playing = true
+    serverQueue.connection.dispatcher.resume()
+
+    msg.channel.send('▶ Resumed the music for you!')
     return msg.delete()
   }
 }

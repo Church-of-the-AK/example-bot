@@ -2,7 +2,7 @@ import * as commando from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import { Message, TextChannel } from 'discord.js';
 
-module.exports = class InviteCommand extends commando.Command {
+export default class InviteCommand extends commando.Command {
   constructor(client) {
     super(client, {
       name: 'invite',

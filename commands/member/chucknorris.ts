@@ -4,7 +4,7 @@ import axios from 'axios'
 import { AllHtmlEntities } from 'html-entities'
 import { Message } from 'discord.js';
 
-module.exports = class ChuckNorrisCommand extends commando.Command {
+export default class ChuckNorrisCommand extends commando.Command {
   constructor(client) {
     super(client, {
       name: 'chucknorris',

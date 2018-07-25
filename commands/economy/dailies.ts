@@ -5,9 +5,9 @@ import { code } from '../../config'
 import { MachoAPIUser } from '../../types/MachoAPIUser'
 import * as numeral from 'numeral'
 import axios from 'axios'
-import { getUser } from '../../util/API';
+import { getUser } from '../../util';
 
-module.exports = class DailiesCommand extends commando.Command {
+export default class DailiesCommand extends commando.Command {
   constructor(client) {
     super(client, {
       name: 'dailies',
@@ -24,8 +24,12 @@ module.exports = class DailiesCommand extends commando.Command {
   }
 
   async run(msg: commando.CommandMessage): Promise<Message | Message[]> {
-    let user: MachoAPIUser = await getUser(msg.author.id)
+    let user = await getUser(msg.author.id)
     let diffHrs
+
+    if (!user) {
+      return msg.reply('I couldn\'t find you in my database, please try again.')
+    }
 
     if (user.balance.dateclaimeddailies) {
       diffHrs = Math.abs(new Date().getTime() - parseInt(user.balance.dateclaimeddailies)) / 36e5

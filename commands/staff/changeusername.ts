@@ -1,10 +1,11 @@
 import * as commando from 'discord.js-commando'
 import { oneLine } from 'common-tags'
-import * as Logger from '../../util/Logger'
+import { log } from '../../util'
 import * as moment from 'moment'
 import { Message, TextChannel, GuildChannel } from 'discord.js';
+import { ownerId } from "../../config";
 
-module.exports = class ChangeUsernameCommand extends commando.Command {
+export default class ChangeUsernameCommand extends commando.Command {
   constructor(client) {
     super(client, {
       name: 'changeusername',
@@ -28,11 +29,11 @@ module.exports = class ChangeUsernameCommand extends commando.Command {
     })
   }
 
-  async run(msg: commando.CommandMessage, { name }: { name: string }): Promise<Message> {
-    if (!(msg.author.id == "176785428450377728")) {
+  async run(msg: commando.CommandMessage, { name }: { name: string }): Promise<Message | Message[]> {
+    if (msg.author.id !== ownerId) {
       await msg.reply("Sorry, but you can't do that.")
 
-      if (msg.channel.type == 'text') {
+      if (msg.channel.type === 'text') {
         return msg.delete()
       }
 
@@ -48,14 +49,12 @@ module.exports = class ChangeUsernameCommand extends commando.Command {
     }
 
     let time = moment().format('YYYY-MM-DD HH:mm:ss Z')
-    Logger.log(`\r\n[${time}] ${msg.author.username} has changed ${this.client.user.username}'s name to ${name}.`)
+    log(`\r\n[${time}] ${msg.author.username} has changed ${this.client.user.username}'s name to ${name}.`)
 
     await msg.reply(`Succesfully changed my username to ${name}!`)
 
-    if (msg.channel.type == 'text') {
+    if (msg.channel.type === 'text') {
       return msg.delete()
     }
-
-    return
   }
 }
