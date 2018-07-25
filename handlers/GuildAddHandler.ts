@@ -10,6 +10,7 @@ export async function handleGuildAdd (guild: CommandoGuild) {
     }
 
     const user = await getUser(member.id)
+
     if (user) {
       return
     }
