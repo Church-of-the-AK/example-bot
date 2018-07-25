@@ -2,11 +2,11 @@ import * as commando from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import { log } from '../../util'
 import * as moment from 'moment'
-import { Message, TextChannel, GuildChannel } from 'discord.js';
-import { ownerId } from "../../config";
+import { Message, TextChannel, GuildChannel } from 'discord.js'
+import { ownerId } from '../../config'
 
 export default class ChangeUsernameCommand extends commando.Command {
-  constructor(client) {
+  constructor (client) {
     super(client, {
       name: 'changeusername',
       aliases: ['changename', 'changebotname'],
@@ -29,7 +29,7 @@ export default class ChangeUsernameCommand extends commando.Command {
     })
   }
 
-  async run(msg: commando.CommandMessage, { name }: { name: string }): Promise<Message | Message[]> {
+  async run (msg: commando.CommandMessage, { name }: { name: string }): Promise<Message | Message[]> {
     if (msg.author.id !== ownerId) {
       await msg.reply("Sorry, but you can't do that.")
 

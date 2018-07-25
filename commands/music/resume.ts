@@ -1,10 +1,10 @@
 import * as commando from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import { queue } from '../../index'
-import { Message } from 'discord.js';
+import { Message } from 'discord.js'
 
 export default class ResumeCommand extends commando.Command {
-  constructor(client) {
+  constructor (client) {
     super(client, {
       name: 'resume',
       aliases: ['start', 'resume'],
@@ -19,7 +19,7 @@ export default class ResumeCommand extends commando.Command {
     })
   }
 
-  async run(msg: commando.CommandMessage): Promise<Message> {
+  async run (msg: commando.CommandMessage): Promise<Message> {
     const serverQueue = queue.get(msg.guild.id)
 
     if (!serverQueue || serverQueue.playing) {

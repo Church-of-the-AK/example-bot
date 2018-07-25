@@ -1,9 +1,9 @@
-import * as  commando from 'discord.js-commando'
+import * as commando from 'discord.js-commando'
 import { oneLine } from 'common-tags'
-import { Message, Role } from 'discord.js';
+import { Message, Role } from 'discord.js'
 
 export default class AcceptCommand extends commando.Command {
-  constructor(client) {
+  constructor (client) {
     super(client, {
       name: 'accept',
       aliases: ['join', 'acceptrules'],
@@ -14,11 +14,11 @@ export default class AcceptCommand extends commando.Command {
 				This command is used to join the server. That's it.
 			`,
       examples: ['accept'],
-      guildOnly: true,
+      guildOnly: true
     })
   }
 
-  async run(msg: commando.CommandMessage): Promise<Message | Message[]> {
+  async run (msg: commando.CommandMessage): Promise<Message | Message[]> {
     const acceptRules = msg.guild.roles.find((role: Role) => role.name === 'Accept Rules')
     const commoner = msg.guild.roles.find((role: Role) => role.name === 'Commoner')
     const member = msg.guild.roles.find((role: Role) => role.name === 'Member')

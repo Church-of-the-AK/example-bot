@@ -2,10 +2,10 @@ import * as commando from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import { log } from '../../util'
 import * as moment from 'moment'
-import { Message, TextChannel, GuildChannel, User } from 'discord.js';
+import { Message, TextChannel, GuildChannel, User } from 'discord.js'
 
 export default class BanCommand extends commando.Command {
-  constructor(client) {
+  constructor (client) {
     super(client, {
       name: 'ban',
       aliases: ['banuser', 'banhammer'],
@@ -29,8 +29,8 @@ export default class BanCommand extends commando.Command {
     })
   }
 
-  async run(msg: commando.CommandMessage, { user }: { user: User }): Promise<Message | Message[]> {
-    if (!msg.member.hasPermission("BAN_MEMBERS")) {
+  async run (msg: commando.CommandMessage, { user }: { user: User }): Promise<Message | Message[]> {
+    if (!msg.member.hasPermission('BAN_MEMBERS')) {
       await msg.reply("You can't ban users.")
       return msg.delete()
     }
@@ -59,7 +59,7 @@ export default class BanCommand extends commando.Command {
     let time = moment().format('YYYY-MM-DD HH:mm:ss Z')
     log(`\r\n[${time}] ${msg.author.username} has banned ${member} from ${msg.guild.name}.`)
 
-    await msg.reply(user.tag + " has been banned!")
+    await msg.reply(user.tag + ' has been banned!')
     return msg.delete()
   }
 }

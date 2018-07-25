@@ -1,17 +1,16 @@
 import * as commando from 'discord.js-commando'
 import { oneLine, stripIndents } from 'common-tags'
 import { queue } from '../../index'
-import { Util, VoiceChannel, TextChannel, Guild, MessageEmbed, Collection } from 'discord.js'
+import { Util, VoiceChannel, TextChannel, Guild, MessageEmbed, Collection, Message } from 'discord.js'
 import * as ytdl from 'ytdl-core'
 import * as YouTube from 'simple-youtube-api'
 import { youtubeKey } from '../../config'
-import { Message } from 'discord.js'
 import { ServerQueue, Song } from '../../types'
 
 const youtube = new YouTube(youtubeKey)
 
 export default class PlayCommand extends commando.Command {
-  constructor(client) {
+  constructor (client) {
     super(client, {
       name: 'play',
       aliases: ['playsong'],
@@ -36,7 +35,7 @@ export default class PlayCommand extends commando.Command {
     })
   }
 
-  async run(msg: commando.CommandMessage, { link }: { link: string | number }): Promise<Message | Message[]> {
+  async run (msg: commando.CommandMessage, { link }: { link: string | number }): Promise<Message | Message[]> {
     const url = link && typeof link === 'string' ? link.replace(/<(.+)>/g, '$1') : ''
     const searchString = link
     const voiceChannel = msg.member.voiceChannel
@@ -139,7 +138,7 @@ export default class PlayCommand extends commando.Command {
   }
 }
 
-async function handleVideo(video, msg: commando.CommandMessage, voiceChannel: VoiceChannel, playlist = false) {
+async function handleVideo (video, msg: commando.CommandMessage, voiceChannel: VoiceChannel, playlist = false) {
   const serverQueue = queue.get(msg.guild.id)
   const song: Song = {
     id: video.id,
@@ -175,7 +174,7 @@ async function handleVideo(video, msg: commando.CommandMessage, voiceChannel: Vo
   return undefined
 }
 
-function play(guild: Guild, song: Song) {
+function play (guild: Guild, song: Song) {
   const serverQueue = queue.get(guild.id)
 
   if (!song) {

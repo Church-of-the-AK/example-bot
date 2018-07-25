@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { CommandMessage } from "discord.js-commando";
+import { CommandMessage } from 'discord.js-commando'
 import { code } from '../config'
 import { TextChannel } from 'discord.js'
 import { MachoAPIUser } from '../types/MachoAPIUser'
@@ -7,16 +7,16 @@ import * as API from '../util'
 
 /**
  * Handles a message sent by a user. If that user is a bot, it does nothing.
- * 
+ *
  * If that message isn't in a `TextChannel`, it does nothing.
- * 
+ *
  * If that message is in `#accept-rules`, it deletes it.
- * 
+ *
  * Otherwise, it either creates or edits a user in the database to add or remove xp/level up/edit avatar.
- * 
+ *
  * @param msg The message to handle.
  */
-export async function handleMessage(msg: CommandMessage) {
+export async function handleMessage (msg: CommandMessage) {
   if (msg.author.bot) {
     return false
   }
@@ -26,7 +26,7 @@ export async function handleMessage(msg: CommandMessage) {
   }
 
   if (msg.channel.name === 'accept-rules' && msg.command.name !== 'accept') {
-    if (!(msg.member.hasPermission("MANAGE_MESSAGES"))) {
+    if (!(msg.member.hasPermission('MANAGE_MESSAGES'))) {
       return msg.delete()
     }
   }
@@ -34,7 +34,7 @@ export async function handleMessage(msg: CommandMessage) {
   const { data: user } = await axios.get(`http://localhost:8000/users/${msg.author.id}`)
 
   if (user === '' || user.length <= 10) {
-    await API.createUser(msg)
+    await API.createUser(msg.author)
   } else {
     await handleUserMessage(msg)
   }
@@ -44,7 +44,7 @@ export async function handleMessage(msg: CommandMessage) {
   * Handles a user's message as explained in `function handleMessage`.
   * @param msg The message to handle.
   */
-async function handleUserMessage(msg: CommandMessage): Promise<MachoAPIUser> {
+async function handleUserMessage (msg: CommandMessage): Promise<MachoAPIUser> {
   let { data: user }: { data: MachoAPIUser } = await axios.get(`http://localhost:8000/users/${msg.author.id}`)
 
   user = handleUserExp(user, msg)
@@ -61,7 +61,7 @@ async function handleUserMessage(msg: CommandMessage): Promise<MachoAPIUser> {
  * @param user The MachoAPI user to handle the xp of.
  * @param msg The message to handle.
  */
-function handleUserExp(user: MachoAPIUser, msg: CommandMessage) {
+function handleUserExp (user: MachoAPIUser, msg: CommandMessage) {
   let diffMins
 
   if (user.level.timestamp) {
@@ -89,10 +89,10 @@ function handleUserExp(user: MachoAPIUser, msg: CommandMessage) {
   return user
 }
 
-function expToLevelUp(level: number): number {
+function expToLevelUp (level: number): number {
   return 5 * level * level + 50 * level + 100
 }
 
-function randomIntFromInterval(min: number, max: number): number {
+function randomIntFromInterval (min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1) + min)
 }

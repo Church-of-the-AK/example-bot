@@ -1,9 +1,9 @@
 import * as commando from 'discord.js-commando'
 import { oneLine } from 'common-tags'
-import { Message, TextChannel, MessageEmbed, GuildChannel } from 'discord.js';
+import { Message, TextChannel, MessageEmbed, GuildChannel } from 'discord.js'
 
 export default class SuggestCommand extends commando.Command {
-  constructor(client) {
+  constructor (client) {
     super(client, {
       name: 'suggest',
       aliases: [],
@@ -26,11 +26,11 @@ export default class SuggestCommand extends commando.Command {
     })
   }
 
-  async run(msg: commando.CommandMessage, { suggestion }): Promise<Message | Message[]> {
+  async run (msg: commando.CommandMessage, { suggestion }): Promise<Message | Message[]> {
     const channel = msg.guild.channels.find((channel: GuildChannel) => channel.name === 'suggestions') as TextChannel
 
     if (!channel) {
-      await msg.reply("This server has no #suggestions channel.")
+      await msg.reply('This server has no #suggestions channel.')
       return msg.delete()
     }
 
@@ -55,7 +55,7 @@ export default class SuggestCommand extends commando.Command {
     await suggestionMsg.react('👍')
     await suggestionMsg.react('👎')
 
-    await msg.reply("Suggestion added!")
+    await msg.reply('Suggestion added!')
 
     return msg.delete()
   }

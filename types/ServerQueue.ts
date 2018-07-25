@@ -1,5 +1,5 @@
 import * as discord from 'discord.js'
-import { Song } from './Song';
+import { Song } from './Song'
 
 export interface ServerQueue {
   /**

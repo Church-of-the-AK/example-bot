@@ -4,7 +4,7 @@ import { queue } from '../../index'
 import { Message } from 'discord.js'
 
 export default class ShuffleCommand extends commando.Command {
-  constructor(client) {
+  constructor (client) {
     super(client, {
       name: 'shuffle',
       aliases: ['shufflesongs', 'mix'],
@@ -19,7 +19,7 @@ export default class ShuffleCommand extends commando.Command {
     })
   }
 
-  async run(msg: commando.CommandMessage): Promise<Message | Message[]> {
+  async run (msg: commando.CommandMessage): Promise<Message | Message[]> {
     const serverQueue = queue.get(msg.guild.id)
 
     if (!serverQueue) {
@@ -42,8 +42,11 @@ export default class ShuffleCommand extends commando.Command {
   }
 }
 
-function shuffle(a: any[]) {
-  var j, x, i
+function shuffle (a: any[]) {
+  let j
+  let x
+  let i
+
   for (i = a.length - 1; i > 0; i--) {
     j = Math.floor(Math.random() * (i + 1))
     x = a[i]

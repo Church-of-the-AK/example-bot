@@ -5,7 +5,7 @@ import * as moment from 'moment'
 import { Message, TextChannel, GuildChannel } from 'discord.js'
 
 export default class UnbanCommand extends commando.Command {
-  constructor(client) {
+  constructor (client) {
     super(client, {
       name: 'unban',
       aliases: ['revokeban', 'pardon'],
@@ -29,7 +29,7 @@ export default class UnbanCommand extends commando.Command {
     })
   }
 
-  async run(msg: commando.CommandMessage, { id }: { id: string }): Promise<Message> {
+  async run (msg: commando.CommandMessage, { id }: { id: string }): Promise<Message> {
     if (!msg.member.hasPermission('BAN_MEMBERS')) {
       await msg.reply("You can't unban members.")
       return msg.delete()
@@ -52,7 +52,7 @@ export default class UnbanCommand extends commando.Command {
     const time = moment().format('YYYY-MM-DD HH:mm:ss Z')
     log(`\r\n[${time}] ${msg.author.username} has unbanned ${id} from ${msg.guild.name}.`)
 
-    await msg.reply("Member unbanned.")
+    await msg.reply('Member unbanned.')
     return msg.delete()
   }
 }

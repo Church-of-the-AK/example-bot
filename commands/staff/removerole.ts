@@ -2,10 +2,10 @@ import * as commando from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import { log } from '../../util'
 import * as moment from 'moment'
-import { Message, TextChannel, GuildChannel, Role, GuildMember } from 'discord.js';
+import { Message, TextChannel, GuildChannel, Role, GuildMember } from 'discord.js'
 
 export default class RemoveRoleCommand extends commando.Command {
-  constructor(client) {
+  constructor (client) {
     super(client, {
       name: 'removerole',
       aliases: ['delrole', 'demote'],
@@ -13,7 +13,7 @@ export default class RemoveRoleCommand extends commando.Command {
       memberName: 'removerole',
       description: 'Removes a mentioned role from a mentioned user.',
       details: oneLine`
-        This command takes in a mentioned user and a mentioned role, 
+        This command takes in a mentioned user and a mentioned role,
         and removes that role from that user.
 			`,
       examples: ['removerole @JasonHaxStuff @Owner', 'demote @JasonHaxStuff @Owner'],
@@ -37,7 +37,7 @@ export default class RemoveRoleCommand extends commando.Command {
     })
   }
 
-  async run(msg: commando.CommandMessage, { member, role }: { member: GuildMember, role: Role }): Promise<Message | Message[]> {
+  async run (msg: commando.CommandMessage, { member, role }: { member: GuildMember, role: Role }): Promise<Message | Message[]> {
     if (!msg.member.hasPermission('MANAGE_ROLES')) {
       await msg.reply('You can\'t remove roles.')
       return msg.delete()
