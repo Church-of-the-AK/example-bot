@@ -4,7 +4,7 @@ import { queue } from '../../index'
 import { Message } from 'discord.js'
 
 export default class PauseCommand extends commando.Command {
-  constructor(client) {
+  constructor (client) {
     super(client, {
       name: 'pause',
       aliases: [],
@@ -15,11 +15,11 @@ export default class PauseCommand extends commando.Command {
         This command is used to pause the current queue.
 			`,
       examples: ['pause'],
-      guildOnly: true,
+      guildOnly: true
     })
   }
 
-  async run(msg: commando.CommandMessage): Promise<Message | Message[]> {
+  async run (msg: commando.CommandMessage): Promise<Message | Message[]> {
     const serverQueue = queue.get(msg.guild.id)
 
     if (!serverQueue) {

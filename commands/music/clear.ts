@@ -1,11 +1,11 @@
 import * as commando from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import { queue } from '../../index'
-import { Message } from 'discord.js';
-import { ServerQueue } from '../../types/ServerQueue';
+import { Message } from 'discord.js'
+import { ServerQueue } from '../../types/ServerQueue'
 
 export default class ClearCommand extends commando.Command {
-  constructor(client) {
+  constructor (client) {
     super(client, {
       name: 'clear',
       aliases: ['clearqueue'],
@@ -17,11 +17,11 @@ export default class ClearCommand extends commando.Command {
         the current queue.
 			`,
       examples: ['clear'],
-      guildOnly: true,
+      guildOnly: true
     })
   }
 
-  async run(msg: commando.CommandMessage): Promise<Message> {
+  async run (msg: commando.CommandMessage): Promise<Message> {
     const serverQueue: ServerQueue = queue.get(msg.guild.id)
 
     if (!msg.member.hasPermission('MANAGE_MESSAGES')) {
@@ -42,7 +42,7 @@ export default class ClearCommand extends commando.Command {
     serverQueue.songs = []
     serverQueue.connection.dispatcher.end('Clear command has been used.')
 
-    msg.channel.send("Cleared the queue.")
+    msg.channel.send('Cleared the queue.')
     return msg.delete()
   }
 }

@@ -2,10 +2,10 @@ import * as commando from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import { log } from '../../util'
 import * as moment from 'moment'
-import { Message, TextChannel, GuildChannel } from 'discord.js';
+import { Message, TextChannel, GuildChannel } from 'discord.js'
 
 export default class PurgeCommand extends commando.Command {
-  constructor(client) {
+  constructor (client) {
     super(client, {
       name: 'purge',
       aliases: ['delete', 'purgemsg'],
@@ -29,14 +29,14 @@ export default class PurgeCommand extends commando.Command {
     })
   }
 
-  async run(msg: commando.CommandMessage, { deleteCount }: { deleteCount: number }): Promise<Message> {
-    if (!(msg.member.hasPermission("MANAGE_MESSAGES"))) {
+  async run (msg: commando.CommandMessage, { deleteCount }: { deleteCount: number }): Promise<Message> {
+    if (!(msg.member.hasPermission('MANAGE_MESSAGES'))) {
       await msg.reply("You can't delete messages.")
       return msg.delete()
     }
 
     if (!deleteCount || deleteCount < 2 || deleteCount > 100) {
-      await msg.reply("I need a number between 2 and 100. Try again.")
+      await msg.reply('I need a number between 2 and 100. Try again.')
       return msg.delete()
     }
 

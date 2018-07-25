@@ -2,10 +2,10 @@ import * as commando from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import { log } from '../../util'
 import * as moment from 'moment'
-import { Message, TextChannel, GuildChannel, User } from 'discord.js';
+import { Message, TextChannel, GuildChannel, User } from 'discord.js'
 
 export default class KickCommand extends commando.Command {
-  constructor(client) {
+  constructor (client) {
     super(client, {
       name: 'kick',
       aliases: ['kickuser'],
@@ -13,7 +13,7 @@ export default class KickCommand extends commando.Command {
       memberName: 'kick',
       description: 'Kicks a mentioned user.',
       details: oneLine`
-        This command is used to kick a user that is mentioned. 
+        This command is used to kick a user that is mentioned.
         Very useful indeed.
 			`,
       examples: ['kick @JasonHaxStuff', 'kickuser @KillMeNow'],
@@ -29,8 +29,8 @@ export default class KickCommand extends commando.Command {
     })
   }
 
-  async run(msg: commando.CommandMessage, { user }: { user: User }): Promise<Message | Message[]> {
-    if (!msg.member.hasPermission("KICK_MEMBERS")) {
+  async run (msg: commando.CommandMessage, { user }: { user: User }): Promise<Message | Message[]> {
+    if (!msg.member.hasPermission('KICK_MEMBERS')) {
       await msg.reply("You can't kick members.")
       return msg.delete()
     }
@@ -59,7 +59,7 @@ export default class KickCommand extends commando.Command {
     const time = moment().format('YYYY-MM-DD HH:mm:ss Z')
     log(`\r\n[${time}] ${msg.author.username} has kicked ${member} from ${msg.guild.name}.`)
 
-    await msg.reply(user.tag + " has been kicked!")
+    await msg.reply(user.tag + ' has been kicked!')
     return msg.delete()
   }
 }

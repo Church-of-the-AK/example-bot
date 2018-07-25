@@ -1,10 +1,10 @@
 import * as commando from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import { queue } from '../../index'
-import { Message } from 'discord.js';
+import { Message } from 'discord.js'
 
 export default class SkipCommand extends commando.Command {
-  constructor(client) {
+  constructor (client) {
     super(client, {
       name: 'skip',
       aliases: ['skipsong'],
@@ -16,11 +16,11 @@ export default class SkipCommand extends commando.Command {
         of songs.
 			`,
       examples: ['skip'],
-      guildOnly: true,
+      guildOnly: true
     })
   }
 
-  async run(msg: commando.CommandMessage): Promise<Message> {
+  async run (msg: commando.CommandMessage): Promise<Message> {
     const serverQueue = queue.get(msg.guild.id)
     const song = serverQueue.songs[0]
 

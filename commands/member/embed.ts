@@ -1,9 +1,9 @@
 import * as commando from 'discord.js-commando'
 import { oneLine } from 'common-tags'
-import { Message, MessageEmbed, ColorResolvable } from 'discord.js';
+import { Message, MessageEmbed, ColorResolvable } from 'discord.js'
 
 export default class AddNumbersCommand extends commando.Command {
-  constructor(client) {
+  constructor (client) {
     super(client, {
       name: 'embed',
       aliases: [],
@@ -26,13 +26,13 @@ export default class AddNumbersCommand extends commando.Command {
     })
   }
 
-  async run(msg: commando.CommandMessage, { content }: { content: string }): Promise<Message | Message[]> {
-    const titleParam: number = content.toLowerCase().indexOf("--title")
-    const descParam: number = content.toLowerCase().indexOf("--desc")
-    const colorParam: number = content.toLowerCase().indexOf("--color")
+  async run (msg: commando.CommandMessage, { content }: { content: string }): Promise<Message | Message[]> {
+    const titleParam: number = content.toLowerCase().indexOf('--title')
+    const descParam: number = content.toLowerCase().indexOf('--desc')
+    const colorParam: number = content.toLowerCase().indexOf('--color')
 
     if (!(titleParam > -1 && descParam > -1)) {
-      await msg.reply("Use `m!help embed` for usage instructions.")
+      await msg.reply('Use `m!help embed` for usage instructions.')
       return msg.delete()
     }
 

@@ -2,10 +2,10 @@ import * as commando from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import { Message, User } from 'discord.js'
 import { MachoAPIUser } from '../../types/MachoAPIUser'
-import { getUser } from "../../util"
+import { getUser } from '../../util'
 
 export default class CreditsCommand extends commando.Command {
-  constructor(client) {
+  constructor (client) {
     super(client, {
       name: 'credits',
       aliases: ['balance', 'money'],
@@ -29,7 +29,7 @@ export default class CreditsCommand extends commando.Command {
     })
   }
 
-  async run(msg: commando.CommandMessage, { mention }: { mention: User | number }): Promise<Message | Message[]> {
+  async run (msg: commando.CommandMessage, { mention }: { mention: User | number }): Promise<Message | Message[]> {
     const user = await getUser(mention instanceof User ? mention.id : msg.author.id)
 
     if (!user) {

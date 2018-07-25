@@ -3,8 +3,8 @@ import * as path from 'path'
 import { oneLine } from 'common-tags'
 import * as sqlite from 'sqlite'
 import * as config from './config'
-import { ServerQueue } from './types/ServerQueue';
-import { handleMessage } from './handlers/MessageHandler'
+import { ServerQueue } from './types/ServerQueue'
+import { handleMessage, handleGuildAdd } from './handlers'
 
 export const queue: Map<string, ServerQueue> = new Map()
 
@@ -78,6 +78,9 @@ client
   })
   .on('message', (msg: commando.CommandMessage) => {
     handleMessage(msg)
+  })
+  .on('guildCreate', guild => {
+    handleGuildAdd(guild)
   })
   .setProvider(
     sqlite.open(path.join(__dirname, 'database.sqlite3')).then(db => new commando.SQLiteProvider(db))

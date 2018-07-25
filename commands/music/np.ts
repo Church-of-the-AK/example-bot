@@ -1,10 +1,10 @@
 import * as commando from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import { queue } from '../../index'
-import { Message } from 'discord.js';
+import { Message } from 'discord.js'
 
 export default class NowPlayingCommand extends commando.Command {
-  constructor(client) {
+  constructor (client) {
     super(client, {
       name: 'np',
       aliases: ['nowplaying', 'current', 'song'],
@@ -16,11 +16,11 @@ export default class NowPlayingCommand extends commando.Command {
         in a certain server.
 			`,
       examples: ['np', 'song'],
-      guildOnly: true,
+      guildOnly: true
     })
   }
 
-  async run(msg: commando.CommandMessage): Promise<Message | Message[]> {
+  async run (msg: commando.CommandMessage): Promise<Message | Message[]> {
     const serverQueue = queue.get(msg.guild.id)
 
     if (!serverQueue) {

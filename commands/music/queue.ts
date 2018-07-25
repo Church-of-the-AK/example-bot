@@ -1,11 +1,10 @@
 import * as commando from 'discord.js-commando'
 import { oneLine, stripIndents } from 'common-tags'
 import { queue } from '../../index'
-import { CommandMessage } from 'discord.js-commando'
-import { Message, MessageEmbed } from 'discord.js';
+import { Message, MessageEmbed } from 'discord.js'
 
 export default class QueueCommand extends commando.Command {
-  constructor(client) {
+  constructor (client) {
     super(client, {
       name: 'queue',
       aliases: ['songs'],
@@ -29,7 +28,7 @@ export default class QueueCommand extends commando.Command {
     })
   }
 
-  async run(msg: CommandMessage, { pageNum }: { pageNum: number }): Promise<Message> {
+  async run (msg: commando.CommandMessage, { pageNum }: { pageNum: number }): Promise<Message> {
     const serverQueue = queue.get(msg.guild.id)
 
     if (!serverQueue) {
@@ -43,9 +42,9 @@ export default class QueueCommand extends commando.Command {
 
     for (let i = 0; i < songs.length; i++) {
       if (pages.has(page)) {
-        pages.set(page, pages.get(page) + songs[i] + "\n")
+        pages.set(page, pages.get(page) + songs[i] + '\n')
       } else {
-        pages.set(page, songs[i] + "\n")
+        pages.set(page, songs[i] + '\n')
       }
       if ((i + 1) % 10 === 0) {
         page++

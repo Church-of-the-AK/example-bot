@@ -2,10 +2,10 @@ import * as commando from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import { log } from '../../util'
 import * as moment from 'moment'
-import { Message, TextChannel, Role, User, GuildChannel } from 'discord.js';
+import { Message, TextChannel, Role, User, GuildChannel } from 'discord.js'
 
 export default class AddRoleCommand extends commando.Command {
-  constructor(client) {
+  constructor (client) {
     super(client, {
       name: 'addrole',
       aliases: ['addrank', 'promote'],
@@ -37,7 +37,7 @@ export default class AddRoleCommand extends commando.Command {
     })
   }
 
-  async run(msg: commando.CommandMessage, { user, role }: { user: User, role: Role }): Promise<Message | Message[]> {
+  async run (msg: commando.CommandMessage, { user, role }: { user: User, role: Role }): Promise<Message | Message[]> {
     if (!msg.member.hasPermission('MANAGE_ROLES')) {
       await msg.reply('You can\'t add roles.')
       return msg.delete()
