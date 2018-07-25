@@ -34,8 +34,10 @@ export async function handleMessage(msg: CommandMessage) {
   const { data: user } = await axios.get(`http://localhost:8000/users/${msg.author.id}`)
 
   if (user === '[]' || user === '' || user === "Error" || user.length <= 10) {
+    console.log('no user')
     await API.createUser(msg)
   } else {
+    console.log('handle message')
     await handleUserMessage(msg)
   }
 }
