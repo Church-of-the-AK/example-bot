@@ -48,8 +48,9 @@ async function handleUserMessage(msg: CommandMessage): Promise<MachoAPIUser> {
   let { data: user }: { data: MachoAPIUser } = await axios.get(`http://localhost:8000/users/${msg.author.id}`)
 
   user = handleUserExp(user, msg)
+  user.name = msg.author.username
   user.datelastmessage = `${new Date().getTime()}`
-  user.avatarurl = msg.author.avatarURL()
+  user.avatarurl = msg.author.displayAvatarURL({ size: 512 })
 
   await axios.put(`http://localhost:8000/users/${msg.author.id}&code=${code}`, user)
   return user
@@ -62,6 +63,7 @@ async function handleUserMessage(msg: CommandMessage): Promise<MachoAPIUser> {
  */
 function handleUserExp(user: MachoAPIUser, msg: CommandMessage) {
   let diffMins
+
   if (user.level.timestamp) {
     const diffMs = (new Date().getTime() - parseInt(user.level.timestamp))
     diffMins = ((diffMs % 86400000) % 3600000) / 60000
