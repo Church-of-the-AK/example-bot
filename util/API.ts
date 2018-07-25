@@ -30,7 +30,7 @@ export async function createUser(msg: CommandMessage) {
     accesstoken: null
   }
 
-  await axios.post(`http://localhost:8000/users/${msg.author.id}&code=${code}`, user)
+  await axios.post(`http://localhost:8000/users&code=${code}`, user)
   console.log('Created user.')
 }
 
