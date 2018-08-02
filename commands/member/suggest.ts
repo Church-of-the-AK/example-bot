@@ -49,7 +49,7 @@ export default class SuggestCommand extends commando.Command {
 
     if (!suggestionMsg) {
       await msg.reply(`I do not have permission to send messages in the ${channel} channel.`)
-      msg.delete()
+      return msg.delete()
     }
 
     await suggestionMsg.react('👍')
