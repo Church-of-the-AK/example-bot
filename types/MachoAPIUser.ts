@@ -64,5 +64,9 @@ export interface MachoAPIUser {
   /**
    * The user's last vakid Discord access token, only accessible by the API.
    */
-  accesstoken: string
+  accesstoken: string,
+  /**
+   * Whether or not the user is an API-wide admin.
+   */
+  admin: boolean
 }
