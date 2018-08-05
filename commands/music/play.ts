@@ -87,9 +87,7 @@ export default class PlayCommand extends commando.Command {
       return msg.delete()
     }
 
-    let video = await youtube.getVideo(url).catch(() => {
-      return
-    })
+    let video = await youtube.getVideo(url)
 
     if (video) {
       handleVideo(video, msg, voiceChannel)
