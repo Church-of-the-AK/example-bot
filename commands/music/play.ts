@@ -68,14 +68,13 @@ export default class PlayCommand extends commando.Command {
     }
 
     let videoId
-    if (url.length > 0) {
+
+    if (url.match(/^https?:\/\/(www.youtube.com|youtube.com)\/playlist(.*)$/)) {
       videoId = url.split('v=')[1]
       if (videoId.indexOf('&') !== -1) {
         videoId = videoId.substring(0, videoId.indexOf('&'))
       }
-    }
 
-    if (url.match(/^https?:\/\/(www.youtube.com|youtube.com)\/playlist(.*)$/)) {
       const playlist = await youtube.getPlaylist(videoId)
       const videos: any[] = await playlist.getVideos()
       const responseMsg = await msg.channel.send(`🕙 Adding playlist **${playlist.title}** to the queue... ${videos.length >= 100 ? 'This may take a while.' : ''}`) as Message
