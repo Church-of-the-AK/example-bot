@@ -99,7 +99,7 @@ export default class PlayCommand extends commando.Command {
 
     let videoId = url.split('v=')[1]
 
-    if (videoId.length > 0) {
+    if (videoId) {
       const ampLoc = videoId.indexOf('&')
 
       if (ampLoc !== -1) {
