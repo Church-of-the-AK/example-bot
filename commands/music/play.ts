@@ -68,9 +68,9 @@ export default class PlayCommand extends commando.Command {
     }
 
     if (url.match(/^https?:\/\/(www.youtube.com|youtube.com)\/playlist(.*)$/)) {
-      let playlistId = url.split('v=')[1]
+      let playlistId = url.split('list=')[1]
 
-      if (playlistId.length > 0) {
+      if (playlistId) {
         const ampLoc = playlistId.indexOf('&')
 
         if (ampLoc !== -1) {
