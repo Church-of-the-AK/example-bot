@@ -27,7 +27,8 @@ export async function createUser (user: User) {
       balance: `0`,
       dateclaimeddailies: ''
     },
-    accesstoken: null
+    accesstoken: null,
+    admin: false
   }
 
   return axios.post(`http://localhost:8000/users&code=${code}`, apiUser)
