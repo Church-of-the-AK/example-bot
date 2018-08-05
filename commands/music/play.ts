@@ -67,15 +67,18 @@ export default class PlayCommand extends commando.Command {
       }
     }
 
-    let videoId
-
     if (url.match(/^https?:\/\/(www.youtube.com|youtube.com)\/playlist(.*)$/)) {
-      videoId = url.split('v=')[1]
-      if (videoId.indexOf('&') !== -1) {
-        videoId = videoId.substring(0, videoId.indexOf('&'))
+      let playlistId = url.split('v=')[1]
+
+      if (playlistId.length > 0) {
+        const ampLoc = playlistId.indexOf('&')
+
+        if (ampLoc !== -1) {
+          playlistId = playlistId.substring(0, playlistId.indexOf('&'))
+        }
       }
 
-      const playlist = await youtube.getPlaylist(videoId)
+      const playlist = await youtube.getPlaylist(playlistId)
       const videos: any[] = await playlist.getVideos()
       const responseMsg = await msg.channel.send(`🕙 Adding playlist **${playlist.title}** to the queue... ${videos.length >= 100 ? 'This may take a while.' : ''}`) as Message
       for (const video of videos) {
@@ -92,6 +95,16 @@ export default class PlayCommand extends commando.Command {
 
       responseMsg.edit(`✅ Playlist: **${playlist.title}** has been added to the queue!`)
       return msg.delete()
+    }
+
+    let videoId = url.split('v=')[1]
+
+    if (videoId.length > 0) {
+      const ampLoc = videoId.indexOf('&')
+
+      if (ampLoc !== -1) {
+        videoId = videoId.substring(0, videoId.indexOf('&'))
+      }
     }
 
     let video = await youtube.getVideo(videoId).catch(() => {
