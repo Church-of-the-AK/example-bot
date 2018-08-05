@@ -3,7 +3,7 @@ import { oneLine, stripIndents } from 'common-tags'
 import { queue } from '../../index'
 import { Util, VoiceChannel, TextChannel, Guild, MessageEmbed, Collection, Message } from 'discord.js'
 import * as ytdl from 'ytdl-core'
-import * as YouTube from 'simple-youtube-api'
+import { YouTube, Video } from 'better-youtube-api'
 import { youtubeKey } from '../../config'
 import { ServerQueue, Song } from '../../types'
 
@@ -73,7 +73,7 @@ export default class PlayCommand extends commando.Command {
       const responseMsg = await msg.channel.send(`🕙 Adding playlist **${playlist.title}** to the queue... ${videos.length >= 100 ? 'This may take a while.' : ''}`) as Message
       for (const video of videos) {
         if (video.description !== 'This video is private.' && video.description !== 'This video is unavailable.') {
-          const video2 = await youtube.getVideoByID(video.id).catch(() => {
+          const video2 = await youtube.getVideo(video.id).catch(() => {
             return
           })
 
@@ -96,7 +96,7 @@ export default class PlayCommand extends commando.Command {
       return msg.delete()
     }
 
-    const videos: any[] | void = await youtube.searchVideos(searchString, 10).catch(() => {
+    const videos = await youtube.searchVideos(searchString as string, 10).catch(() => {
       return
     })
 
@@ -105,7 +105,7 @@ export default class PlayCommand extends commando.Command {
     }
 
     let index = 0
-    const description = stripIndents`${videos.map(video2 => `**${++index} -** ${video2.title}`).join('\n')}`
+    const description = stripIndents`${(videos as Video[]).map(video2 => `**${++index} -** ${video2.title}`).join('\n')}`
     const embed = new MessageEmbed()
       .setColor('BLUE')
       .setAuthor(msg.author.username, msg.author.displayAvatarURL(), `http://192.243.102.112:8000/users/${msg.author.id}`)
@@ -131,19 +131,19 @@ export default class PlayCommand extends commando.Command {
     }
 
     const videoIndex = parseInt(response.first().content)
-    video = await youtube.getVideoByID(videos[videoIndex - 1].id)
+    video = await youtube.getVideo(videos[videoIndex - 1].id)
 
     handleVideo(video, msg, voiceChannel)
     return msg.delete()
   }
 }
 
-async function handleVideo (video, msg: commando.CommandMessage, voiceChannel: VoiceChannel, playlist = false) {
+async function handleVideo (video: Video, msg: commando.CommandMessage, voiceChannel: VoiceChannel, playlist = false) {
   const serverQueue = queue.get(msg.guild.id)
   const song: Song = {
     id: video.id,
     title: Util.escapeMarkdown(video.title),
-    url: `https://www.youtube.com/watch?v=${video.id}`,
+    url: video.url,
     member: msg.member
   }
 
