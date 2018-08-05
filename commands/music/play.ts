@@ -79,11 +79,12 @@ export default class PlayCommand extends commando.Command {
       }
 
       const playlist = await youtube.getPlaylist(playlistId)
-      const videos: any[] = await playlist.getVideos()
+      const videos = await playlist.getVideos()
       const responseMsg = await msg.channel.send(`🕙 Adding playlist **${playlist.title}** to the queue... ${videos.length >= 100 ? 'This may take a while.' : ''}`) as Message
       for (const video of videos) {
         if (video.description !== 'This video is private.' && video.description !== 'This video is unavailable.') {
-          const video2 = await youtube.getVideo(video.id).catch(() => {
+          const video2 = await youtube.getVideo(video.id).catch((err) => {
+            console.log(err)
             return
           })
 
