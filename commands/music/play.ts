@@ -42,45 +42,37 @@ export default class PlayCommand extends commando.Command {
     const serverQueue = queue.get(msg.guild.id)
 
     if (!voiceChannel) {
-      msg.channel.send('I\'m sorry, but you need to be in a voice channel to play music!')
-      return msg.delete()
+      return msg.channel.send('I\'m sorry, but you need to be in a voice channel to play music!')
     }
     const permissions = voiceChannel.permissionsFor(msg.client.user)
     if (!permissions.has('CONNECT')) {
-      msg.channel.send('I cannot connect to your voice channel, make sure I have the proper permissions!')
-      return msg.delete()
+      return msg.channel.send('I cannot connect to your voice channel, make sure I have the proper permissions!')
     }
     if (!permissions.has('SPEAK')) {
-      msg.channel.send('I cannot speak in this voice channel, make sure I have the proper permissions!')
-      return msg.delete()
+      return msg.channel.send('I cannot speak in this voice channel, make sure I have the proper permissions!')
     }
 
     if (link === -1) {
       if (serverQueue && !serverQueue.playing) {
         serverQueue.playing = true
         serverQueue.connection.dispatcher.resume()
-        msg.channel.send('▶ Resumed the music for you!')
-        return msg.delete()
+        return msg.channel.send('▶ Resumed the music for you!')
       } else {
-        msg.reply(`Nothing is paused. Use \`${msg.guild.commandPrefix}play <youtube link or search term>\` to play music.`)
-        return undefined
+        return msg.reply(`Nothing is paused. Use \`${msg.guild.commandPrefix}play <youtube link or search term>\` to play music.`)
       }
     }
 
     if (url.match(/^https?:\/\/(www.youtube.com|youtube.com)\/playlist(.*)$/)) {
-      let playlistId = url.split('list=')[1]
+      const playlist = await youtube.getPlaylistByUrl(url).catch(() => {
+        return
+      })
 
-      if (playlistId) {
-        const ampLoc = playlistId.indexOf('&')
-
-        if (ampLoc !== -1) {
-          playlistId = playlistId.substring(0, playlistId.indexOf('&'))
-        }
+      if (!playlist) {
+        return msg.channel.send('I couldn\'t find that playlist!')
       }
 
-      const playlist = await youtube.getPlaylist(playlistId)
+      const responseMsg = await msg.channel.send(`🕙 Adding playlist **${playlist.title}** to the queue... ${playlist.itemCount >= 100 ? 'This may take a while.' : ''}`) as Message
       await playlist.getVideos()
-      const responseMsg = await msg.channel.send(`🕙 Adding playlist **${playlist.title}** to the queue... ${playlist.videos.length >= 100 ? 'This may take a while.' : ''}`) as Message
       for (const video of playlist.videos) {
         if (video.description !== 'This video is private.' && video.description !== 'This video is unavailable.') {
           const video2 = await youtube.getVideo(video.id).catch((err) => {
@@ -94,27 +86,16 @@ export default class PlayCommand extends commando.Command {
         }
       }
 
-      responseMsg.edit(`✅ Playlist: **${playlist.title}** has been added to the queue!`)
-      return msg.delete()
+      return responseMsg.edit(`✅ Playlist: **${playlist.title}** has been added to the queue!`)
     }
 
-    let videoId = url.split('v=')[1]
-
-    if (videoId) {
-      const ampLoc = videoId.indexOf('&')
-
-      if (ampLoc !== -1) {
-        videoId = videoId.substring(0, videoId.indexOf('&'))
-      }
-    }
-
-    let video = await youtube.getVideo(videoId).catch(() => {
+    let video = await youtube.getVideoByUrl(url).catch(() => {
       return
     })
 
     if (video) {
       handleVideo(video, msg, voiceChannel)
-      return msg.delete()
+      return
     }
 
     const videos = await youtube.searchVideos(searchString as string, 10).catch(() => {
@@ -146,16 +127,13 @@ export default class PlayCommand extends commando.Command {
     })
 
     if (!response) {
-      if (msg.deletable) await msg.delete()
-      msg.channel.send('No or invalid value entered, cancelling video selection.')
-      return
+      return msg.channel.send('No or invalid value entered, cancelling video selection.')
     }
 
     const videoIndex = parseInt(response.first().content)
     video = await youtube.getVideo(videos[videoIndex - 1].id)
 
     handleVideo(video, msg, voiceChannel)
-    return msg.delete()
   }
 }
 

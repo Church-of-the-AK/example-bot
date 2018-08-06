@@ -19,18 +19,16 @@ export default class ResumeCommand extends commando.Command {
     })
   }
 
-  async run (msg: commando.CommandMessage): Promise<Message> {
+  async run (msg: commando.CommandMessage): Promise<Message | Message[]> {
     const serverQueue = queue.get(msg.guild.id)
 
     if (!serverQueue || serverQueue.playing) {
-      msg.channel.send('There is nothing paused.')
-      return msg.delete()
+      return msg.channel.send('There is nothing paused.')
     }
 
     serverQueue.playing = true
     serverQueue.connection.dispatcher.resume()
 
-    msg.channel.send('▶ Resumed the music for you!')
-    return msg.delete()
+    return msg.channel.send('▶ Resumed the music for you!')
   }
 }

@@ -23,8 +23,7 @@ export default class ShuffleCommand extends commando.Command {
     const serverQueue = queue.get(msg.guild.id)
 
     if (!serverQueue) {
-      msg.channel.send('There is no queue to shuffle.')
-      return msg.delete()
+      return msg.channel.send('There is no queue to shuffle.')
     }
 
     let shuffled = []
@@ -37,8 +36,7 @@ export default class ShuffleCommand extends commando.Command {
     shuffled.unshift(serverQueue.songs[0])
     serverQueue.songs = shuffled
 
-    msg.channel.send('🔀 Shuffled the music for you!')
-    return msg.delete()
+    return msg.channel.send('🔀 Shuffled the music for you!')
   }
 }
 

@@ -24,11 +24,9 @@ export default class NowPlayingCommand extends commando.Command {
     const serverQueue = queue.get(msg.guild.id)
 
     if (!serverQueue) {
-      msg.channel.send('There is nothing playing.')
-      return msg.delete()
+      return msg.channel.send('There is nothing playing.')
     }
 
-    msg.channel.send(`🎶 Now playing: **${serverQueue.songs[0].title}**`)
-    return msg.delete()
+    return msg.channel.send(`🎶 Now playing: **${serverQueue.songs[0].title}**`)
   }
 }
