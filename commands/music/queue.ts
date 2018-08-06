@@ -28,12 +28,11 @@ export default class QueueCommand extends commando.Command {
     })
   }
 
-  async run (msg: commando.CommandMessage, { pageNum }: { pageNum: number }): Promise<Message> {
+  async run (msg: commando.CommandMessage, { pageNum }: { pageNum: number }): Promise<Message | Message[]> {
     const serverQueue = queue.get(msg.guild.id)
 
     if (!serverQueue) {
-      msg.channel.send('There is nothing playing.')
-      return msg.delete()
+      return msg.channel.send('There is nothing playing.')
     }
 
     const songs = serverQueue.songs.map(song => `**-** ${song.title}`)
@@ -52,8 +51,7 @@ export default class QueueCommand extends commando.Command {
     }
 
     if (!pages.get(pageNum)) {
-      msg.channel.send("There aren't that many pages!")
-      return msg.delete()
+      return msg.channel.send("There aren't that many pages!")
     }
 
     const description = stripIndents`
@@ -69,7 +67,6 @@ export default class QueueCommand extends commando.Command {
       .setFooter(`Page ${pageNum}/${pages.size}. View different pages with ${msg.guild.commandPrefix}queue <number>.`)
       .setThumbnail(this.client.user.displayAvatarURL())
 
-    msg.channel.send(embed)
-    return msg.delete()
+    return msg.channel.send(embed)
   }
 }

@@ -42,28 +42,23 @@ export default class PlayCommand extends commando.Command {
     const serverQueue = queue.get(msg.guild.id)
 
     if (!voiceChannel) {
-      msg.channel.send('I\'m sorry, but you need to be in a voice channel to play music!')
-      return msg.delete()
+      return msg.channel.send('I\'m sorry, but you need to be in a voice channel to play music!')
     }
     const permissions = voiceChannel.permissionsFor(msg.client.user)
     if (!permissions.has('CONNECT')) {
-      msg.channel.send('I cannot connect to your voice channel, make sure I have the proper permissions!')
-      return msg.delete()
+      return msg.channel.send('I cannot connect to your voice channel, make sure I have the proper permissions!')
     }
     if (!permissions.has('SPEAK')) {
-      msg.channel.send('I cannot speak in this voice channel, make sure I have the proper permissions!')
-      return msg.delete()
+      return msg.channel.send('I cannot speak in this voice channel, make sure I have the proper permissions!')
     }
 
     if (link === -1) {
       if (serverQueue && !serverQueue.playing) {
         serverQueue.playing = true
         serverQueue.connection.dispatcher.resume()
-        msg.channel.send('▶ Resumed the music for you!')
-        return msg.delete()
+        return msg.channel.send('▶ Resumed the music for you!')
       } else {
-        msg.reply(`Nothing is paused. Use \`${msg.guild.commandPrefix}play <youtube link or search term>\` to play music.`)
-        return undefined
+        return msg.reply(`Nothing is paused. Use \`${msg.guild.commandPrefix}play <youtube link or search term>\` to play music.`)
       }
     }
 
@@ -73,8 +68,7 @@ export default class PlayCommand extends commando.Command {
       })
 
       if (!playlist) {
-        msg.channel.send('I couldn\'t find that playlist!')
-        return msg.delete()
+        return msg.channel.send('I couldn\'t find that playlist!')
       }
 
       const responseMsg = await msg.channel.send(`🕙 Adding playlist **${playlist.title}** to the queue... ${playlist.itemCount >= 100 ? 'This may take a while.' : ''}`) as Message
@@ -92,8 +86,7 @@ export default class PlayCommand extends commando.Command {
         }
       }
 
-      responseMsg.edit(`✅ Playlist: **${playlist.title}** has been added to the queue!`)
-      return msg.delete()
+      return responseMsg.edit(`✅ Playlist: **${playlist.title}** has been added to the queue!`)
     }
 
     let video = await youtube.getVideoByUrl(url).catch(() => {
@@ -102,7 +95,7 @@ export default class PlayCommand extends commando.Command {
 
     if (video) {
       handleVideo(video, msg, voiceChannel)
-      return msg.delete()
+      return
     }
 
     const videos = await youtube.searchVideos(searchString as string, 10).catch(() => {
@@ -134,16 +127,13 @@ export default class PlayCommand extends commando.Command {
     })
 
     if (!response) {
-      if (msg.deletable) await msg.delete()
-      msg.channel.send('No or invalid value entered, cancelling video selection.')
-      return
+      return msg.channel.send('No or invalid value entered, cancelling video selection.')
     }
 
     const videoIndex = parseInt(response.first().content)
     video = await youtube.getVideo(videos[videoIndex - 1].id)
 
     handleVideo(video, msg, voiceChannel)
-    return msg.delete()
   }
 }
 
