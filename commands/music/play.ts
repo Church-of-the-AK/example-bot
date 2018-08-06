@@ -77,7 +77,7 @@ export default class PlayCommand extends commando.Command {
         return msg.delete()
       }
 
-      const responseMsg = await msg.channel.send(`🕙 Adding playlist **${playlist.title}** to the queue... ${playlist.videos.length >= 100 ? 'This may take a while.' : ''}`) as Message
+      const responseMsg = await msg.channel.send(`🕙 Adding playlist **${playlist.title}** to the queue... ${playlist.itemCount >= 100 ? 'This may take a while.' : ''}`) as Message
       await playlist.getVideos()
       for (const video of playlist.videos) {
         if (video.description !== 'This video is private.' && video.description !== 'This video is unavailable.') {
