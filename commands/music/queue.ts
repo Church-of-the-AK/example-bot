@@ -35,7 +35,7 @@ export default class QueueCommand extends commando.Command {
       return msg.channel.send('There is nothing playing.')
     }
 
-    const songs = serverQueue.songs.map(song => `**-** ${song.title}`)
+    const songs = serverQueue.songs.map(song => `**-** \`${song.title}\` - \`${song.member.nickname}\``)
     const pages: Map<number, string> = new Map()
     let page = 1
 
