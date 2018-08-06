@@ -68,19 +68,17 @@ export default class PlayCommand extends commando.Command {
     }
 
     if (url.match(/^https?:\/\/(www.youtube.com|youtube.com)\/playlist(.*)$/)) {
-      let playlistId = url.split('list=')[1]
+      const playlist = await youtube.getPlaylistByUrl(url).catch(() => {
+        return
+      })
 
-      if (playlistId) {
-        const ampLoc = playlistId.indexOf('&')
-
-        if (ampLoc !== -1) {
-          playlistId = playlistId.substring(0, playlistId.indexOf('&'))
-        }
+      if (!playlist) {
+        msg.channel.send('I couldn\'t find that playlist!')
+        return msg.delete()
       }
 
-      const playlist = await youtube.getPlaylist(playlistId)
-      await playlist.getVideos()
       const responseMsg = await msg.channel.send(`🕙 Adding playlist **${playlist.title}** to the queue... ${playlist.videos.length >= 100 ? 'This may take a while.' : ''}`) as Message
+      await playlist.getVideos()
       for (const video of playlist.videos) {
         if (video.description !== 'This video is private.' && video.description !== 'This video is unavailable.') {
           const video2 = await youtube.getVideo(video.id).catch((err) => {
@@ -98,17 +96,7 @@ export default class PlayCommand extends commando.Command {
       return msg.delete()
     }
 
-    let videoId = url.split('v=')[1]
-
-    if (videoId) {
-      const ampLoc = videoId.indexOf('&')
-
-      if (ampLoc !== -1) {
-        videoId = videoId.substring(0, videoId.indexOf('&'))
-      }
-    }
-
-    let video = await youtube.getVideo(videoId).catch(() => {
+    let video = await youtube.getVideoByUrl(url).catch(() => {
       return
     })
 
