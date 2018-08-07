@@ -46,11 +46,11 @@ export default class UnbanCommand extends commando.Command {
     }
 
     if (channel) {
-      channel.send(`\`${msg.author.username}\` has unbanned \`${id}\` from ${msg.guild.name}.`)
+      channel.send(`\`${msg.author.tag}\` (${msg.author.id}) has unbanned \`${id}\` from ${msg.guild.name}.`)
     }
 
     const time = moment().format('YYYY-MM-DD HH:mm:ss Z')
-    log(`\r\n[${time}] ${msg.author.username} has unbanned ${id} from ${msg.guild.name}.`)
+    log(`\r\n[${time}] ${msg.author.tag} (${msg.author.id}) has unbanned ${id} from ${msg.guild.name} (${msg.guild.id}).`)
 
     await msg.reply('Member unbanned.')
     return msg.delete()

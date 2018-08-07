@@ -40,20 +40,14 @@ export default class ChangeUsernameCommand extends commando.Command {
       return
     }
 
-    const channel = msg.guild.channels.find((channel: GuildChannel) => channel.name === 'machobot-audit') as TextChannel
-
     this.client.user.setUsername(name)
 
-    if (channel) {
-      channel.send(`${msg.author.username} has changed ${this.client.user.username}'s name to ${name}.`)
-    }
-
     let time = moment().format('YYYY-MM-DD HH:mm:ss Z')
-    log(`\r\n[${time}] ${msg.author.username} has changed ${this.client.user.username}'s name to ${name}.`)
+    log(`\r\n[${time}] ${msg.author.tag} (${msg.author.id}) has changed ${this.client.user.username}'s name to ${name}.`)
 
-    await msg.reply(`Succesfully changed my username to ${name}!`)
+    await msg.reply(`Succesfully changed my username to \`${name}\`!`)
 
-    if (msg.channel.type === 'text') {
+    if (msg.deletable) {
       return msg.delete()
     }
   }

@@ -53,11 +53,11 @@ export default class BanCommand extends commando.Command {
     }
 
     if (channel) {
-      channel.send(`${msg.author.username} has banned ${member} from ${msg.guild.name}.`)
+      channel.send(`\`${msg.author.tag}\` (${msg.author.id}) has banned \`${member.user.tag} (${member.id})\` from \`${msg.guild.name}\`.`)
     }
 
     let time = moment().format('YYYY-MM-DD HH:mm:ss Z')
-    log(`\r\n[${time}] ${msg.author.username} has banned ${member} from ${msg.guild.name}.`)
+    log(`\r\n[${time}] ${msg.author.tag} (${msg.author.id}) has banned ${member.user.tag} (${member.id}) from ${msg.guild.name} (${msg.guild.id}).`)
 
     await msg.reply(user.tag + ' has been banned!')
     return msg.delete()

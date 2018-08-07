@@ -42,7 +42,7 @@ export default class PurgeCommand extends commando.Command {
 
     const logChannel = msg.guild.channels.find((channel: GuildChannel) => channel.name === 'machobot-audit') as TextChannel
     const channel = msg.channel as TextChannel
-    const deleteResponse = await msg.channel.bulkDelete(deleteCount).catch(() => {
+    const deleteResponse = await msg.channel.bulkDelete(deleteCount + 1).catch(() => {
       return
     })
 
@@ -52,10 +52,10 @@ export default class PurgeCommand extends commando.Command {
     }
 
     if (logChannel) {
-      logChannel.send(`${msg.author.username} has purged ${deleteCount} messages from ${channel.name}.`)
+      logChannel.send(`\`${msg.author.tag}\` (${msg.author.id}) has purged \`${deleteCount}\` messages from \`${channel.name}\` (${channel.id}).`)
     }
 
     const time = moment().format('YYYY-MM-DD HH:mm:ss Z')
-    log(`\r\n[${time}] ${msg.author.username} has purged ${deleteCount} messages from ${channel.name}.`)
+    log(`\r\n[${time}] ${msg.author.username} (${msg.author.id}) has purged ${deleteCount} messages from ${channel.name} (${channel.id}).`)
   }
 }

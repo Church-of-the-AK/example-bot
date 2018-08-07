@@ -2,7 +2,7 @@ import * as commando from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import { log } from '../../util'
 import * as moment from 'moment'
-import { Message, TextChannel, Role, User, GuildChannel } from 'discord.js'
+import { Message, TextChannel, Role, User, GuildChannel, RoleStore } from 'discord.js'
 
 export default class AddRoleCommand extends commando.Command {
   constructor (client) {
@@ -13,8 +13,7 @@ export default class AddRoleCommand extends commando.Command {
       memberName: 'addrole',
       description: 'Adds a mentioned role to a mentioned user.',
       details: oneLine`
-				This is an incredibly useful command that changes the username of the bot.
-				Only usable by the owner, JasonHaxStuff.
+				Allows to to add roles to users.
 			`,
       examples: ['addrole @JasonHaxStuff @Owner', 'promote @JasonHaxStuff @Owner'],
       guildOnly: true,
@@ -61,13 +60,13 @@ export default class AddRoleCommand extends commando.Command {
     }
 
     if (channel) {
-      channel.send(`${msg.author.username} has added role ${role.name} to ${member.displayName}.`)
+      channel.send(`\`${msg.author.tag}\` (${msg.author.id}) has added role \`${role.name}\` (${role.id}) to \`${user.tag}\` (${user.id}).`)
     }
 
     const time = moment().format('YYYY-MM-DD HH:mm:ss Z')
-    log(`\r\n[${time}] ${msg.author.username} has added role ${role.name} to ${member.displayName}.`)
+    log(`\r\n[${time}] ${msg.author.tag} (${msg.author.id}) has added role ${role.name} (${role.id}) to ${user.tag} (${user.id}).`)
 
-    await msg.reply(`Added role ${role.name} to ${member.displayName}.`)
+    await msg.reply(`Added role \`${role.name}\` to \`${user.tag}\`.`)
     return msg.delete()
   }
 }

@@ -27,6 +27,8 @@ export default class NowPlayingCommand extends commando.Command {
       return msg.channel.send('There is nothing playing.')
     }
 
-    return msg.channel.send(`🎶 Now playing: **${serverQueue.songs[0].title}**`)
+    const song = serverQueue.songs[0]
+
+    return msg.channel.send(`🎶 Now playing: \`${song.title}\` - \`${song.member.nickname ? song.member.nickname : song.member.user.username}\``)
   }
 }
