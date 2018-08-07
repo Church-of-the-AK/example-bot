@@ -53,11 +53,11 @@ export default class KickCommand extends commando.Command {
     }
 
     if (channel) {
-      channel.send(`${msg.author.username} has kicked ${member} from ${msg.guild.name}.`)
+      channel.send(`\`${msg.author.tag}\` (${msg.author.id}) has kicked \`${user.tag}\` (${user.id}) from ${msg.guild.name}.`)
     }
 
     const time = moment().format('YYYY-MM-DD HH:mm:ss Z')
-    log(`\r\n[${time}] ${msg.author.username} has kicked ${member} from ${msg.guild.name}.`)
+    log(`\r\n[${time}] ${msg.author.tag} (${msg.author.id}) has kicked ${user.tag} (${user.id}) from ${msg.guild.name} (${msg.guild.id}).`)
 
     await msg.reply(user.tag + ' has been kicked!')
     return msg.delete()
