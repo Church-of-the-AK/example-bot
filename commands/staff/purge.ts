@@ -1,10 +1,10 @@
-import * as commando from 'discord.js-commando'
+import { Command, CommandMessage } from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import { log } from '../../util'
 import * as moment from 'moment'
 import { Message, TextChannel, GuildChannel } from 'discord.js'
 
-export default class PurgeCommand extends commando.Command {
+export default class PurgeCommand extends Command {
   constructor (client) {
     super(client, {
       name: 'purge',
@@ -29,7 +29,7 @@ export default class PurgeCommand extends commando.Command {
     })
   }
 
-  async run (msg: commando.CommandMessage, { deleteCount }: { deleteCount: number }): Promise<Message> {
+  async run (msg: CommandMessage, { deleteCount }: { deleteCount: number }): Promise<Message> {
     if (!(msg.member.hasPermission('MANAGE_MESSAGES'))) {
       await msg.reply("You can't delete messages.")
       return msg.delete()
@@ -42,12 +42,17 @@ export default class PurgeCommand extends commando.Command {
 
     const logChannel = msg.guild.channels.find((channel: GuildChannel) => channel.name === 'machobot-audit') as TextChannel
     const channel = msg.channel as TextChannel
-    const deleteResponse = await msg.channel.bulkDelete(deleteCount + 1).catch(() => {
+    const deleteResponse = await msg.channel.bulkDelete(deleteCount + 1, true).catch(() => {
       return
     })
 
     if (!deleteResponse) {
       await msg.reply('I encountered an error whilst deleting messages. Do I have the Manage Messages permission?')
+      return msg.delete()
+    }
+
+    if (deleteResponse.size === 0) {
+      await msg.reply('There were no messages younger than two weeks that I could delete.')
       return msg.delete()
     }
 
