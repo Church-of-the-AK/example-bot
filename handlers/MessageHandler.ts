@@ -2,7 +2,7 @@ import axios from 'axios'
 import { CommandMessage } from 'discord.js-commando'
 import { code } from '../config'
 import { TextChannel } from 'discord.js'
-import { MachoAPIUser } from '../types/MachoAPIUser'
+import { User } from 'machobot-database'
 import * as API from '../util'
 
 /**
@@ -44,13 +44,13 @@ export async function handleMessage (msg: CommandMessage) {
   * Handles a user's message as explained in `function handleMessage`.
   * @param msg The message to handle.
   */
-async function handleUserMessage (msg: CommandMessage): Promise<MachoAPIUser> {
-  let { data: user }: { data: MachoAPIUser } = await axios.get(`http://localhost:8000/users/${msg.author.id}`)
+async function handleUserMessage (msg: CommandMessage): Promise<User> {
+  let { data: user }: { data: User } = await axios.get(`http://localhost:8000/users/${msg.author.id}`)
 
   user = handleUserExp(user, msg)
   user.name = msg.author.username
-  user.datelastmessage = `${new Date().getTime()}`
-  user.avatarurl = msg.author.displayAvatarURL({ size: 512 })
+  user.dateLastMessage = new Date().getTime()
+  user.avatarUrl = msg.author.displayAvatarURL({ size: 512 })
 
   await axios.put(`http://localhost:8000/users/${msg.author.id}&code=${code}`, user)
   return user
@@ -61,27 +61,28 @@ async function handleUserMessage (msg: CommandMessage): Promise<MachoAPIUser> {
  * @param user The MachoAPI user to handle the xp of.
  * @param msg The message to handle.
  */
-function handleUserExp (user: MachoAPIUser, msg: CommandMessage) {
+function handleUserExp (user: User, msg: CommandMessage) {
   let diffMins
 
   if (user.level.timestamp) {
-    const diffMs = (new Date().getTime() - parseInt(user.level.timestamp))
+    const diffMs = new Date().getTime() - user.level.timestamp
     diffMins = ((diffMs % 86400000) % 3600000) / 60000
   } else {
     diffMins = 2
   }
 
   if (diffMins >= 1) {
-    user.level.timestamp = `${new Date().getTime()}`
-    user.level.xp = `${parseInt(user.level.xp) + randomIntFromInterval(15, 25)}`
+    user.level.timestamp = new Date().getTime()
+    user.level.xp = user.level.xp + randomIntFromInterval(15, 25)
 
-    if (parseInt(user.level.xp) >= expToLevelUp(parseInt(user.level.level))) {
-      const creditsEarned = randomIntFromInterval(45, 50) + Math.floor(parseInt(user.level.level) * 0.5)
+    if (user.level.xp >= expToLevelUp(user.level.level)) {
+      const creditsEarned = randomIntFromInterval(45, 50) + Math.floor(user.level.level * 0.5)
 
-      user.level.xp = `${parseInt(user.level.xp) - expToLevelUp(parseInt(user.level.level))}`
-      user.level.level = `${parseInt(user.level.level) + 1}`
-      user.balance.balance = `${parseInt(user.balance.balance) + creditsEarned}`
-      user.balance.networth = `${parseInt(user.balance.networth) + creditsEarned}`
+      user.level.xp = user.level.xp - expToLevelUp(user.level.level)
+      user.level.level += 1
+      user.balance.balance += creditsEarned
+      user.balance.netWorth += creditsEarned
+
       msg.channel.send(`Congrats **${user.name}**! You have reached level **${user.level.level}** and earned **${creditsEarned}** credits!`)
     }
   }

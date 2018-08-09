@@ -20,6 +20,7 @@ client
   .on('debug', console.log)
   .on('ready', () => {
     console.log(`Client ready; logged in as ${client.user.username}#${client.user.discriminator} (${client.user.id})`)
+
     client.user.setActivity('Macho, the bot for everything (soon).', {
       url: config.twitch,
       type: 'STREAMING'
@@ -34,10 +35,8 @@ client
     const memberRole = member.guild.roles.find(role => role.name.toLowerCase() === 'member')
     const acceptRulesRole = member.guild.roles.find(role => role.name.toLowerCase() === 'accept rules')
 
-    member.roles.add(acceptRulesRole).catch(() => {
-      member.roles.add(commonerRole ? commonerRole : memberRole).catch(() => {
-        // eat the error, not important
-      })
+    member.roles.add(acceptRulesRole ? acceptRulesRole : commonerRole ? commonerRole : memberRole).catch(() => {
+      // eat the error, not important
     })
   })
   .on('disconnect', () => {
