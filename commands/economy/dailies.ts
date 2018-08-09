@@ -45,7 +45,7 @@ export default class DailiesCommand extends commando.Command {
     user = this.claimDailies(user)
     msg.channel.send(`**${user.name}**, you have claimed your **200** daily credits!`)
 
-    await axios.put(`http://localhost:8000/users/${msg.author.id}&code=${code}`, user)
+    await axios.put(`http://localhost:8000/users/${msg.author.id}/balance&code=${code}`, user.balance)
 
     return msg.delete()
   }
