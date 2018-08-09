@@ -53,6 +53,9 @@ async function handleUserMessage (msg: CommandMessage): Promise<User> {
   user.avatarUrl = msg.author.displayAvatarURL({ size: 512 })
 
   await axios.put(`http://localhost:8000/users/${msg.author.id}&code=${code}`, user)
+  await axios.put(`http://localhost:8000/users/${msg.author.id}/balance&code=${code}`, user.balance)
+  await axios.put(`http://localhost:8000/users/${msg.author.id}/level&code=${code}`, user.level)
+
   return user
 }
 
