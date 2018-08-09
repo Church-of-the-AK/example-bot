@@ -2,10 +2,10 @@ import * as commando from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import { Message } from 'discord.js'
 import { code } from '../../config'
-import { MachoAPIUser } from '../../types/MachoAPIUser'
 import * as numeral from 'numeral'
 import axios from 'axios'
 import { getUser } from '../../util'
+import { User } from 'machobot-database'
 
 export default class DailiesCommand extends commando.Command {
   constructor (client) {
@@ -31,8 +31,8 @@ export default class DailiesCommand extends commando.Command {
       return msg.reply('I couldn\'t find you in my database, please try again.')
     }
 
-    if (user.balance.dateclaimeddailies) {
-      diffHrs = Math.abs(new Date().getTime() - parseInt(user.balance.dateclaimeddailies)) / 36e5
+    if (user.balance.dateClaimedDailies) {
+      diffHrs = Math.abs(new Date().getTime() - user.balance.dateClaimedDailies) / 36e5
     } else {
       diffHrs = 24
     }
@@ -50,7 +50,7 @@ export default class DailiesCommand extends commando.Command {
     return msg.delete()
   }
 
-  claimDailies (user: MachoAPIUser): MachoAPIUser {
+  claimDailies (user): User {
     user.balance.balance = `${parseInt(user.balance.balance) + 200}`
     user.balance.networth = `${parseInt(user.balance.networth) + 200}`
     user.balance.dateclaimeddailies = `${new Date().getTime()}`
