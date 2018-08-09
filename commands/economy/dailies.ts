@@ -51,9 +51,9 @@ export default class DailiesCommand extends commando.Command {
   }
 
   claimDailies (user): User {
-    user.balance.balance = `${parseInt(user.balance.balance) + 200}`
-    user.balance.networth = `${parseInt(user.balance.networth) + 200}`
-    user.balance.dateclaimeddailies = `${new Date().getTime()}`
+    user.balance.balance += 200
+    user.balance.netWorth += 200
+    user.balance.dateClaimedDailies = new Date().getTime()
 
     return user
   }
