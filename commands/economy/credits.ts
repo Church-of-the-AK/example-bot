@@ -1,7 +1,6 @@
 import * as commando from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import { Message, User } from 'discord.js'
-import { MachoAPIUser } from '../../types/MachoAPIUser'
 import { getUser } from '../../util'
 
 export default class CreditsCommand extends commando.Command {

@@ -1,4 +1,4 @@
-import { MachoAPIUser } from '../types/MachoAPIUser'
+import { User as APIUser } from 'machobot-database'
 import axios from 'axios'
 import { code } from '../config'
 import { User } from 'discord.js'
@@ -9,14 +9,14 @@ import { User } from 'discord.js'
   */
 export async function createUser (user: User) {
   console.log(`Creating user ${user.username} (${user.id})...`)
-  const apiUser: MachoAPIUser = {
+  const apiUser = {
     id: user.id,
     name: user.username,
-    avatarurl: user.displayAvatarURL({ size: 512 }),
+    avatarUrl: user.displayAvatarURL({ size: 512 }),
     banned: false,
-    datecreated: `${new Date().getTime()}`,
-    datelastmessage: `${new Date().getTime()}`,
-    steamid: '',
+    dateCreated: new Date().getTime(),
+    dateLastMessage: new Date().getTime(),
+    steamId: '',
     level: {
       xp: `0`,
       level: `0`,
@@ -31,11 +31,19 @@ export async function createUser (user: User) {
     admin: false
   }
 
-  return axios.post(`http://localhost:8000/users&code=${code}`, apiUser)
+  const newUser = new APIUser()
+  newUser.id = user.id
+  newUser.name = user.username
+  newUser.avatarUrl = user.displayAvatarURL({ size: 512 })
+  newUser.banned = false
+  newUser.accessToken = ''
+  newUser.admin = false
+
+  return axios.post(`http://localhost:8000/users&code=${code}`, newUser)
 }
 
 export async function getUser (id: string) {
-  const { data: user }: { data: MachoAPIUser | '' } = await axios.get(`http://localhost:8000/users/${id}`)
+  const { data: user }: { data: APIUser | '' } = await axios.get(`http://localhost:8000/users/${id}`)
 
   return user
 }
