@@ -98,9 +98,9 @@ export default class PlayCommand extends commando.Command {
       return
     }
 
-    const videos = await youtube.searchVideos(searchString as string, 10).catch(() => {
+    const videos = (await youtube.searchVideos(searchString as string, 10).catch(() => {
       return
-    })
+    })) as Video[]
 
     if (!videos || videos.length === 0) {
       return msg.channel.send('🆘 I could not obtain any search results.')
