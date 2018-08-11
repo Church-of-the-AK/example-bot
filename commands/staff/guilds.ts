@@ -1,0 +1,39 @@
+import * as commando from 'discord.js-commando'
+import { Message, MessageEmbed } from 'discord.js'
+
+export default class GuildsCommand extends commando.Command {
+  constructor (client) {
+    super(client, {
+      name: 'accept',
+      aliases: ['join', 'acceptrules'],
+      group: 'member',
+      memberName: 'accept',
+      description: 'Allows you to join the server when typed in #accept-rules',
+      details: ``,
+      examples: ['accept'],
+      guildOnly: true
+    })
+  }
+
+  hasPermission (msg: commando.CommandMessage) {
+    if (this.client.isOwner(msg.author)) {
+      return true
+    }
+
+    return false
+  }
+
+  async run (msg: commando.CommandMessage): Promise<Message | Message[]> {
+    const guilds = this.client.guilds.map(guild => `**-** \`${guild.name}\` (\`${guild.id}\`) - \`${guild.joinedAt.toLocaleString()}\``)
+    const embed = new MessageEmbed()
+      .setAuthor('Macho', this.client.user.displayAvatarURL())
+      .setTitle('Guilds')
+      .setColor('BLUE')
+      .setFooter('Macho')
+      .setTimestamp(new Date())
+      .setThumbnail(msg.author.displayAvatarURL())
+      .setDescription(guilds)
+
+    return msg.channel.send(embed)
+  }
+}
