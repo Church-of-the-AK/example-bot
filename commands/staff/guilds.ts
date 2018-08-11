@@ -6,11 +6,10 @@ export default class GuildsCommand extends commando.Command {
     super(client, {
       name: 'guilds',
       group: 'member',
-      memberName: 'accept',
-      description: 'Allows you to join the server when typed in #accept-rules',
+      memberName: 'guilds',
+      description: '',
       details: ``,
-      examples: ['accept'],
-      guildOnly: true
+      examples: ['guilds']
     })
   }
 
