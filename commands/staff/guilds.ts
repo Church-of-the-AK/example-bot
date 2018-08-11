@@ -22,15 +22,12 @@ export default class GuildsCommand extends commando.Command {
   }
 
   async run (msg: commando.CommandMessage): Promise<Message | Message[]> {
-    const guilds = await this.client.guilds.map(guild => {
-      let invite: string
-
-      guild.fetchInvites().then(invites => {
-        invite = invites.first().url
-      })
-
-      return `**-** \`${guild.name}\` (\`${guild.id}\`) - \`${guild.joinedAt.toLocaleString()}\` - ${invite}`
+    const guildsPromises = await this.client.guilds.map(async (guild) => {
+      return `**-** \`${guild.name}\` (\`${guild.id}\`) - \`${guild.joinedAt.toLocaleString()}\` - \`${(await guild.fetchInvites()).first().url}\``
     })
+
+    const guilds = await Promise.all(guildsPromises)
+
     const embed = new MessageEmbed()
       .setAuthor('Macho', this.client.user.displayAvatarURL())
       .setTitle('Guilds')
