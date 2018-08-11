@@ -4,8 +4,7 @@ import { Message, MessageEmbed } from 'discord.js'
 export default class GuildsCommand extends commando.Command {
   constructor (client) {
     super(client, {
-      name: 'accept',
-      aliases: ['join', 'acceptrules'],
+      name: 'guilds',
       group: 'member',
       memberName: 'accept',
       description: 'Allows you to join the server when typed in #accept-rules',
