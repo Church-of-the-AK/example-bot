@@ -22,7 +22,7 @@ export default class GuildsCommand extends commando.Command {
   }
 
   async run (msg: commando.CommandMessage): Promise<Message | Message[]> {
-    const guilds = this.client.guilds.map(async guild => {
+    const guilds = await this.client.guilds.map(async guild => {
       return `**-** \`${guild.name}\` (\`${guild.id}\`) - \`${guild.joinedAt.toLocaleString()}\` - ${(await guild.fetchInvites()).first().url}`
     })
     const embed = new MessageEmbed()
