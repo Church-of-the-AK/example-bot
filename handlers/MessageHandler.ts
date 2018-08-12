@@ -36,6 +36,10 @@ export async function handleMessage (msg: CommandMessage) {
   if (user === '' || user.length <= 10) {
     await API.createUser(msg.author)
   } else {
+    if (msg.command) {
+      return false
+    }
+
     await handleUserMessage(msg)
   }
 }
@@ -49,7 +53,7 @@ async function handleUserMessage (msg: CommandMessage): Promise<User> {
 
   user = handleUserExp(user, msg)
   user.name = msg.author.username
-  user.dateLastMessage = new Date().getTime()
+  user.dateLastMessage = new Date().getTime().toString()
   user.avatarUrl = msg.author.displayAvatarURL({ size: 512 })
 
   await axios.put(`http://localhost:8000/users/${msg.author.id}&code=${code}`, user)
@@ -68,14 +72,14 @@ function handleUserExp (user: User, msg: CommandMessage) {
   let diffMins
 
   if (user.level.timestamp) {
-    const diffMs = new Date().getTime() - user.level.timestamp
+    const diffMs = new Date().getTime() - parseInt(user.level.timestamp)
     diffMins = ((diffMs % 86400000) % 3600000) / 60000
   } else {
     diffMins = 2
   }
 
   if (diffMins >= 1) {
-    user.level.timestamp = new Date().getTime()
+    user.level.timestamp = new Date().getTime().toString()
     user.level.xp = user.level.xp + randomIntFromInterval(15, 25)
 
     if (user.level.xp >= expToLevelUp(user.level.level)) {

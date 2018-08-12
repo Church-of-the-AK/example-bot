@@ -18,7 +18,7 @@
     "erlpack": "github:discordapp/erlpack",
     "html-entities": "^1.2.1",
     "libsodium-wrappers": "^0.7.3",
-    "machobot-database": "^0.0.12",
+    "machobot-database": "0.0.14",
     "material-colors": "^1.2.6",
     "moment": "^2.22.2",
     "node-opus": "^0.3.0",

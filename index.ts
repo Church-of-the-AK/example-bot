@@ -19,7 +19,7 @@ client
   .on('warn', console.warn)
   .on('debug', console.log)
   .on('ready', () => {
-    console.log(`Client ready; logged in as ${client.user.username}#${client.user.discriminator} (${client.user.id})`)
+    console.log(`Client ready; logged in as ${client.user.tag} (${client.user.id})`)
 
     client.user.setActivity('Macho, the bot for everything (soon).', {
       url: config.twitch,
