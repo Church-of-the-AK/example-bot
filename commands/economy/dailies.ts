@@ -24,7 +24,7 @@ export default class DailiesCommand extends commando.Command {
   }
 
   async run (msg: commando.CommandMessage): Promise<Message | Message[]> {
-    const { data: user }: { data: User } = await axios.get(`http://localhost:8000/users/${msg.author.id}`)
+    let user = await getUser(msg.author.id)
     let diffHrs
 
     if (!user) {
