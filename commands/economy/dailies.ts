@@ -24,7 +24,7 @@ export default class DailiesCommand extends commando.Command {
   }
 
   async run (msg: commando.CommandMessage): Promise<Message | Message[]> {
-    let user = await getUser(msg.author.id)
+    const user = await getUser(msg.author.id)
     let diffHrs
 
     if (!user) {
@@ -42,19 +42,14 @@ export default class DailiesCommand extends commando.Command {
       return msg.channel.send(`**${user.name}**, you still have **${waitTime}** hours until you can claim your dailies again.`)
     }
 
-    user = this.claimDailies(user)
+    user.balance.balance += 200
+    user.balance.netWorth += 200
+    user.balance.dateClaimedDailies = new Date().getTime().toString()
+
     msg.channel.send(`**${user.name}**, you have claimed your **200** daily credits!`)
 
     await axios.put(`http://localhost:8000/users/${msg.author.id}/balance&code=${code}`, user.balance)
 
     return msg.delete()
-  }
-
-  claimDailies (user: User): User {
-    user.balance.balance += 200
-    user.balance.netWorth += 200
-    user.balance.dateClaimedDailies = new Date().getTime().toString()
-
-    return user
   }
 }
