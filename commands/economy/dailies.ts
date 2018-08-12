@@ -32,7 +32,7 @@ export default class DailiesCommand extends commando.Command {
     }
 
     if (user.balance.dateClaimedDailies) {
-      diffHrs = Math.abs(new Date().getTime() - user.balance.dateClaimedDailies) / 36e5
+      diffHrs = Math.abs(new Date().getTime() - parseInt(user.balance.dateClaimedDailies)) / 36e5
     } else {
       diffHrs = 24
     }
