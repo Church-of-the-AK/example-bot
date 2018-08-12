@@ -50,10 +50,10 @@ export default class DailiesCommand extends commando.Command {
     return msg.delete()
   }
 
-  claimDailies (user): User {
+  claimDailies (user: User): User {
     user.balance.balance += 200
     user.balance.netWorth += 200
-    user.balance.dateClaimedDailies = new Date().getTime()
+    user.balance.dateClaimedDailies = new Date().getTime().toString()
 
     return user
   }
