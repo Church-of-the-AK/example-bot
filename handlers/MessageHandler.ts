@@ -36,6 +36,10 @@ export async function handleMessage (msg: CommandMessage) {
   if (user === '' || user.length <= 10) {
     await API.createUser(msg.author)
   } else {
+    if (msg.command) {
+      return false
+    }
+
     await handleUserMessage(msg)
   }
 }
