@@ -75,13 +75,17 @@ export default class PlayCommand extends commando.Command {
       await playlist.getVideos()
       for (const video of playlist.videos) {
         if (video.description !== 'This video is private.' && video.description !== 'This video is unavailable.') {
-          const video2 = await youtube.getVideo(video.id).catch((err) => {
-            console.log(err)
-            return
-          })
+          try {
+            await handleVideo(video, msg, voiceChannel, true)
+          } catch {
+            const video2 = await youtube.getVideo(video.id).catch((err) => {
+              console.log(err)
+              return
+            })
 
-          if (video2) {
-            await handleVideo(video2, msg, voiceChannel, true)
+            if (video2) {
+              await handleVideo(video2, msg, voiceChannel, true)
+            }
           }
         }
       }
