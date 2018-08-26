@@ -38,15 +38,13 @@ export default class AddRoleCommand extends commando.Command {
 
   async run (msg: commando.CommandMessage, { user, role }: { user: User, role: Role }): Promise<Message | Message[]> {
     if (!msg.member.hasPermission('MANAGE_ROLES')) {
-      await msg.reply('You can\'t add roles.')
-      return msg.delete()
+      return msg.reply('You can\'t add roles.')
     }
 
     const member = msg.guild.member(user)
 
     if (msg.member.roles.highest.comparePositionTo(role) <= 0) {
-      await msg.reply('You can\'t add roles that are higher than or equal to yours.')
-      return msg.delete()
+      return msg.reply('You can\'t add roles that are higher than or equal to yours.')
     }
 
     const channel = msg.guild.channels.find((channel: GuildChannel) => channel.name === 'machobot-audit') as TextChannel
@@ -55,8 +53,7 @@ export default class AddRoleCommand extends commando.Command {
     })
 
     if (!addRoleResponse) {
-      await msg.reply("I don't have permission to add that role to that user.")
-      return msg.delete()
+      return msg.reply("I don't have permission to add that role to that user.")
     }
 
     if (channel) {
@@ -66,7 +63,6 @@ export default class AddRoleCommand extends commando.Command {
     const time = moment().format('YYYY-MM-DD HH:mm:ss Z')
     log(`\r\n[${time}] ${msg.author.tag} (${msg.author.id}) has added role ${role.name} (${role.id}) to ${user.tag} (${user.id}).`)
 
-    await msg.reply(`Added role \`${role.name}\` to \`${user.tag}\`.`)
-    return msg.delete()
+    return msg.reply(`Added role \`${role.name}\` to \`${user.tag}\`.`)
   }
 }

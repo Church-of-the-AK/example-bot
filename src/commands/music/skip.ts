@@ -28,7 +28,7 @@ export default class SkipCommand extends commando.Command {
       return msg.channel.send('You need to have the Manage Messages permission to delete other user\'s songs.')
     }
 
-    if (!msg.member.voiceChannel) {
+    if (!msg.member.voice.channel) {
       return msg.channel.send('You are not in a voice channel!')
     }
 

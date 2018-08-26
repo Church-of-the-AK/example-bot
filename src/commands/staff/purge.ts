@@ -29,15 +29,13 @@ export default class PurgeCommand extends Command {
     })
   }
 
-  async run (msg: CommandMessage, { deleteCount }: { deleteCount: number }): Promise<Message> {
+  async run (msg: CommandMessage, { deleteCount }: { deleteCount: number }): Promise<Message | Message[]> {
     if (!(msg.member.hasPermission('MANAGE_MESSAGES'))) {
-      await msg.reply("You can't delete messages.")
-      return msg.delete()
+      return msg.reply("You can't delete messages.")
     }
 
     if (!deleteCount || deleteCount < 2 || deleteCount > 100) {
       await msg.reply('I need a number between 2 and 100. Try again.')
-      return msg.delete()
     }
 
     const logChannel = msg.guild.channels.find((channel: GuildChannel) => channel.name === 'machobot-audit') as TextChannel
@@ -47,13 +45,11 @@ export default class PurgeCommand extends Command {
     })
 
     if (!deleteResponse) {
-      await msg.reply('I encountered an error whilst deleting messages. Do I have the Manage Messages permission?')
-      return msg.delete()
+      return msg.reply('I encountered an error whilst deleting messages. Do I have the Manage Messages permission?')
     }
 
     if (deleteResponse.size === 0) {
-      await msg.reply('There were no messages younger than two weeks that I could delete.')
-      return msg.delete()
+      return msg.reply('There were no messages younger than two weeks that I could delete.')
     }
 
     if (logChannel) {

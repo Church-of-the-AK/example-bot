@@ -28,7 +28,7 @@ export default class ClearCommand extends commando.Command {
       return msg.channel.send('This command requires you to have the Manage Messages permission.')
     }
 
-    if (!msg.member.voiceChannel) {
+    if (!msg.member.voice.channel) {
       return msg.channel.send('You are not in a voice channel!')
     }
 

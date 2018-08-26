@@ -87,10 +87,11 @@ client
 
 client.registry
   .registerGroups([
-    ['staff', 'Functional Staff Commands'],
-    ['member', 'Commands for Members'],
+    ['staff', 'Staff Commands'],
+    ['member', 'Member Commands'],
     ['music', 'Music Commands'],
-    ['economy', 'Money Commands']
+    ['economy', 'Money Commands'],
+    ['owner', 'Owner-only Commands.']
   ])
   .registerDefaults()
   .registerCommandsIn(path.join(__dirname, 'commands'))
