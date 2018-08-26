@@ -1,6 +1,6 @@
 import * as commando from 'discord.js-commando'
 import * as path from 'path'
-import { oneLine } from 'common-tags'
+import { oneLine, stripIndents } from 'common-tags'
 import * as sqlite from 'sqlite'
 import * as config from './config'
 import { ServerQueue } from './types/ServerQueue'
@@ -32,9 +32,8 @@ client
 
     const commonerRole = member.guild.roles.find(role => role.name.toLowerCase() === 'commoner')
     const memberRole = member.guild.roles.find(role => role.name.toLowerCase() === 'member')
-    const acceptRulesRole = member.guild.roles.find(role => role.name.toLowerCase() === 'accept rules')
 
-    member.roles.add(acceptRulesRole ? acceptRulesRole : commonerRole ? commonerRole : memberRole).catch(() => {
+    member.roles.add(commonerRole ? commonerRole : memberRole).catch(() => {
       // eat the error, not important
     })
   })
@@ -43,6 +42,16 @@ client
   })
   .on('reconnecting', () => {
     console.warn('Reconnecting...')
+  })
+  .on('commandRun', (cmd, promise, msg, args) => {
+    const message = stripIndents`
+      Command: ${cmd.name}
+      User: ${msg.author.tag} (${msg.author.id})
+      Guild: ${msg.guild.name} (${msg.guild.id})
+      Args: ${args}
+    `
+
+    console.log(message)
   })
   .on('commandError', (cmd, err) => {
     if (err instanceof commando.FriendlyError) return
