@@ -197,5 +197,5 @@ function play (guild: Guild, song: Song) {
     .on('error', error => console.error(error))
 
   dispatcher.setVolumeLogarithmic(serverQueue.volume / 5)
-  serverQueue.textChannel.send(`🎶 Started playing: **${song.title}**`)
+  serverQueue.textChannel.send(`🎶 Started playing: **${song.title}**, requested by \`${song.member.user.tag}\`.`)
 }

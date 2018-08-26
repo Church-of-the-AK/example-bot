@@ -17,11 +17,10 @@ export const client = new commando.CommandoClient({
 client
   .on('error', console.error)
   .on('warn', console.warn)
-  .on('debug', console.log)
   .on('ready', () => {
     console.log(`Client ready; logged in as ${client.user.tag} (${client.user.id})`)
 
-    client.user.setActivity('Macho, the bot for everything (soon).', {
+    client.user.setActivity(`Macho | @${client.user.tag} help`, {
       url: config.twitch,
       type: 'STREAMING'
     })

@@ -23,6 +23,10 @@ export default class AcceptCommand extends commando.Command {
     const commoner = msg.guild.roles.find((role: Role) => role.name === 'Commoner')
     const member = msg.guild.roles.find((role: Role) => role.name === 'Member')
 
+    if (!acceptRules && !commoner) {
+      return
+    }
+
     if (!msg.member.roles.has(acceptRules.id)) {
       await msg.reply("No, you can't do that lol")
       return msg.delete()

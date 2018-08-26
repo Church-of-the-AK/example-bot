@@ -25,7 +25,7 @@ export default class SkipCommand extends commando.Command {
     const song = serverQueue.songs[0]
 
     if ((msg.member.id !== song.member.id) && !msg.member.hasPermission('MANAGE_MESSAGES')) {
-      return msg.channel.send('You need to have the Manage Messages permission to delete other user\'s songs.')
+      return msg.channel.send('You need to have the Manage Messages permission to skip other user\'s songs.')
     }
 
     if (!msg.member.voice.channel) {

@@ -24,11 +24,11 @@ export default class NowPlayingCommand extends commando.Command {
     const serverQueue = queue.get(msg.guild.id)
 
     if (!serverQueue) {
-      return msg.channel.send('There is nothing playing.')
+      return msg.channel.send('There is nothing playing. Why don\'t *you* start the party?')
     }
 
     const song = serverQueue.songs[0]
 
-    return msg.channel.send(`🎶 Now playing: \`${song.title}\` - \`${song.member.nickname ? song.member.nickname : song.member.user.username}\``)
+    return msg.channel.send(`🎶 Now playing: **${song.title}** - ${song.member.user.tag}`)
   }
 }
