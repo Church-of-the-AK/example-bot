@@ -25,12 +25,6 @@ export async function handleMessage (msg: CommandMessage) {
     return false
   }
 
-  if (msg.channel.name === 'accept-rules' && msg.command.name !== 'accept') {
-    if (!(msg.member.hasPermission('MANAGE_MESSAGES'))) {
-      return msg.delete()
-    }
-  }
-
   const { data: user } = await axios.get(`http://localhost:8000/users/${msg.author.id}`)
 
   if (user === '' || user.length <= 10) {

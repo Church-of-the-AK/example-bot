@@ -25,10 +25,10 @@ export default class SkipCommand extends commando.Command {
     const song = serverQueue.songs[0]
 
     if ((msg.member.id !== song.member.id) && !msg.member.hasPermission('MANAGE_MESSAGES')) {
-      return msg.channel.send('You need to have the Manage Messages permission to delete other user\'s songs.')
+      return msg.channel.send('You need to have the Manage Messages permission to skip other user\'s songs.')
     }
 
-    if (!msg.member.voiceChannel) {
+    if (!msg.member.voice.channel) {
       return msg.channel.send('You are not in a voice channel!')
     }
 
@@ -38,6 +38,6 @@ export default class SkipCommand extends commando.Command {
 
     serverQueue.connection.dispatcher.end('Skip command has been used.')
 
-    return msg.channel.send(`Skipped \`${song.title}\` - Requested by \`${song.member.nickname ? song.member.nickname : song.member.user.username}\``)
+    return msg.channel.send(`Skipped **${song.title}** - Requested by \`${song.member.user.tag}\``)
   }
 }

@@ -31,15 +31,13 @@ export default class BanCommand extends commando.Command {
 
   async run (msg: commando.CommandMessage, { user }: { user: User }): Promise<Message | Message[]> {
     if (!msg.member.hasPermission('BAN_MEMBERS')) {
-      await msg.reply("You can't ban users.")
-      return msg.delete()
+      return msg.reply("You can't ban users.")
     }
 
     const member = msg.guild.member(user)
 
     if (msg.member.roles.highest.comparePositionTo(member.roles.highest) < 0) {
-      await msg.reply('You can\'t ban that user.')
-      return msg.delete()
+      return msg.reply('You can\'t ban that user.')
     }
 
     const channel = msg.guild.channels.find((channel: GuildChannel) => channel.name === 'machobot-audit') as TextChannel
@@ -48,8 +46,7 @@ export default class BanCommand extends commando.Command {
     })
 
     if (!banResponse) {
-      await msg.reply('I can\'t ban that user. Sorry about that.')
-      return msg.delete()
+      return msg.reply('I can\'t ban that user. Sorry about that.')
     }
 
     if (channel) {
@@ -59,7 +56,6 @@ export default class BanCommand extends commando.Command {
     let time = moment().format('YYYY-MM-DD HH:mm:ss Z')
     log(`\r\n[${time}] ${msg.author.tag} (${msg.author.id}) has banned ${member.user.tag} (${member.id}) from ${msg.guild.name} (${msg.guild.id}).`)
 
-    await msg.reply(user.tag + ' has been banned!')
-    return msg.delete()
+    return msg.reply(user.tag + ' has been banned!')
   }
 }

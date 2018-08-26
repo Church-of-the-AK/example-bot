@@ -1,6 +1,6 @@
 import * as commando from 'discord.js-commando'
 import * as path from 'path'
-import { oneLine } from 'common-tags'
+import { oneLine, stripIndents } from 'common-tags'
 import * as sqlite from 'sqlite'
 import * as config from './config'
 import { ServerQueue } from './types/ServerQueue'
@@ -17,11 +17,10 @@ export const client = new commando.CommandoClient({
 client
   .on('error', console.error)
   .on('warn', console.warn)
-  .on('debug', console.log)
   .on('ready', () => {
     console.log(`Client ready; logged in as ${client.user.tag} (${client.user.id})`)
 
-    client.user.setActivity('Macho, the bot for everything (soon).', {
+    client.user.setActivity(`Macho | @${client.user.tag} help`, {
       url: config.twitch,
       type: 'STREAMING'
     })
@@ -33,9 +32,8 @@ client
 
     const commonerRole = member.guild.roles.find(role => role.name.toLowerCase() === 'commoner')
     const memberRole = member.guild.roles.find(role => role.name.toLowerCase() === 'member')
-    const acceptRulesRole = member.guild.roles.find(role => role.name.toLowerCase() === 'accept rules')
 
-    member.roles.add(acceptRulesRole ? acceptRulesRole : commonerRole ? commonerRole : memberRole).catch(() => {
+    member.roles.add(commonerRole ? commonerRole : memberRole).catch(() => {
       // eat the error, not important
     })
   })
@@ -44,6 +42,15 @@ client
   })
   .on('reconnecting', () => {
     console.warn('Reconnecting...')
+  })
+  .on('commandRun', (cmd, promise, msg, args) => {
+    const message = `
+Command: ${cmd.name}
+  User: ${msg.author.tag} (${msg.author.id})
+  Guild: ${msg.guild.name} (${msg.guild.id})
+  Message: ${msg.content}`
+
+    console.log(message)
   })
   .on('commandError', (cmd, err) => {
     if (err instanceof commando.FriendlyError) return
@@ -87,10 +94,11 @@ client
 
 client.registry
   .registerGroups([
-    ['staff', 'Functional Staff Commands'],
-    ['member', 'Commands for Members'],
+    ['staff', 'Staff Commands'],
+    ['member', 'Member Commands'],
     ['music', 'Music Commands'],
-    ['economy', 'Money Commands']
+    ['economy', 'Money Commands'],
+    ['owner', 'Owner-only Commands.']
   ])
   .registerDefaults()
   .registerCommandsIn(path.join(__dirname, 'commands'))

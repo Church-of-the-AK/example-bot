@@ -32,15 +32,15 @@ export default class QueueCommand extends commando.Command {
     const serverQueue = queue.get(msg.guild.id)
 
     if (!serverQueue) {
-      return msg.channel.send('There is nothing playing.')
+      return msg.channel.send('There is nothing playing. Why don\'t *you* start the jam session?')
     }
 
     const songs = serverQueue.songs.map((song, index) => {
       if (index === 0) {
-        return
+        return ''
       }
 
-      return `**-** \`${song.title}\` - \`${song.member.nickname ? song.member.nickname : song.member.user.username}\``
+      return `**-** ${song.title} - \`${song.member.user.tag}\``
     })
     const pages: Map<number, string> = new Map()
     let page = 1
@@ -51,20 +51,21 @@ export default class QueueCommand extends commando.Command {
       } else {
         pages.set(page, songs[i] + '\n')
       }
+
       if ((i + 1) % 10 === 0) {
         page++
       }
     }
 
     if (!pages.get(pageNum)) {
-      return msg.channel.send("There aren't that many pages!")
+      return msg.channel.send(`There are only ${pages.size} pages.`)
     }
 
     const nowPlaying = serverQueue.songs[0]
 
     const description = stripIndents`
 			${pages.get(pageNum)}
-      **Now playing:** \`${nowPlaying.title}\` - \`${nowPlaying.member.nickname ? nowPlaying.member.nickname : nowPlaying.member.user.username}\`
+      **Now playing:** ${nowPlaying.title} - \`${nowPlaying.member.user.tag}\`
     `
 
     const embed = new MessageEmbed()

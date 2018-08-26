@@ -3,4 +3,5 @@ node_modules/
 .vscode/
 log.txt
 out/
-package-lock.json
+yarn.lock
+yarn-error.log

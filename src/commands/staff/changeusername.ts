@@ -31,13 +31,7 @@ export default class ChangeUsernameCommand extends commando.Command {
 
   async run (msg: commando.CommandMessage, { name }: { name: string }): Promise<Message | Message[]> {
     if (msg.author.id !== ownerId) {
-      await msg.reply("Sorry, but you can't do that.")
-
-      if (msg.channel.type === 'text') {
-        return msg.delete()
-      }
-
-      return
+      return msg.reply("Sorry, but you can't do that.")
     }
 
     this.client.user.setUsername(name)
@@ -45,10 +39,6 @@ export default class ChangeUsernameCommand extends commando.Command {
     let time = moment().format('YYYY-MM-DD HH:mm:ss Z')
     log(`\r\n[${time}] ${msg.author.tag} (${msg.author.id}) has changed ${this.client.user.username}'s name to ${name}.`)
 
-    await msg.reply(`Succesfully changed my username to \`${name}\`!`)
-
-    if (msg.deletable) {
-      return msg.delete()
-    }
+    return msg.reply(`Succesfully changed my username to \`${name}\`!`)
   }
 }

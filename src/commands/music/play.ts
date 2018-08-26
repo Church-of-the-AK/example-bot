@@ -38,7 +38,7 @@ export default class PlayCommand extends commando.Command {
   async run (msg: commando.CommandMessage, { link }: { link: string | number }): Promise<Message | Message[]> {
     const url = link && typeof link === 'string' ? link.replace(/<(.+)>/g, '$1') : ''
     const searchString = link
-    const voiceChannel = msg.member.voiceChannel
+    const voiceChannel = msg.member.voice.channel
     const serverQueue = queue.get(msg.guild.id)
 
     if (!voiceChannel) {
@@ -75,13 +75,17 @@ export default class PlayCommand extends commando.Command {
       await playlist.getVideos()
       for (const video of playlist.videos) {
         if (video.description !== 'This video is private.' && video.description !== 'This video is unavailable.') {
-          const video2 = await youtube.getVideo(video.id).catch((err) => {
-            console.log(err)
-            return
-          })
+          try {
+            await handleVideo(video, msg, voiceChannel, true)
+          } catch {
+            const video2 = await youtube.getVideo(video.id).catch((err) => {
+              console.log(err)
+              return
+            })
 
-          if (video2) {
-            await handleVideo(video2, msg, voiceChannel, true)
+            if (video2) {
+              await handleVideo(video2, msg, voiceChannel, true)
+            }
           }
         }
       }
@@ -184,8 +188,7 @@ function play (guild: Guild, song: Song) {
 
   const dispatcher = serverQueue.connection.play(ytdl(song.url))
     .on('end', reason => {
-      if (reason === 'Stream is not generating quickly enough.') console.log('Song ended.')
-      else console.error(reason)
+      if (reason) console.error(reason)
 
       serverQueue.songs.shift()
       play(guild, serverQueue.songs[0])
@@ -193,5 +196,5 @@ function play (guild: Guild, song: Song) {
     .on('error', error => console.error(error))
 
   dispatcher.setVolumeLogarithmic(serverQueue.volume / 5)
-  serverQueue.textChannel.send(`🎶 Started playing: **${song.title}**`)
+  serverQueue.textChannel.send(`🎶 Started playing: **${song.title}**, requested by \`${song.member.user.tag}\`.`)
 }

@@ -5,11 +5,11 @@ export default class GuildsCommand extends commando.Command {
   constructor (client) {
     super(client, {
       name: 'guilds',
-      group: 'member',
+      group: 'owner',
       memberName: 'guilds',
       description: '',
       details: ``,
-      examples: ['guilds']
+      examples: [ 'guilds' ]
     })
   }
 

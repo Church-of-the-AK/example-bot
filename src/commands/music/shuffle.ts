@@ -23,7 +23,7 @@ export default class ShuffleCommand extends commando.Command {
     const serverQueue = queue.get(msg.guild.id)
 
     if (!serverQueue) {
-      return msg.channel.send('There is no queue to shuffle.')
+      return msg.channel.send('There is no queue to shuffle. Why don\'t you play something?')
     }
 
     let shuffled = []
