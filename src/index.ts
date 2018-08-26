@@ -44,11 +44,11 @@ client
     console.warn('Reconnecting...')
   })
   .on('commandRun', (cmd, promise, msg, args) => {
-    const message = stripIndents`
+    const message = `
       Command: ${cmd.name}
-      User: ${msg.author.tag} (${msg.author.id})
-      Guild: ${msg.guild.name} (${msg.guild.id})
-      Args: ${args}
+      \tUser: ${msg.author.tag} (${msg.author.id})
+      \tGuild: ${msg.guild.name} (${msg.guild.id})
+      \tArgs: ${JSON.stringify(args, null, 2)}
     `
 
     console.log(message)

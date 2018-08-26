@@ -38,6 +38,6 @@ export default class SkipCommand extends commando.Command {
 
     serverQueue.connection.dispatcher.end('Skip command has been used.')
 
-    return msg.channel.send(`Skipped \`${song.title}\` - Requested by \`${song.member.nickname ? song.member.nickname : song.member.user.username}\``)
+    return msg.channel.send(`Skipped **${song.title}** - Requested by \`${song.member.user.tag}\``)
   }
 }
