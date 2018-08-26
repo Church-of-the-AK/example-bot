@@ -37,7 +37,7 @@ export default class QueueCommand extends commando.Command {
 
     const songs = serverQueue.songs.map((song, index) => {
       if (index === 0) {
-        return
+        return ''
       }
 
       return `**-** \`${song.title}\` - \`${song.member.nickname ? song.member.nickname : song.member.user.username}\``
