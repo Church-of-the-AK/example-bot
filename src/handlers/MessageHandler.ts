@@ -29,6 +29,8 @@ export async function handleMessage (msg: CommandMessage) {
     if (!(msg.member.hasPermission('MANAGE_MESSAGES'))) {
       return msg.delete()
     }
+
+    return
   }
 
   const { data: user } = await axios.get(`http://localhost:8000/users/${msg.author.id}`)

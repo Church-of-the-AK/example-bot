@@ -1,6 +1,6 @@
 import * as commando from 'discord.js-commando'
 import { oneLine } from 'common-tags'
-import { Message, Role } from 'discord.js'
+import { Message } from 'discord.js'
 
 export default class AcceptCommand extends commando.Command {
   constructor (client) {
@@ -19,21 +19,21 @@ export default class AcceptCommand extends commando.Command {
   }
 
   async run (msg: commando.CommandMessage): Promise<Message | Message[]> {
-    const acceptRules = msg.guild.roles.find((role: Role) => role.name === 'Accept Rules')
-    const commoner = msg.guild.roles.find((role: Role) => role.name === 'Commoner')
-    const member = msg.guild.roles.find((role: Role) => role.name === 'Member')
+    const acceptRules = msg.guild.roles.find(role => role.name === 'Accept Rules')
+    const commoner = msg.guild.roles.find(role => role.name === 'Commoner')
+    const member = msg.guild.roles.find(role => role.name === 'Member')
 
     if (!acceptRules || (!commoner && !member)) {
       return
     }
 
-    if (!msg.member.roles.has(acceptRules.id)) {
+    if (!msg.member.roles.find(role => role.id === acceptRules.id)) {
       await msg.reply("No, you can't do that lol")
       return msg.delete()
     }
 
-    msg.member.roles.remove(acceptRules)
-    msg.member.roles.add(commoner ? commoner : member)
+    await msg.member.roles.remove(acceptRules)
+    await msg.member.roles.add(commoner ? commoner : member)
 
     return msg.delete()
   }
