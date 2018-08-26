@@ -48,7 +48,7 @@ client
 Command: ${cmd.name}
 \tUser: ${msg.author.tag} (${msg.author.id})
 \tGuild: ${msg.guild.name} (${msg.guild.id})
-\tArgs: \n${JSON.stringify(args, null, 2)}
+\tArgs: ${args.toString()}
     `
 
     console.log(message)
