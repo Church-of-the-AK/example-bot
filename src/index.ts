@@ -45,10 +45,10 @@ client
   })
   .on('commandRun', (cmd, promise, msg, args) => {
     const message = `
-      Command: ${cmd.name}
-      \tUser: ${msg.author.tag} (${msg.author.id})
-      \tGuild: ${msg.guild.name} (${msg.guild.id})
-      \tArgs: ${JSON.stringify(args, null, 2)}
+Command: ${cmd.name}
+\tUser: ${msg.author.tag} (${msg.author.id})
+\tGuild: ${msg.guild.name} (${msg.guild.id})
+\tArgs: ${JSON.stringify(args, null, 2)}
     `
 
     console.log(message)
