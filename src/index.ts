@@ -46,9 +46,9 @@ client
   .on('commandRun', (cmd, promise, msg, args) => {
     const message = `
 Command: ${cmd.name}
-\tUser: ${msg.author.tag} (${msg.author.id})
-\tGuild: ${msg.guild.name} (${msg.guild.id})
-\tArgs: ${args.toString()}
+  User: ${msg.author.tag} (${msg.author.id})
+  Guild: ${msg.guild.name} (${msg.guild.id})
+  Args: ${args.valueOf()}
     `
 
     console.log(message)
