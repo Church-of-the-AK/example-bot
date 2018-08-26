@@ -48,8 +48,7 @@ client
 Command: ${cmd.name}
   User: ${msg.author.tag} (${msg.author.id})
   Guild: ${msg.guild.name} (${msg.guild.id})
-  Args: ${args.valueOf()}
-    `
+  Message: ${msg.content}`
 
     console.log(message)
   })
