@@ -88,13 +88,13 @@ Command: ${cmd.name}
   .on('guildCreate', guild => {
     handleGuildAdd(guild)
   })
-  .on('voiceStateUpdate', (oldMember, newMember) => {
+  .on('voiceStateUpdate', async (oldMember, newMember) => {
     if (oldMember.id === client.user.id) {
       return false
     }
 
     console.log('handleVoiceStateUpdate')
-    handleVoiceStateUpdate(oldMember, newMember)
+    await handleVoiceStateUpdate(oldMember, newMember)
   })
   .setProvider(
     sqlite.open(path.join(__dirname, 'database.sqlite3')).then(db => new commando.SQLiteProvider(db))
