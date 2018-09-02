@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { CommandMessage } from 'discord.js-commando'
-import { code } from '../config'
+import { api } from '../config'
 import { TextChannel } from 'discord.js'
 import { User } from 'machobot-database'
 import * as API from '../util'
@@ -9,8 +9,6 @@ import * as API from '../util'
  * Handles a message sent by a user. If that user is a bot, it does nothing.
  *
  * If that message isn't in a `TextChannel`, it does nothing.
- *
- * If that message is in `#accept-rules`, it deletes it.
  *
  * Otherwise, it either creates or edits a user in the database to add or remove xp/level up/edit avatar.
  *
@@ -25,16 +23,12 @@ export async function handleMessage (msg: CommandMessage) {
     return false
   }
 
-  const { data: user } = await axios.get(`http://localhost:8000/users/${msg.author.id}`)
+  const user = await API.getUser(msg.author.id)
 
-  if (user === '' || user.length <= 10) {
+  if (!user) {
     await API.createUser(msg.author)
   } else {
-    if (msg.command) {
-      return false
-    }
-
-    await handleUserMessage(msg)
+    await handleUserMessage(msg, user)
   }
 }
 
@@ -42,17 +36,15 @@ export async function handleMessage (msg: CommandMessage) {
   * Handles a user's message as explained in `function handleMessage`.
   * @param msg The message to handle.
   */
-async function handleUserMessage (msg: CommandMessage): Promise<User> {
-  let { data: user }: { data: User } = await axios.get(`http://localhost:8000/users/${msg.author.id}`)
-
-  user = handleUserExp(user, msg)
+async function handleUserMessage (msg: CommandMessage, user: User): Promise<User> {
+  if (!msg.content.match(/^(\.|!|\?|\*)(\s?[a-z]*)/gim) && !msg.command) {
+    user = handleUserExp(user, msg)
+  }
   user.name = msg.author.username
   user.dateLastMessage = new Date().getTime().toString()
   user.avatarUrl = msg.author.displayAvatarURL({ size: 512 })
 
-  await axios.put(`http://localhost:8000/users/${msg.author.id}&code=${code}`, user)
-  await axios.put(`http://localhost:8000/users/${msg.author.id}/balance&code=${code}`, user.balance)
-  await axios.put(`http://localhost:8000/users/${msg.author.id}/level&code=${code}`, user.level)
+  await axios.put(`${api.url}/users/${msg.author.id}&code=${api.code}`, user)
 
   return user
 }

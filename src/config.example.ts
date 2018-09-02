@@ -1,6 +1,10 @@
-export const token = ''
-export const ownerId = ''
-export const prefix = 'm!'
-export const twitch = ''
-export const code = ''
-export const youtubeKey = ''
+export let token = ''
+export let ownerId = ''
+export let prefix = 'm!'
+export let twitch = ''
+export let youtubeKey = ''
+
+export let api = {
+  url: '',
+  code: ''
+}

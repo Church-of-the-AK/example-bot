@@ -1,6 +1,6 @@
 import * as commando from 'discord.js-commando'
 import * as path from 'path'
-import { oneLine, stripIndents } from 'common-tags'
+import { oneLine } from 'common-tags'
 import * as sqlite from 'sqlite'
 import * as config from './config'
 import { ServerQueue } from './types/ServerQueue'

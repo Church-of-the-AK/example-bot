@@ -4,7 +4,7 @@ import { queue } from '../../index'
 import { Util, VoiceChannel, TextChannel, Guild, MessageEmbed, Collection, Message } from 'discord.js'
 import * as ytdl from 'ytdl-core'
 import { YouTube, Video } from 'better-youtube-api'
-import { youtubeKey } from '../../config'
+import { youtubeKey, api } from '../../config'
 import { ServerQueue, Song } from '../../types'
 
 const youtube = new YouTube(youtubeKey)
@@ -72,21 +72,19 @@ export default class PlayCommand extends commando.Command {
       }
 
       const responseMsg = await msg.channel.send(`🕙 Adding playlist **${playlist.title}** to the queue... ${playlist.itemCount >= 100 ? 'This may take a while.' : ''}`) as Message
-      await playlist.getVideos()
-      for (const video of playlist.videos) {
-        if (video.description !== 'This video is private.' && video.description !== 'This video is unavailable.') {
-          try {
-            await handleVideo(video, msg, voiceChannel, true)
-          } catch {
-            const video2 = await youtube.getVideo(video.id).catch((err) => {
-              console.log(err)
-              return
-            })
+      const videos = await playlist.getVideos()
 
-            if (video2) {
-              await handleVideo(video2, msg, voiceChannel, true)
-            }
-          }
+      for (let i = 0; i < videos.length; i++) {
+        if (videos[i].private) {
+          await videos[i].fetch().catch(() => {
+            // It's private
+          })
+        }
+
+        if (!videos[i].private) {
+          await handleVideo(videos[i], msg, voiceChannel, true).catch(err => {
+            console.log(err)
+          })
         }
       }
 
@@ -111,10 +109,10 @@ export default class PlayCommand extends commando.Command {
     }
 
     let index = 0
-    const description = stripIndents`${(videos as Video[]).map(video2 => `**${++index} -** ${video2.title}`).join('\n')}`
+    const description = stripIndents`${videos.map(video2 => `**${++index} -** ${video2.title}`).join('\n')}`
     const embed = new MessageEmbed()
       .setColor('BLUE')
-      .setAuthor(msg.author.username, msg.author.displayAvatarURL(), `http://192.243.102.112:8000/users/${msg.author.id}`)
+      .setAuthor(msg.author.username, msg.author.displayAvatarURL(), `${api.url}/users/${msg.author.id}`)
       .setTitle('Song Selection')
       .setFooter('Please provide a value to select one of the search results ranging from 1-10.')
       .setDescription(description)
@@ -170,11 +168,12 @@ async function handleVideo (video: Video, msg: commando.CommandMessage, voiceCha
   } else {
     serverQueue.songs.push(song)
 
-    if (playlist) return undefined
-    else return msg.channel.send(`✅ **${song.title}** has been added to the queue!`)
-  }
+    if (playlist) {
+      return true
+    }
 
-  return undefined
+    return msg.channel.send(`✅ **${song.title}** has been added to the queue!`)
+  }
 }
 
 function play (guild: Guild, song: Song) {
@@ -183,6 +182,7 @@ function play (guild: Guild, song: Song) {
   if (!song) {
     serverQueue.voiceChannel.leave()
     queue.delete(guild.id)
+
     return
   }
 
