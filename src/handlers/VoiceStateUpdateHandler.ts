@@ -5,12 +5,7 @@ import { queue } from '..'
 export function handleVoiceStateUpdate (oldMember: GuildMember, newMember: GuildMember) {
   const oldVoice = oldMember.voice.channel
   const newVoice = newMember.voice.channel
-  let serverQueue: ServerQueue
-
-  console.log('Does it have it?')
-  if (queue.has(oldMember.guild.id)) {
-    serverQueue = queue.get(oldMember.guild.id)
-  }
+  const serverQueue = queue.get(oldMember.guild.id)
 
   if (!serverQueue) {
     console.log('return false')
