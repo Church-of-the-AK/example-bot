@@ -40,7 +40,6 @@ async function handleUserMessage (msg: CommandMessage, user: User): Promise<User
   if (!msg.content.match(/^(\.|!|\?|\*)(\s?[a-z]*)/gim) && !msg.command) {
     user = handleUserExp(user, msg)
   }
-
   user.name = msg.author.username
   user.dateLastMessage = new Date().getTime().toString()
   user.avatarUrl = msg.author.displayAvatarURL({ size: 512 })
