@@ -28,5 +28,5 @@ export async function handleGuildAdd (guild: CommandoGuild) {
   apiGuild.banned = false
   apiGuild.settings = new GuildSettings()
 
-  await axios.post(`${api.url}/guilds`, apiGuild)
+  await axios.post(`${api.url}/guilds&code=${api.code}`, apiGuild)
 }
