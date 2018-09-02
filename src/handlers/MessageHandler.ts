@@ -32,7 +32,7 @@ export async function handleMessage (msg: CommandMessage) {
       return false
     }
 
-    await handleUserMessage(msg)
+    await handleUserMessage(msg, user)
   }
 }
 
@@ -40,12 +40,11 @@ export async function handleMessage (msg: CommandMessage) {
   * Handles a user's message as explained in `function handleMessage`.
   * @param msg The message to handle.
   */
-async function handleUserMessage (msg: CommandMessage): Promise<User> {
-  let { data: user }: { data: User } = await axios.get(`${api.url}/users/${msg.author.id}`)
-
-  if (msg.content.match(/^(\.|!|\?|\*)(\s?[a-z]*)/gim)[1]) {
+async function handleUserMessage (msg: CommandMessage, user: User): Promise<User> {
+  if (!msg.content.match(/^(\.|!|\?|\*)(\s?[a-z]*)/gim)) {
     user = handleUserExp(user, msg)
   }
+
   user.name = msg.author.username
   user.dateLastMessage = new Date().getTime().toString()
   user.avatarUrl = msg.author.displayAvatarURL({ size: 512 })
