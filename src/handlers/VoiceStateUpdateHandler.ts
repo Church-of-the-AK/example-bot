@@ -7,15 +7,15 @@ export async function handleVoiceStateUpdate (oldMember: GuildMember, newMember:
   const newVoice = newMember.voice.channel
   let serverQueue: ServerQueue
 
-  if (oldMember.id === client.user.id) {
-    return false
-  }
-
   if (queue.has(oldMember.guild.id)) {
     serverQueue = queue.get(oldMember.guild.id)
   }
 
   if (!serverQueue) {
+    return false
+  }
+
+  if (!serverQueue.connection) {
     return false
   }
 

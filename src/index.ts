@@ -39,6 +39,10 @@ client
     })
   })
   .on('voiceStateUpdate', (oldMember, newMember) => {
+    if (oldMember.id === client.user.id) {
+      return false
+    }
+
     handleVoiceStateUpdate(oldMember, newMember, queue, client)
   })
   .on('disconnect', () => {
