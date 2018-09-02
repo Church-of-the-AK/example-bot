@@ -93,6 +93,7 @@ Command: ${cmd.name}
       return false
     }
 
+    console.log('handleVoiceStateUpdate')
     handleVoiceStateUpdate(oldMember, newMember)
   })
   .setProvider(
