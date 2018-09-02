@@ -1,6 +1,7 @@
 import * as commando from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import { Message, TextChannel, MessageEmbed, GuildChannel } from 'discord.js'
+import { api } from '../../config'
 
 export default class SuggestCommand extends commando.Command {
   constructor (client) {
@@ -35,7 +36,7 @@ export default class SuggestCommand extends commando.Command {
     }
 
     const embed = new MessageEmbed()
-      .setAuthor(msg.author.username, msg.author.displayAvatarURL(), `http://192.243.102.112:8000/users/${msg.author.id}`)
+      .setAuthor(msg.author.username, msg.author.displayAvatarURL(), `${api.url}/users/${msg.author.id}`)
       .setThumbnail(this.client.user.displayAvatarURL())
       .setTimestamp(new Date())
       .setColor('BLUE')

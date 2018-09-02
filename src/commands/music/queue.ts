@@ -2,6 +2,7 @@ import * as commando from 'discord.js-commando'
 import { oneLine, stripIndents } from 'common-tags'
 import { queue } from '../../index'
 import { Message, MessageEmbed } from 'discord.js'
+import { api } from '../../config'
 
 export default class QueueCommand extends commando.Command {
   constructor (client) {
@@ -70,7 +71,7 @@ export default class QueueCommand extends commando.Command {
 
     const embed = new MessageEmbed()
       .setColor('BLUE')
-      .setAuthor(msg.author.username, msg.author.displayAvatarURL(), `http://192.243.102.112:8000/users/${msg.author.id}`)
+      .setAuthor(msg.author.username, msg.author.displayAvatarURL(), `${api.url}/users/${msg.author.id}`)
       .setTitle('Song Queue')
       .setDescription(description)
       .setFooter(`Page ${pageNum}/${pages.size}. View different pages with ${msg.guild.commandPrefix}queue <number>.`)

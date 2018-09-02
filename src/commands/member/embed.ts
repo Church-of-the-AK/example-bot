@@ -1,6 +1,7 @@
 import * as commando from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import { Message, MessageEmbed, ColorResolvable } from 'discord.js'
+import { api } from '../../config'
 
 export default class AddNumbersCommand extends commando.Command {
   constructor (client) {
@@ -38,7 +39,7 @@ export default class AddNumbersCommand extends commando.Command {
 
     const title: string = content.substring(titleParam + 7, descParam)
     const embed = new MessageEmbed()
-      .setAuthor(msg.author.username, msg.author.displayAvatarURL(), `http://192.243.102.112:8000/users/${msg.author.id}`)
+      .setAuthor(msg.author.username, msg.author.displayAvatarURL(), `${api.url}/users/${msg.author.id}`)
       .setTitle(title)
       .setFooter('Macho')
       .setThumbnail(this.client.user.displayAvatarURL())

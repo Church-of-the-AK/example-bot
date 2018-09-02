@@ -1,11 +1,10 @@
 import * as commando from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import { Message } from 'discord.js'
-import { code } from '../../config'
+import { api } from '../../config'
 import * as numeral from 'numeral'
 import axios from 'axios'
 import { getUser } from '../../util'
-import { User } from 'machobot-database'
 
 export default class DailiesCommand extends commando.Command {
   constructor (client) {
@@ -48,7 +47,7 @@ export default class DailiesCommand extends commando.Command {
 
     msg.channel.send(`**${user.name}**, you have claimed your **200** daily credits!`)
 
-    await axios.put(`http://localhost:8000/users/${msg.author.id}/balance&code=${code}`, user.balance)
+    await axios.put(`${api.url}/users/${msg.author.id}/balance&code=${api.code}`, user.balance)
     return msg.delete()
   }
 }
