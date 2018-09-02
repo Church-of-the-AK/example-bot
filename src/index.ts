@@ -4,8 +4,7 @@ import { oneLine } from 'common-tags'
 import * as sqlite from 'sqlite'
 import * as config from './config'
 import { ServerQueue } from './types/ServerQueue'
-import { handleMessage, handleGuildAdd } from './handlers'
-import { handleVoiceStateUpdate } from './handlers/VoiceStateUpdateHandler'
+import { handleMessage, handleGuildAdd, handleVoiceStateUpdate } from './handlers'
 
 export const queue: Map<string, ServerQueue> = new Map()
 
@@ -37,13 +36,6 @@ client
     member.roles.add(commonerRole ? commonerRole : memberRole).catch(() => {
       // eat the error, not important
     })
-  })
-  .on('voiceStateUpdate', (oldMember, newMember) => {
-    if (oldMember.id === client.user.id) {
-      return false
-    }
-
-    handleVoiceStateUpdate(oldMember, newMember, queue, client)
   })
   .on('disconnect', () => {
     console.warn('Disconnected!')
@@ -95,6 +87,13 @@ Command: ${cmd.name}
   })
   .on('guildCreate', guild => {
     handleGuildAdd(guild)
+  })
+  .on('voiceStateUpdate', (oldMember, newMember) => {
+    if (oldMember.id === client.user.id) {
+      return false
+    }
+
+    handleVoiceStateUpdate(oldMember, newMember)
   })
   .setProvider(
     sqlite.open(path.join(__dirname, 'database.sqlite3')).then(db => new commando.SQLiteProvider(db))
