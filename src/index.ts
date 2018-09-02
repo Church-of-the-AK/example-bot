@@ -1,10 +1,11 @@
 import * as commando from 'discord.js-commando'
 import * as path from 'path'
-import { oneLine, stripIndents } from 'common-tags'
+import { oneLine } from 'common-tags'
 import * as sqlite from 'sqlite'
 import * as config from './config'
 import { ServerQueue } from './types/ServerQueue'
 import { handleMessage, handleGuildAdd } from './handlers'
+import { handleVoiceStateUpdate } from './handlers/VoiceStateUpdateHandler'
 
 export const queue: Map<string, ServerQueue> = new Map()
 
@@ -36,6 +37,9 @@ client
     member.roles.add(commonerRole ? commonerRole : memberRole).catch(() => {
       // eat the error, not important
     })
+  })
+  .on('voiceStateUpdate', (oldMember, newMember) => {
+    handleVoiceStateUpdate(oldMember, newMember, queue)
   })
   .on('disconnect', () => {
     console.warn('Disconnected!')

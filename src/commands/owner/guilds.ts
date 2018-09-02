@@ -34,7 +34,7 @@ export default class GuildsCommand extends commando.Command {
       .setColor('BLUE')
       .setFooter('Macho')
       .setTimestamp(new Date())
-      .setThumbnail(msg.author.displayAvatarURL())
+      .setThumbnail(msg.author.displayAvatarURL({ size: 512, format: 'png' }))
       .setDescription(guilds)
 
     return msg.channel.send(embed)

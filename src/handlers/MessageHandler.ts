@@ -28,10 +28,6 @@ export async function handleMessage (msg: CommandMessage) {
   if (!user) {
     await API.createUser(msg.author)
   } else {
-    if (msg.command) {
-      return false
-    }
-
     await handleUserMessage(msg, user)
   }
 }
@@ -41,7 +37,7 @@ export async function handleMessage (msg: CommandMessage) {
   * @param msg The message to handle.
   */
 async function handleUserMessage (msg: CommandMessage, user: User): Promise<User> {
-  if (!msg.content.match(/^(\.|!|\?|\*)(\s?[a-z]*)/gim)) {
+  if (!msg.content.match(/^(\.|!|\?|\*)(\s?[a-z]*)/gim) && !msg.command) {
     user = handleUserExp(user, msg)
   }
 
