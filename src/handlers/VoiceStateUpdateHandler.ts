@@ -10,18 +10,33 @@ export function handleVoiceStateUpdate (oldMember: GuildMember, newMember: Guild
     return false
   }
 
-  if (oldVoice.channelID && !newVoice.channelID && oldVoice.channel.id === serverQueue.voiceChannel.id) {
-    if (serverQueue.voiceChannel.members.size === 0) {
-      if (serverQueue.playing) {
-        serverQueue.playing = false
-        serverQueue.connection.dispatcher.pause()
-        serverQueue.textChannel.send('All users have left the voice channel. The music has been paused.')
+  if (oldVoice.channelID) {
+    if (newVoice.channelID) {
+      return false
+    }
+
+    if (oldVoice.channelID === serverQueue.voiceChannel.id) {
+      if (serverQueue.voiceChannel.members.size === 0) {
+        if (serverQueue.playing) {
+          serverQueue.playing = false
+          serverQueue.connection.dispatcher.pause()
+          serverQueue.textChannel.send('All users have left the voice channel. The music has been paused.')
+        }
       }
     }
-  } else if (!oldVoice.channelID && newVoice.channelID !== undefined && newVoice.channel.id === serverQueue.voiceChannel.id) {
-    if (!serverQueue.playing) {
-      serverQueue.playing = true
-      serverQueue.connection.dispatcher.resume()
+  } else if (newVoice.channelID) {
+    if (oldVoice.channelID) {
+      return false
+    }
+
+    if (newVoice.channelID === serverQueue.voiceChannel.id) {
+      if (serverQueue.voiceChannel.members.size === 0) {
+        if (serverQueue.playing) {
+          serverQueue.playing = false
+          serverQueue.connection.dispatcher.pause()
+          serverQueue.textChannel.send('All users have left the voice channel. The music has been paused.')
+        }
+      }
     }
   }
 }
