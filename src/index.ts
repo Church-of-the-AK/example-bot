@@ -39,7 +39,7 @@ client
     })
   })
   .on('voiceStateUpdate', (oldMember, newMember) => {
-    handleVoiceStateUpdate(oldMember, newMember, queue)
+    handleVoiceStateUpdate(oldMember, newMember, queue, client)
   })
   .on('disconnect', () => {
     console.warn('Disconnected!')
