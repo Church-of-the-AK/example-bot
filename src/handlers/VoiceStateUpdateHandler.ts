@@ -2,7 +2,7 @@ import { GuildMember } from 'discord.js'
 import { ServerQueue } from '../types'
 import { queue } from '..'
 
-export async function handleVoiceStateUpdate (oldMember: GuildMember, newMember: GuildMember) {
+export function handleVoiceStateUpdate (oldMember: GuildMember, newMember: GuildMember) {
   const oldVoice = oldMember.voice.channel
   const newVoice = newMember.voice.channel
   let serverQueue: ServerQueue
