@@ -10,7 +10,7 @@ export function handleVoiceStateUpdate (oldMember: GuildMember, newMember: Guild
     return false
   }
 
-  if (oldVoice.channel && !newVoice.channel && oldVoice.channel.id === serverQueue.voiceChannel.id) {
+  if (oldVoice.channel !== undefined && newVoice.channel === undefined && oldVoice.channel.id === serverQueue.voiceChannel.id) {
     if (serverQueue.voiceChannel.members.size === 0) {
       if (serverQueue.playing) {
         serverQueue.playing = false
@@ -18,7 +18,7 @@ export function handleVoiceStateUpdate (oldMember: GuildMember, newMember: Guild
         serverQueue.textChannel.send('All users have left the voice channel. The music has been paused.')
       }
     }
-  } else if (!oldVoice.channel && newVoice.channel && newVoice.channel.id === serverQueue.voiceChannel.id) {
+  } else if (oldVoice.channel === undefined && newVoice.channel !== undefined && newVoice.channel.id === serverQueue.voiceChannel.id) {
     if (!serverQueue.playing) {
       serverQueue.playing = true
       serverQueue.connection.dispatcher.resume()
