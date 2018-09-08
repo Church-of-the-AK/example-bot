@@ -16,8 +16,7 @@ export default class DailiesCommand extends commando.Command {
       description: 'Gives you your 200 daily credits.',
       details: oneLine`
         Gives you your 200 daily credits. Can be used once every 24
-        hours.
-			`,
+        hours.`,
       examples: ['dailies', 'daily', 'freemoney']
     })
   }
@@ -38,9 +37,9 @@ export default class DailiesCommand extends commando.Command {
 
     if (diffHrs < 24) {
       const hours = parseFloat(numeral(24 - diffHrs).format('0'))
-      const minutes = parseFloat(numeral(24 - diffHrs).format('.00')) * 100 * .6
+      const minutes = (parseFloat(numeral(24 - diffHrs).format('.00')) * 100 * .6).toFixed(0)
 
-      return msg.channel.send(`**${user.name}**, you still have **${hours}** hours and ${minutes} minutes until you can claim your dailies again.`)
+      return msg.channel.send(`**${user.name}**, you still have **${hours}** hours and **${minutes}** minutes until you can claim your dailies again.`)
     }
 
     user.balance.balance += 200
