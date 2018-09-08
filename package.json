@@ -10,7 +10,7 @@
   "license": "GPL-3.0",
   "dependencies": {
     "axios": "^0.18.0",
-    "better-youtube-api": "0.1.0",
+    "better-youtube-api": "0.1.1",
     "common-tags": "^1.8.0",
     "discord.js": "github:discordjs/discord.js",
     "discord.js-commando": "github:discordjs/Commando",
