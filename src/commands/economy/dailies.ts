@@ -16,15 +16,14 @@ export default class DailiesCommand extends commando.Command {
       description: 'Gives you your 200 daily credits.',
       details: oneLine`
         Gives you your 200 daily credits. Can be used once every 24
-        hours.
-			`,
+        hours.`,
       examples: ['dailies', 'daily', 'freemoney']
     })
   }
 
   async run (msg: commando.CommandMessage): Promise<Message | Message[]> {
-    let user = await getUser(msg.author.id)
-    let diffHrs
+    const user = await getUser(msg.author.id)
+    let diffHrs: number
 
     if (!user) {
       return msg.reply('I couldn\'t find you in my database, please try again.')
@@ -37,8 +36,10 @@ export default class DailiesCommand extends commando.Command {
     }
 
     if (diffHrs < 24) {
-      const waitTime = parseFloat(numeral(24 - diffHrs).format('0.00'))
-      return msg.channel.send(`**${user.name}**, you still have **${waitTime}** hours until you can claim your dailies again.`)
+      const hours = Math.floor(24 - diffHrs)
+      const minutes = (parseFloat(numeral(24 - diffHrs).format('.00')) * 100 * .6).toFixed(0)
+
+      return msg.channel.send(`**${user.name}**, you still have **${hours}** hours and **${minutes}** minutes until you can claim your dailies again.`)
     }
 
     user.balance.balance += 200
