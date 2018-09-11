@@ -37,7 +37,7 @@ export async function handleMessage (msg: CommandMessage) {
   * @param msg The message to handle.
   */
 async function handleUserMessage (msg: CommandMessage, user: User): Promise<User> {
-  if (!msg.content.match(/^(\.|!|\?|\*)(\s?[a-z]*)/gim) && !msg.command) {
+  if (!msg.command) {
     user = handleUserExp(user, msg)
   }
   user.name = msg.author.username

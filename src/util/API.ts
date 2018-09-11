@@ -22,7 +22,12 @@ export async function createUser (user: User) {
 }
 
 export async function getUser (id: string) {
-  const { data: user }: { data: APIUser | '' } = await axios.get(`${api.url}/users/${id}`)
+  const { data: user }: { data: APIUser | '' } = await axios.get(`${api.url}/users/${id}`).catch(error => {
+    console.log(error)
+
+    const response: { data: '' } = { data: '' }
+    return response
+  })
 
   return user
 }
