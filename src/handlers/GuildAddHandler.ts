@@ -2,7 +2,14 @@ import { CommandoGuild } from 'discord.js-commando'
 import { createUser, getUser } from '../util'
 import { Guild, GuildSettings } from 'machobot-database'
 import { api } from '../config'
-import axios from 'axios'
+import axiosInit from 'axios'
+import * as https from 'https'
+
+const axios = axiosInit.create({
+  httpsAgent: new https.Agent({
+    rejectUnauthorized: false
+  })
+})
 
 export async function handleGuildAdd (guild: CommandoGuild) {
   console.log(`Joined guild ${guild.name} (${guild.id})`)
