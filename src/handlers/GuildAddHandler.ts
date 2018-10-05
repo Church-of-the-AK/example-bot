@@ -1,13 +1,5 @@
 import { CommandoGuild } from 'discord.js-commando'
-import { createUser, getUser, createGuild } from '../util'
-import axiosInit from 'axios'
-import * as https from 'https'
-
-const axios = axiosInit.create({
-  httpsAgent: new https.Agent({
-    rejectUnauthorized: false
-  })
-})
+import { createUser, getUser, createGuild, getGuild } from '../util'
 
 export async function handleGuildAdd (guild: CommandoGuild) {
   console.log(`Joined guild ${guild.name} (${guild.id})`)
@@ -26,5 +18,9 @@ export async function handleGuildAdd (guild: CommandoGuild) {
     await createUser(member.user)
   })
 
-  await createGuild(guild)
+  const apiGuild = await getGuild(guild.id)
+
+  if (!apiGuild) {
+    await createGuild(guild)
+  }
 }
