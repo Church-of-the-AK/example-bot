@@ -23,7 +23,9 @@ export default class ShuffleCommand extends commando.Command {
     const serverQueue = queue.get(msg.guild.id)
 
     if (!serverQueue) {
-      return msg.channel.send('There is no queue to shuffle. Why don\'t you play something?')
+      return msg.channel.send('There is no queue to shuffle. Why don\'t you play something?').catch(() => {
+        return null
+      })
     }
 
     let shuffled = []
@@ -36,7 +38,9 @@ export default class ShuffleCommand extends commando.Command {
     shuffled.unshift(serverQueue.songs[0])
     serverQueue.songs = shuffled
 
-    return msg.channel.send('🔀 Shuffled the music for you!')
+    return msg.channel.send('🔀 Shuffled the music for you!').catch(() => {
+      return null
+    })
   }
 }
 

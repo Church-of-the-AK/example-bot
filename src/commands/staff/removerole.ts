@@ -39,11 +39,15 @@ export default class RemoveRoleCommand extends commando.Command {
 
   async run (msg: commando.CommandMessage, { member, role }: { member: GuildMember, role: Role }): Promise<Message | Message[]> {
     if (!msg.member.hasPermission('MANAGE_ROLES')) {
-      return msg.reply('You can\'t remove roles.')
+      return msg.reply('You can\'t remove roles.').catch(() => {
+        return null
+      })
     }
 
     if (msg.member.roles.highest.comparePositionTo(role) <= 0) {
-      return msg.reply('You can\'t remove roles that are higher than or equal to yours.')
+      return msg.reply('You can\'t remove roles that are higher than or equal to yours.').catch(() => {
+        return null
+      })
     }
 
     const channel = msg.guild.channels.find((channel: GuildChannel) => channel.name === 'machobot-audit') as TextChannel
@@ -52,16 +56,22 @@ export default class RemoveRoleCommand extends commando.Command {
     })
 
     if (!removeRoleResponse) {
-      return msg.reply('I can\'t remove roles.')
+      return msg.reply('I can\'t remove roles.').catch(() => {
+        return null
+      })
     }
 
     if (channel) {
-      channel.send(`\`${msg.author.tag}\` (${msg.author.id}) has removed role \`${role.name}\` (${role.id}) from \`${member.user.tag}\` (${member.id}).`)
+      channel.send(`\`${msg.author.tag}\` (${msg.author.id}) has removed role \`${role.name}\` (${role.id}) from \`${member.user.tag}\` (${member.id}).`).catch(() => {
+        return null
+      })
     }
 
     const time = moment().format('YYYY-MM-DD HH:mm:ss Z')
     log(`\r\n[${time}] ${msg.author.tag} (${msg.author.id}) has removed role ${role.name} (${role.id}) from ${member.user.tag} (${member.id}).`)
 
-    return msg.reply(`Removed role \`${role.name}\` from \`${member.user.tag}\`.`)
+    return msg.reply(`Removed role \`${role.name}\` from \`${member.user.tag}\`.`).catch(() => {
+      return null
+    })
   }
 }

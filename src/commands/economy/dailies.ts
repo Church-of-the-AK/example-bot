@@ -33,7 +33,9 @@ export default class DailiesCommand extends commando.Command {
     let diffHrs: number
 
     if (!user) {
-      return msg.reply('I couldn\'t find you in my database, please try again.')
+      return msg.reply('I couldn\'t find you in my database, please try again.').catch(() => {
+        return null
+      })
     }
 
     if (user.balance.dateClaimedDailies) {
@@ -46,16 +48,21 @@ export default class DailiesCommand extends commando.Command {
       const hours = Math.ceil(24 - diffHrs)
       const minutes = (parseFloat(numeral(24 - diffHrs).format('.00')) * 100 * .6).toFixed(0)
 
-      return msg.channel.send(`**${user.name}**, you still have **${hours}** hours and **${minutes}** minutes until you can claim your dailies again.`)
+      return msg.channel.send(`**${user.name}**, you still have **${hours}** hours and **${minutes}** minutes until you can claim your dailies again.`).catch(() => {
+        return null
+      })
     }
 
     user.balance.balance += 200
     user.balance.netWorth += 200
     user.balance.dateClaimedDailies = new Date().getTime().toString()
 
-    msg.channel.send(`**${user.name}**, you have claimed your **200** daily credits!`)
+    await msg.channel.send(`**${user.name}**, you have claimed your **200** daily credits!`).catch(() => {
+      return
+    })
 
-    await axios.put(`${api.url}/users/${msg.author.id}/balance&code=${api.code}`, user.balance)
-    return msg.delete()
+    await axios.put(`${api.url}/users/${msg.author.id}/balance&code=${api.code}`, user.balance).catch(error => {
+      console.log(error)
+    })
   }
 }

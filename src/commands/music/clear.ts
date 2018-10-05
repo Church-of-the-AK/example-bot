@@ -25,20 +25,28 @@ export default class ClearCommand extends commando.Command {
     const serverQueue: ServerQueue = queue.get(msg.guild.id)
 
     if (!msg.member.hasPermission('MANAGE_MESSAGES')) {
-      return msg.channel.send('This command requires you to have the Manage Messages permission.')
+      return msg.channel.send('This command requires you to have the Manage Messages permission.').catch(() => {
+        return null
+      })
     }
 
     if (!msg.member.voice.channel) {
-      return msg.channel.send('You are not in a voice channel!')
+      return msg.channel.send('You are not in a voice channel!').catch(() => {
+        return null
+      })
     }
 
     if (!serverQueue) {
-      return msg.channel.send('The queue is already empty.')
+      return msg.channel.send('The queue is already empty.').catch(() => {
+        return null
+      })
     }
 
     serverQueue.songs = []
     serverQueue.connection.dispatcher.end('Clear command has been used.')
 
-    return msg.channel.send('Cleared the queue.')
+    return msg.channel.send('Cleared the queue.').catch(() => {
+      return null
+    })
   }
 }

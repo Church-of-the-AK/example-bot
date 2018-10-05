@@ -33,8 +33,9 @@ export default class AddNumbersCommand extends commando.Command {
     const colorParam: number = content.toLowerCase().indexOf('--color')
 
     if (!(titleParam > -1 && descParam > -1)) {
-      await msg.reply('Use `m!help embed` for usage instructions.')
-      return msg.delete()
+      return msg.reply('Use `m!help embed` for usage instructions.').catch(() => {
+        return null
+      })
     }
 
     const title: string = content.substring(titleParam + 7, descParam)
@@ -57,12 +58,8 @@ export default class AddNumbersCommand extends commando.Command {
       embed.setDescription(description)
     }
 
-    msg.channel.send(embed)
-
-    if (msg.channel.type === 'text') {
-      return msg.delete()
-    }
-
-    return undefined
+    return msg.channel.send(embed).catch(() => {
+      return null
+    })
   }
 }

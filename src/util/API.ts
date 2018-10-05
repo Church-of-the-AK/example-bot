@@ -25,9 +25,11 @@ export async function createUser (user: User) {
   newUser.accessToken = ''
   newUser.admin = false
 
-  return axios.post(`${api.url}/users&code=${api.code}`, newUser).catch(error => {
+  const response = await axios.post(`${api.url}/users&code=${api.code}`, newUser).catch(error => {
     console.log(error)
   })
+
+  console.log(response ? `Created user ${user.username}` : `Failed to create user ${user.username}`)
 }
 
 export async function getUser (id: string) {

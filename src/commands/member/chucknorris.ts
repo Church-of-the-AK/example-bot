@@ -21,11 +21,14 @@ export default class ChuckNorrisCommand extends commando.Command {
   }
 
   async run (msg: commando.CommandMessage): Promise<Message | Message[]> {
-    const { data: joke } = await axios.get('http://api.icndb.com/jokes/random')
+    const { data: joke } = await axios.get('http://api.icndb.com/jokes/random').catch(error => {
+      console.log(error)
+      return { data: 'Error retrieving a joke from the database.' }
+    })
     const decoded = AllHtmlEntities.decode(joke.value.joke)
 
-    msg.reply(decoded)
-
-    return msg.delete()
+    return msg.reply(decoded).catch(() => {
+      return null
+    })
   }
 }

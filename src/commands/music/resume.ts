@@ -23,12 +23,16 @@ export default class ResumeCommand extends commando.Command {
     const serverQueue = queue.get(msg.guild.id)
 
     if (!serverQueue || serverQueue.playing) {
-      return msg.channel.send('There is nothing paused.')
+      return msg.channel.send('There is nothing paused.').catch(() => {
+        return null
+      })
     }
 
     serverQueue.playing = true
     serverQueue.connection.dispatcher.resume()
 
-    return msg.channel.send('▶ Resumed the music for you!')
+    return msg.channel.send('▶ Resumed the music for you!').catch(() => {
+      return null
+    })
   }
 }

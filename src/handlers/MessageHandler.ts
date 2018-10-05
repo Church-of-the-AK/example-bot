@@ -85,8 +85,8 @@ function handleUserExp (user: User, msg: CommandMessage) {
       user.balance.balance += creditsEarned
       user.balance.netWorth += creditsEarned
 
-      msg.channel.send(`Congrats **${user.name}**! You have reached level **${user.level.level}** and earned **${creditsEarned}** credits!`).catch(error => {
-        console.log(error)
+      msg.channel.send(`Congrats **${user.name}**! You have reached level **${user.level.level}** and earned **${creditsEarned}** credits!`).catch(() => {
+        return
       })
     }
   }

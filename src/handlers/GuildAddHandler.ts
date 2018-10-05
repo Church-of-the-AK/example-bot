@@ -35,7 +35,9 @@ export async function handleGuildAdd (guild: CommandoGuild) {
   apiGuild.banned = false
   apiGuild.settings = new GuildSettings()
 
-  await axios.post(`${api.url}/guilds&code=${api.code}`, apiGuild).catch(error => {
+  const response = await axios.post(`${api.url}/guilds&code=${api.code}`, apiGuild).catch(error => {
     console.log(error)
   })
+
+  console.log(response ? `Created guild ${guild.name}` : `Failed to create guild ${guild.name}`)
 }

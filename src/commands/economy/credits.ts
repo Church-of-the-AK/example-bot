@@ -34,16 +34,17 @@ export default class CreditsCommand extends commando.Command {
     })
 
     if (!user) {
-      msg.reply(
+      return msg.reply(
         `${mention !== 1 ? `I don't have that user in the database. Wait until they send a message.`
           : `It seems as if I didn't have you in the database. Please try again.`
         }`
-      )
-      return msg.delete()
+      ).catch(() => {
+        return null
+      })
     }
 
-    msg.channel.send(`**${user.name}** has **${user.balance.balance}** credits.`)
-
-    return msg.delete()
+    return msg.channel.send(`**${user.name}** has **${user.balance.balance}** credits.`).catch(() => {
+      return null
+    })
   }
 }
