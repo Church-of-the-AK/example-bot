@@ -1,4 +1,4 @@
-import { User as APIUser } from 'machobot-database'
+import { User as APIUser, GuildSettings } from 'machobot-database'
 import axiosInit from 'axios'
 import { api } from '../config'
 import { User } from 'discord.js'
@@ -41,4 +41,15 @@ export async function getUser (id: string) {
   })
 
   return user
+}
+
+export async function getGuildSettings (id: string) {
+  const { data: settings }: { data: GuildSettings | '' } = await axios.get(`${api.url}/guilds/${id}/settings`).catch(error => {
+    console.log(error)
+
+    const response: { data: '' } = { data: '' }
+    return response
+  })
+
+  return settings
 }
