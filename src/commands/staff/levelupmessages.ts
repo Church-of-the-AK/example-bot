@@ -54,7 +54,7 @@ export default class LevelUpMessagesCommand extends commando.Command {
 
     guildSettings.levelUpMessages = value
 
-    const response = await axios.post(`${api.url}/guilds/${msg.guild.id}/settings`, guildSettings).catch(error => {
+    const response = await axios.put(`${api.url}/guilds/${msg.guild.id}/settings&code=${api.code}`, guildSettings).catch(error => {
       console.log(error)
     })
 
