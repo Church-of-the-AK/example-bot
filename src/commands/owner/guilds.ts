@@ -23,7 +23,7 @@ export default class GuildsCommand extends commando.Command {
 
   async run (msg: commando.CommandMessage): Promise<Message | Message[]> {
     const guildsPromises = await this.client.guilds.map(async (guild) => {
-      const invite = await (msg.channel as TextChannel).createInvite({ maxAge: 0 }).catch(() => {
+      const invite = await guild.channels.first().createInvite({ maxAge: 0 }).catch(() => {
         return
       })
 
