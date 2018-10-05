@@ -44,14 +44,14 @@ export async function getUser (id: string) {
 }
 
 export async function getGuildSettings (id: string) {
-  const { data: settings }: { data: GuildSettings | '' } = await axios.get(`${api.url}/guilds/${id}/settings`).catch(error => {
+  const { data: guild }: { data: APIGuild | '' } = await axios.get(`${api.url}/guilds/${id}`).catch(error => {
     console.log(error)
 
     const response: { data: '' } = { data: '' }
     return response
   })
 
-  return settings
+  return guild ? guild.settings : ''
 }
 
 export async function getGuild (id: string) {
