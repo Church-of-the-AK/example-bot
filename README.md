@@ -1,3 +1,8 @@
+[![Discord Bots](https://discordbots.org/api/widget/lib/399794061059424257.svg)](https://discordbots.org/bot/399794061059424257)
+[![Discord Bots](https://discordbots.org/api/widget/status/399794061059424257.svg)](https://discordbots.org/bot/399794061059424257)
+[![Discord Bots](https://discordbots.org/api/widget/upvotes/399794061059424257.svg)](https://discordbots.org/bot/399794061059424257)
+[![Discord Bots](https://discordbots.org/api/widget/owner/399794061059424257.svg)](https://discordbots.org/bot/399794061059424257)
+
 # Machobot
 A bot I've made for Discord.
 
