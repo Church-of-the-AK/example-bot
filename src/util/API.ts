@@ -25,7 +25,9 @@ export async function createUser (user: User) {
   newUser.accessToken = ''
   newUser.admin = false
 
-  return axios.post(`${api.url}/users&code=${api.code}`, newUser)
+  return axios.post(`${api.url}/users&code=${api.code}`, newUser).catch(error => {
+    console.log(error)
+  })
 }
 
 export async function getUser (id: string) {
