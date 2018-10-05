@@ -23,16 +23,22 @@ export default class PauseCommand extends commando.Command {
     const serverQueue = queue.get(msg.guild.id)
 
     if (!serverQueue) {
-      return msg.channel.send('There is nothing playing.')
+      return msg.channel.send('There is nothing playing.').catch(() => {
+        return null
+      })
     }
 
     if (!serverQueue.playing) {
-      return msg.channel.send('The music is already paused.')
+      return msg.channel.send('The music is already paused.').catch(() => {
+        return null
+      })
     }
 
     serverQueue.playing = false
     serverQueue.connection.dispatcher.pause()
 
-    return msg.channel.send('⏸ Paused the music for you!')
+    return msg.channel.send('⏸ Paused the music for you!').catch(() => {
+      return null
+    })
   }
 }

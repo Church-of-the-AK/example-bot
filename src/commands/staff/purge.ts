@@ -31,11 +31,15 @@ export default class PurgeCommand extends Command {
 
   async run (msg: CommandMessage, { deleteCount }: { deleteCount: number }): Promise<Message | Message[]> {
     if (!(msg.member.hasPermission('MANAGE_MESSAGES'))) {
-      return msg.reply("You can't delete messages.")
+      return msg.reply("You can't delete messages.").catch(() => {
+        return null
+      })
     }
 
     if (!deleteCount || deleteCount < 2 || deleteCount > 100) {
-      await msg.reply('I need a number between 2 and 100. Try again.')
+      await msg.reply('I need a number between 2 and 100. Try again.').catch(() => {
+        return null
+      })
     }
 
     const logChannel = msg.guild.channels.find((channel: GuildChannel) => channel.name === 'machobot-audit') as TextChannel
@@ -45,15 +49,21 @@ export default class PurgeCommand extends Command {
     })
 
     if (!deleteResponse) {
-      return msg.reply('I encountered an error whilst deleting messages. Do I have the Manage Messages permission?')
+      return msg.reply('I encountered an error whilst deleting messages. Do I have the Manage Messages permission?').catch(() => {
+        return null
+      })
     }
 
     if (deleteResponse.size === 0) {
-      return msg.reply('There were no messages younger than two weeks that I could delete.')
+      return msg.reply('There were no messages younger than two weeks that I could delete.').catch(() => {
+        return null
+      })
     }
 
     if (logChannel) {
-      logChannel.send(`\`${msg.author.tag}\` (${msg.author.id}) has purged \`${deleteCount}\` messages from \`${channel.name}\` (${channel.id}).`)
+      logChannel.send(`\`${msg.author.tag}\` (${msg.author.id}) has purged \`${deleteCount}\` messages from \`${channel.name}\` (${channel.id}).`).catch(() => {
+        return null
+      })
     }
 
     const time = moment().format('YYYY-MM-DD HH:mm:ss Z')

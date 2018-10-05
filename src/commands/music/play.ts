@@ -42,23 +42,37 @@ export default class PlayCommand extends commando.Command {
     const serverQueue = queue.get(msg.guild.id)
 
     if (!voiceChannel) {
-      return msg.channel.send('I\'m sorry, but you need to be in a voice channel to play music!')
+      return msg.channel.send('I\'m sorry, but you need to be in a voice channel to play music!').catch(() => {
+        return null
+      })
     }
+
     const permissions = voiceChannel.permissionsFor(msg.client.user)
+
     if (!permissions.has('CONNECT')) {
-      return msg.channel.send('I cannot connect to your voice channel, make sure I have the proper permissions!')
+      return msg.channel.send('I cannot connect to your voice channel, make sure I have the proper permissions!').catch(() => {
+        return null
+      })
     }
+
     if (!permissions.has('SPEAK')) {
-      return msg.channel.send('I cannot speak in this voice channel, make sure I have the proper permissions!')
+      return msg.channel.send('I cannot speak in this voice channel, make sure I have the proper permissions!').catch(() => {
+        return null
+      })
     }
 
     if (link === -1) {
       if (serverQueue && !serverQueue.playing) {
         serverQueue.playing = true
         serverQueue.connection.dispatcher.resume()
-        return msg.channel.send('▶ Resumed the music for you!')
+
+        return msg.channel.send('▶ Resumed the music for you!').catch(() => {
+          return null
+        })
       } else {
-        return msg.reply(`Nothing is paused. Use \`${msg.guild.commandPrefix}play <youtube link or search term>\` to play music.`)
+        return msg.reply(`Nothing is paused. Use \`${msg.guild.commandPrefix}play <youtube link or search term>\` to play music.`).catch(() => {
+          return null
+        })
       }
     }
 
@@ -68,10 +82,15 @@ export default class PlayCommand extends commando.Command {
       })
 
       if (!playlist) {
-        return msg.channel.send('I couldn\'t find that playlist!')
+        return msg.channel.send('I couldn\'t find that playlist!').catch(() => {
+          return null
+        })
       }
 
-      const responseMsg = await msg.channel.send(`🕙 Adding playlist **${playlist.title}** to the queue... ${playlist.itemCount >= 100 ? 'This may take a while.' : ''}`) as Message
+      const responseMsg = await msg.channel.send(`🕙 Adding playlist **${playlist.title}** to the queue... ${playlist.itemCount >= 100 ? 'This may take a while.' : ''}`).catch(() => {
+        return null
+      }) as Message
+
       const videos = await playlist.getVideos()
 
       for (let i = 0; i < videos.length; i++) {
@@ -88,7 +107,11 @@ export default class PlayCommand extends commando.Command {
         }
       }
 
-      return responseMsg.edit(`✅ Playlist: **${playlist.title}** has been added to the queue!`)
+      if (responseMsg) {
+        await responseMsg.edit(`✅ Playlist: **${playlist.title}** has been added to the queue!`)
+      }
+
+      return
     }
 
     let video = await youtube.getVideoByUrl(url).catch(() => {
@@ -105,7 +128,9 @@ export default class PlayCommand extends commando.Command {
     })
 
     if (!videos || videos.length === 0) {
-      return msg.channel.send('🆘 I could not obtain any search results.')
+      return msg.channel.send('🆘 I could not obtain any search results.').catch(() => {
+        return null
+      })
     }
 
     let index = 0
@@ -118,7 +143,9 @@ export default class PlayCommand extends commando.Command {
       .setDescription(description)
       .setThumbnail(this.client.user.displayAvatarURL())
 
-    msg.channel.send(embed)
+    msg.channel.send(embed).catch(() => {
+      return
+    })
 
     const response: Collection<string, Message> | void = await msg.channel.awaitMessages(msg2 => msg2.content > 0 && msg2.content < 11, {
       max: 1,
@@ -129,7 +156,9 @@ export default class PlayCommand extends commando.Command {
     })
 
     if (!response) {
-      return msg.channel.send('No or invalid value entered, cancelling video selection.')
+      return msg.channel.send('No or invalid value entered, cancelling video selection.').catch(() => {
+        return null
+      })
     }
 
     const videoIndex = parseInt(response.first().content)
@@ -172,7 +201,9 @@ async function handleVideo (video: Video, msg: commando.CommandMessage, voiceCha
       return true
     }
 
-    return msg.channel.send(`✅ **${song.title}** has been added to the queue!`)
+    return msg.channel.send(`✅ **${song.title}** has been added to the queue!`).catch(() => {
+      return null
+    })
   }
 }
 
@@ -196,5 +227,7 @@ function play (guild: Guild, song: Song) {
     .on('error', error => console.error(error))
 
   dispatcher.setVolumeLogarithmic(serverQueue.volume / 5)
-  serverQueue.textChannel.send(`🎶 Started playing: **${song.title}**, requested by \`${song.member.user.tag}\`.`)
+  serverQueue.textChannel.send(`🎶 Started playing: **${song.title}**, requested by \`${song.member.user.tag}\`.`).catch(() => {
+    return
+  })
 }

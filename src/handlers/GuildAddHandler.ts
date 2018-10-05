@@ -2,7 +2,14 @@ import { CommandoGuild } from 'discord.js-commando'
 import { createUser, getUser } from '../util'
 import { Guild, GuildSettings } from 'machobot-database'
 import { api } from '../config'
-import axios from 'axios'
+import axiosInit from 'axios'
+import * as https from 'https'
+
+const axios = axiosInit.create({
+  httpsAgent: new https.Agent({
+    rejectUnauthorized: false
+  })
+})
 
 export async function handleGuildAdd (guild: CommandoGuild) {
   console.log(`Joined guild ${guild.name} (${guild.id})`)
@@ -28,5 +35,9 @@ export async function handleGuildAdd (guild: CommandoGuild) {
   apiGuild.banned = false
   apiGuild.settings = new GuildSettings()
 
-  await axios.post(`${api.url}/guilds&code=${api.code}`, apiGuild)
+  const response = await axios.post(`${api.url}/guilds&code=${api.code}`, apiGuild).catch(error => {
+    console.log(error)
+  })
+
+  console.log(response ? `Created guild ${guild.name}` : `Failed to create guild ${guild.name}`)
 }

@@ -1,7 +1,14 @@
 import { User as APIUser } from 'machobot-database'
-import axios from 'axios'
+import axiosInit from 'axios'
 import { api } from '../config'
 import { User } from 'discord.js'
+import * as https from 'https'
+
+const axios = axiosInit.create({
+  httpsAgent: new https.Agent({
+    rejectUnauthorized: false
+  })
+})
 
 /**
   * Creates a user using MachoAPI.
@@ -18,11 +25,20 @@ export async function createUser (user: User) {
   newUser.accessToken = ''
   newUser.admin = false
 
-  return axios.post(`${api.url}/users&code=${api.code}`, newUser)
+  const response = await axios.post(`${api.url}/users&code=${api.code}`, newUser).catch(error => {
+    console.log(error)
+  })
+
+  console.log(response ? `Created user ${user.username}` : `Failed to create user ${user.username}`)
 }
 
 export async function getUser (id: string) {
-  const { data: user }: { data: APIUser | '' } = await axios.get(`${api.url}/users/${id}`)
+  const { data: user }: { data: APIUser | '' } = await axios.get(`${api.url}/users/${id}`).catch(error => {
+    console.log(error)
+
+    const response: { data: '' } = { data: '' }
+    return response
+  })
 
   return user
 }

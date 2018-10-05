@@ -1,9 +1,16 @@
-import axios from 'axios'
+import axiosInit from 'axios'
 import { CommandMessage } from 'discord.js-commando'
 import { api } from '../config'
 import { TextChannel } from 'discord.js'
 import { User } from 'machobot-database'
 import * as API from '../util'
+import * as https from 'https'
+
+const axios = axiosInit.create({
+  httpsAgent: new https.Agent({
+    rejectUnauthorized: false
+  })
+})
 
 /**
  * Handles a message sent by a user. If that user is a bot, it does nothing.
@@ -37,14 +44,16 @@ export async function handleMessage (msg: CommandMessage) {
   * @param msg The message to handle.
   */
 async function handleUserMessage (msg: CommandMessage, user: User): Promise<User> {
-  if (!msg.content.match(/^(\.|!|\?|\*)(\s?[a-z]*)/gim) && !msg.command) {
+  if (!msg.command) {
     user = handleUserExp(user, msg)
   }
   user.name = msg.author.username
   user.dateLastMessage = new Date().getTime().toString()
   user.avatarUrl = msg.author.displayAvatarURL({ size: 512 })
 
-  await axios.put(`${api.url}/users/${msg.author.id}&code=${api.code}`, user)
+  await axios.put(`${api.url}/users/${msg.author.id}&code=${api.code}`, user).catch(error => {
+    console.log(error)
+  })
 
   return user
 }
@@ -76,7 +85,9 @@ function handleUserExp (user: User, msg: CommandMessage) {
       user.balance.balance += creditsEarned
       user.balance.netWorth += creditsEarned
 
-      msg.channel.send(`Congrats **${user.name}**! You have reached level **${user.level.level}** and earned **${creditsEarned}** credits!`)
+      msg.channel.send(`Congrats **${user.name}**! You have reached level **${user.level.level}** and earned **${creditsEarned}** credits!`).catch(() => {
+        return
+      })
     }
   }
 

@@ -31,7 +31,9 @@ export default class UnbanCommand extends commando.Command {
 
   async run (msg: commando.CommandMessage, { id }: { id: string }): Promise<Message | Message[]> {
     if (!msg.member.hasPermission('BAN_MEMBERS')) {
-      return msg.reply("You can't unban members.")
+      return msg.reply("You can't unban members.").catch(() => {
+        return null
+      })
     }
 
     const channel = msg.guild.channels.find((channel: GuildChannel) => channel.name === 'machobot-audit') as TextChannel
@@ -40,7 +42,9 @@ export default class UnbanCommand extends commando.Command {
     })
 
     if (!unbanResponse) {
-      return msg.reply('I can\'t unban that user.')
+      return msg.reply('I can\'t unban that user.').catch(() => {
+        return null
+      })
     }
 
     if (channel) {
@@ -50,6 +54,8 @@ export default class UnbanCommand extends commando.Command {
     const time = moment().format('YYYY-MM-DD HH:mm:ss Z')
     log(`\r\n[${time}] ${msg.author.tag} (${msg.author.id}) has unbanned ${id} from ${msg.guild.name} (${msg.guild.id}).`)
 
-    return msg.reply('Member unbanned.')
+    return msg.reply('Member unbanned.').catch(() => {
+      return null
+    })
   }
 }

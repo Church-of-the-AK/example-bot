@@ -33,7 +33,9 @@ export default class QueueCommand extends commando.Command {
     const serverQueue = queue.get(msg.guild.id)
 
     if (!serverQueue) {
-      return msg.channel.send('There is nothing playing. Why don\'t *you* start the jam session?')
+      return msg.channel.send('There is nothing playing. Why don\'t *you* start the jam session?').catch(() => {
+        return null
+      })
     }
 
     const songs = serverQueue.songs.map((song, index) => {
@@ -59,7 +61,9 @@ export default class QueueCommand extends commando.Command {
     }
 
     if (!pages.get(pageNum)) {
-      return msg.channel.send(`There are only ${pages.size} pages.`)
+      return msg.channel.send(`There are only ${pages.size} pages.`).catch(() => {
+        return null
+      })
     }
 
     const nowPlaying = serverQueue.songs[0]
@@ -77,6 +81,8 @@ export default class QueueCommand extends commando.Command {
       .setFooter(`Page ${pageNum}/${pages.size}. View different pages with ${msg.guild.commandPrefix}queue <number>.`)
       .setThumbnail(this.client.user.displayAvatarURL())
 
-    return msg.channel.send(embed)
+    return msg.channel.send(embed).catch(() => {
+      return null
+    })
   }
 }

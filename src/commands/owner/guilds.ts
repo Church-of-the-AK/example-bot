@@ -37,6 +37,8 @@ export default class GuildsCommand extends commando.Command {
       .setThumbnail(msg.author.displayAvatarURL({ size: 512, format: 'png' }))
       .setDescription(guilds)
 
-    return msg.channel.send(embed)
+    return msg.channel.send(embed).catch(() => {
+      return null
+    })
   }
 }

@@ -31,13 +31,17 @@ export default class KickCommand extends commando.Command {
 
   async run (msg: commando.CommandMessage, { user }: { user: User }): Promise<Message | Message[]> {
     if (!msg.member.hasPermission('KICK_MEMBERS')) {
-      return msg.reply("You can't kick members.")
+      return msg.reply("You can't kick members.").catch(() => {
+        return null
+      })
     }
 
     const member = msg.guild.member(user)
 
     if (msg.member.roles.highest.comparePositionTo(member.roles.highest) < 0) {
-      return msg.reply('You can\'t kick that user.')
+      return msg.reply('You can\'t kick that user.').catch(() => {
+        return null
+      })
     }
 
     const channel = msg.guild.channels.find((channel: GuildChannel) => channel.name === 'machobot-audit') as TextChannel
@@ -46,16 +50,22 @@ export default class KickCommand extends commando.Command {
     })
 
     if (!kickReponse) {
-      return msg.reply('I can\'t kick that member.')
+      return msg.reply('I can\'t kick that member.').catch(() => {
+        return null
+      })
     }
 
     if (channel) {
-      channel.send(`\`${msg.author.tag}\` (${msg.author.id}) has kicked \`${user.tag}\` (${user.id}) from ${msg.guild.name}.`)
+      channel.send(`\`${msg.author.tag}\` (${msg.author.id}) has kicked \`${user.tag}\` (${user.id}) from ${msg.guild.name}.`).catch(() => {
+        return null
+      })
     }
 
     const time = moment().format('YYYY-MM-DD HH:mm:ss Z')
     log(`\r\n[${time}] ${msg.author.tag} (${msg.author.id}) has kicked ${user.tag} (${user.id}) from ${msg.guild.name} (${msg.guild.id}).`)
 
-    return msg.reply(user.tag + ' has been kicked!')
+    return msg.reply(user.tag + ' has been kicked!').catch(() => {
+      return null
+    })
   }
 }

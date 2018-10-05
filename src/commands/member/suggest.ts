@@ -31,8 +31,9 @@ export default class SuggestCommand extends commando.Command {
     const channel = msg.guild.channels.find((channel: GuildChannel) => channel.name === 'suggestions') as TextChannel
 
     if (!channel) {
-      await msg.reply('This server has no #suggestions channel.')
-      return msg.delete()
+      return msg.reply('This server has no #suggestions channel.').catch(() => {
+        return null
+      })
     }
 
     const embed = new MessageEmbed()
@@ -49,15 +50,20 @@ export default class SuggestCommand extends commando.Command {
     }) as Message
 
     if (!suggestionMsg) {
-      await msg.reply(`I do not have permission to send messages in the ${channel} channel.`)
-      return msg.delete()
+      await msg.reply(`I do not have permission to send messages in the ${channel} channel.`).catch(() => {
+        return null
+      })
     }
 
-    await suggestionMsg.react('👍')
-    await suggestionMsg.react('👎')
+    await suggestionMsg.react('👍').catch(() => {
+      return
+    })
+    await suggestionMsg.react('👎').catch(() => {
+      return
+    })
 
-    await msg.reply('Suggestion added!')
-
-    return msg.delete()
+    return msg.reply('Suggestion added!').catch(() => {
+      return null
+    })
   }
 }
