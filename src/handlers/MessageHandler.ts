@@ -37,6 +37,12 @@ export async function handleMessage (msg: CommandMessage) {
   } else {
     await handleUserMessage(msg, user)
   }
+
+  const guild = await API.getGuild(msg.guild.id)
+
+  if (!guild) {
+    await API.createGuild(msg.guild)
+  }
 }
 
 /**
