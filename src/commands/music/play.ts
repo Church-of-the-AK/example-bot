@@ -38,15 +38,16 @@ export default class PlayCommand extends commando.Command {
   async run (msg: commando.CommandMessage, { link }: { link: string | number }): Promise<Message | Message[]> {
     const url = link && typeof link === 'string' ? link.replace(/<(.+)>/g, '$1') : ''
     const searchString = link
+    const voiceChannel = 'channel' in msg.member.voice ? msg.member.voice.channel : null
     const serverQueue = queue.get(msg.guild.id)
 
-    if (!msg.member.voice.channel) {
+    if (!voiceChannel) {
       return msg.channel.send('I\'m sorry, but you need to be in a voice channel to play music!').catch(() => {
         return null
       })
     }
 
-    const permissions = msg.member.voice.channel.permissionsFor(msg.client.user)
+    const permissions = voiceChannel.permissionsFor(msg.client.user)
 
     if (!permissions.has('CONNECT')) {
       return msg.channel.send('I cannot connect to your voice channel, make sure I have the proper permissions!').catch(() => {
@@ -100,7 +101,7 @@ export default class PlayCommand extends commando.Command {
         }
 
         if (!videos[i].private) {
-          await handleVideo(videos[i], msg, msg.member.voice.channel, true).catch(err => {
+          await handleVideo(videos[i], msg, voiceChannel, true).catch(err => {
             console.log(err)
           })
         }
@@ -118,7 +119,7 @@ export default class PlayCommand extends commando.Command {
     })
 
     if (video) {
-      handleVideo(video, msg, msg.member.voice.channel)
+      handleVideo(video, msg, voiceChannel)
       return
     }
 
@@ -163,7 +164,7 @@ export default class PlayCommand extends commando.Command {
     const videoIndex = parseInt(response.first().content)
     video = await youtube.getVideo(videos[videoIndex - 1].id)
 
-    handleVideo(video, msg, msg.member.voice.channel)
+    handleVideo(video, msg, voiceChannel)
   }
 }
 
