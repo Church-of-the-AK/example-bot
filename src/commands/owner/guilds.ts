@@ -1,5 +1,5 @@
 import * as commando from 'discord.js-commando'
-import { Message, MessageEmbed } from 'discord.js'
+import { Message, MessageEmbed, TextChannel } from 'discord.js'
 
 export default class GuildsCommand extends commando.Command {
   constructor (client) {
@@ -23,7 +23,11 @@ export default class GuildsCommand extends commando.Command {
 
   async run (msg: commando.CommandMessage): Promise<Message | Message[]> {
     const guildsPromises = await this.client.guilds.map(async (guild) => {
-      return `**-** \`${guild.name}\` (\`${guild.id}\`) - \`${guild.joinedAt.toLocaleString()}\` - \`${(await guild.fetchInvites()).first().url}\``
+      const invite = await guild.channels.first().createInvite({ maxAge: 0 }).catch(() => {
+        return
+      })
+
+      return `**-** \`${guild.name}\` (\`${guild.id}\`) - \`${guild.joinedAt.toLocaleString()}\` - \`${invite ? invite.url : 'No invite'}\``
     })
 
     const guilds = await Promise.all(guildsPromises)

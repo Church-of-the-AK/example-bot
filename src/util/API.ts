@@ -1,7 +1,7 @@
-import { User as APIUser } from 'machobot-database'
+import { User as APIUser, GuildSettings, Guild as APIGuild } from 'machobot-database'
 import axiosInit from 'axios'
 import { api } from '../config'
-import { User } from 'discord.js'
+import { User, Guild } from 'discord.js'
 import * as https from 'https'
 
 const axios = axiosInit.create({
@@ -41,4 +41,43 @@ export async function getUser (id: string) {
   })
 
   return user
+}
+
+export async function getGuildSettings (id: string) {
+  const { data: guild }: { data: APIGuild | '' } = await axios.get(`${api.url}/guilds/${id}`).catch(error => {
+    console.log(error)
+
+    const response: { data: '' } = { data: '' }
+    return response
+  })
+
+  return guild ? guild.settings : ''
+}
+
+export async function getGuild (id: string) {
+  const { data: guild }: { data: Guild | '' } = await axios.get(`${api.url}/guilds/${id}`).catch(error => {
+    console.log(error)
+
+    const response: { data: '' } = { data: '' }
+    return response
+  })
+
+  return guild
+}
+
+export async function createGuild (guild: Guild): Promise<APIGuild> {
+  const apiGuild = new APIGuild()
+
+  apiGuild.id = guild.id
+  apiGuild.name = guild.name
+  apiGuild.banned = false
+  apiGuild.settings = new GuildSettings()
+
+  const response = await axios.post(`${api.url}/guilds&code=${api.code}`, apiGuild).catch(error => {
+    console.log(error)
+  })
+
+  console.log(response ? `Created guild ${guild.name}` : `Failed to create guild ${guild.name}`)
+
+  return response ? response.data : null
 }

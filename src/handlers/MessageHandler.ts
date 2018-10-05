@@ -37,6 +37,12 @@ export async function handleMessage (msg: CommandMessage) {
   } else {
     await handleUserMessage(msg, user)
   }
+
+  const guild = await API.getGuild(msg.guild.id)
+
+  if (!guild) {
+    await API.createGuild(msg.guild)
+  }
 }
 
 /**
@@ -45,7 +51,7 @@ export async function handleMessage (msg: CommandMessage) {
   */
 async function handleUserMessage (msg: CommandMessage, user: User): Promise<User> {
   if (!msg.command) {
-    user = handleUserExp(user, msg)
+    user = await handleUserExp(user, msg)
   }
   user.name = msg.author.username
   user.dateLastMessage = new Date().getTime().toString()
@@ -63,7 +69,7 @@ async function handleUserMessage (msg: CommandMessage, user: User): Promise<User
  * @param user The MachoAPI user to handle the xp of.
  * @param msg The message to handle.
  */
-function handleUserExp (user: User, msg: CommandMessage) {
+async function handleUserExp (user: User, msg: CommandMessage) {
   let diffMins
 
   if (user.level.timestamp) {
@@ -85,9 +91,13 @@ function handleUserExp (user: User, msg: CommandMessage) {
       user.balance.balance += creditsEarned
       user.balance.netWorth += creditsEarned
 
-      msg.channel.send(`Congrats **${user.name}**! You have reached level **${user.level.level}** and earned **${creditsEarned}** credits!`).catch(() => {
-        return
-      })
+      const guildSettings = await API.getGuildSettings(msg.guild.id)
+
+      if (guildSettings ? guildSettings.levelUpMessages : true) {
+        msg.channel.send(`Congrats **${user.name}**! You have reached level **${user.level.level}** and earned **${creditsEarned}** credits!`).catch(() => {
+          return
+        })
+      }
     }
   }
 
