@@ -24,7 +24,7 @@ export default class ClearCommand extends commando.Command {
   async run (msg: commando.CommandMessage): Promise<Message | Message[]> {
     const serverQueue: ServerQueue = queue.get(msg.guild.id)
 
-    if (!msg.member.hasPermission('MANAGE_MESSAGES')) {
+    if (!msg.member.hasPermission('MANAGE_MESSAGES') && !this.client.isOwner(msg.author)) {
       return msg.channel.send('This command requires you to have the Manage Messages permission.').catch(() => {
         return null
       })
