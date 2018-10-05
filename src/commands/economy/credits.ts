@@ -29,7 +29,9 @@ export default class CreditsCommand extends commando.Command {
   }
 
   async run (msg: commando.CommandMessage, { mention }: { mention: User | number }): Promise<Message | Message[]> {
-    const user = await getUser(mention instanceof User ? mention.id : msg.author.id)
+    const user = await getUser(mention instanceof User ? mention.id : msg.author.id).catch(error => {
+      console.log(error)
+    })
 
     if (!user) {
       msg.reply(
