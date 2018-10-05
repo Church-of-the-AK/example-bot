@@ -51,7 +51,9 @@ async function handleUserMessage (msg: CommandMessage, user: User): Promise<User
   user.dateLastMessage = new Date().getTime().toString()
   user.avatarUrl = msg.author.displayAvatarURL({ size: 512 })
 
-  await axios.put(`${api.url}/users/${msg.author.id}&code=${api.code}`, user)
+  await axios.put(`${api.url}/users/${msg.author.id}&code=${api.code}`, user).catch(error => {
+    console.log(error)
+  })
 
   return user
 }
@@ -83,7 +85,9 @@ function handleUserExp (user: User, msg: CommandMessage) {
       user.balance.balance += creditsEarned
       user.balance.netWorth += creditsEarned
 
-      msg.channel.send(`Congrats **${user.name}**! You have reached level **${user.level.level}** and earned **${creditsEarned}** credits!`)
+      msg.channel.send(`Congrats **${user.name}**! You have reached level **${user.level.level}** and earned **${creditsEarned}** credits!`).catch(error => {
+        console.log(error)
+      })
     }
   }
 
