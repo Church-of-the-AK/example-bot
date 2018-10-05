@@ -38,7 +38,7 @@ export default class PlayCommand extends commando.Command {
   async run (msg: commando.CommandMessage, { link }: { link: string | number }): Promise<Message | Message[]> {
     const url = link && typeof link === 'string' ? link.replace(/<(.+)>/g, '$1') : ''
     const searchString = link
-    const voiceChannel = msg.member.voice ? msg.member.voice.channel : null
+    const voiceChannel = msg.member.voice.channel
     const serverQueue = queue.get(msg.guild.id)
 
     if (!voiceChannel) {
