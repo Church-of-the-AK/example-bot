@@ -5,6 +5,7 @@ import * as sqlite from 'sqlite'
 import * as config from './config'
 import { ServerQueue } from './types/ServerQueue'
 import { handleMessage, handleGuildAdd } from './handlers'
+import { postServerCount } from './util'
 
 export const queue: Map<string, ServerQueue> = new Map()
 
@@ -24,6 +25,10 @@ client
       url: config.twitch,
       type: 'STREAMING'
     })
+
+    setInterval(() => {
+      postServerCount(client.guilds.size)
+    }, 60000)
   })
   .on('guildMemberAdd', member => {
     if (member.user.bot) {
@@ -47,7 +52,7 @@ client
     const message = `
 Command: ${cmd.name}
   User: ${msg.author.tag} (${msg.author.id})
-  Guild: ${msg.guild.name} (${msg.guild.id})
+  Guild: ${msg.guild ? msg.guild.name : ''} (${msg.guild ? msg.guild.id : ''})
   Message: ${msg.content}`
 
     console.log(message)
