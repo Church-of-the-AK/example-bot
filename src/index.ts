@@ -52,7 +52,7 @@ client
     const message = `
 Command: ${cmd.name}
   User: ${msg.author.tag} (${msg.author.id})
-  Guild: ${msg.guild.name} (${msg.guild.id})
+  Guild: ${msg.guild ? msg.guild.name : ''} (${msg.guild ? msg.guild.id : ''})
   Message: ${msg.content}`
 
     console.log(message)
