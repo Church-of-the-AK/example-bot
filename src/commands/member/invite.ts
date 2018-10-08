@@ -20,7 +20,7 @@ export default class InviteCommand extends commando.Command {
 
   async run (msg: commando.CommandMessage): Promise<Message | Message[]> {
     const channel = msg.channel as TextChannel
-    const invite = await channel.createInvite({ maxAge: 0, reason: `${msg.author.tag} asked for one.` }).catch(() => {
+    const invite = await channel.createInvite({ maxAge: 0, reason: `${msg.author.tag} asked for one.`, unique: false }).catch(() => {
       return
     })
 
