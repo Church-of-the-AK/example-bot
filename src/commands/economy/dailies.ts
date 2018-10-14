@@ -45,7 +45,7 @@ export default class DailiesCommand extends commando.Command {
     }
 
     if (diffHrs < 24) {
-      const hours = Math.ceil(24 - diffHrs)
+      const hours = Math.floor(24 - diffHrs)
       const minutes = (parseFloat(numeral(24 - diffHrs).format('.00')) * 100 * .6).toFixed(0)
 
       return msg.channel.send(`**${user.name}**, you still have **${hours}** hours and **${minutes}** minutes until you can claim your dailies again.`).catch(() => {
