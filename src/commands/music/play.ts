@@ -82,7 +82,7 @@ export default class PlayCommand extends commando.Command {
       })
 
       if (!playlist) {
-        return msg.channel.send('I couldn\'t find that playlist!').catch(() => {
+        return msg.channel.send('🆘 I couldn\'t find that playlist!').catch(() => {
           return null
         })
       }
