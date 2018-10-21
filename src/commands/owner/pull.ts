@@ -30,7 +30,10 @@ export default class PullCommand extends commando.Command {
         return pulling.edit('🆘 Failed to pull from the GitHub repo.')
       }
 
-      console.log(stdout)
+      if (stdout.startsWith('Already')) {
+        return pulling.edit('✅ Already up-to-date.')
+      }
+
       return pulling.edit('✅ Successfully pulled from the GitHub repo.')
     })
 
