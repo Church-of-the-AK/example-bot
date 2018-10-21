@@ -8,7 +8,6 @@ import { handleMessage, handleGuildAdd, handleVoiceStateUpdate } from './handler
 import { postServerCount } from './util'
 
 export const queue: Map<string, ServerQueue> = new Map()
-
 export const client = new commando.CommandoClient({
   owner: config.ownerId,
   commandPrefix: config.prefix,
@@ -94,6 +93,7 @@ Command: ${cmd.name}
     handleGuildAdd(guild)
   })
   .on('voiceStateUpdate', (oldState, newState) => {
+    // @ts-ignore
     handleVoiceStateUpdate(oldState, newState)
   })
   .setProvider(

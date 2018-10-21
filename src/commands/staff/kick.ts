@@ -1,7 +1,6 @@
 import * as commando from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import { log } from '../../util'
-import * as moment from 'moment'
 import { Message, TextChannel, GuildChannel, User } from 'discord.js'
 
 export default class KickCommand extends commando.Command {
@@ -61,7 +60,7 @@ export default class KickCommand extends commando.Command {
       })
     }
 
-    const time = moment().format('YYYY-MM-DD HH:mm:ss Z')
+    const time = new Date()
     log(`\r\n[${time}] ${msg.author.tag} (${msg.author.id}) has kicked ${user.tag} (${user.id}) from ${msg.guild.name} (${msg.guild.id}).`)
 
     return msg.reply(user.tag + ' has been kicked!').catch(() => {

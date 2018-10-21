@@ -3,15 +3,8 @@ import { oneLine } from 'common-tags'
 import { Message } from 'discord.js'
 import { api } from '../../config'
 import * as numeral from 'numeral'
-import axiosInit from 'axios'
+import axios from 'axios'
 import { getUser } from '../../util'
-import * as https from 'https'
-
-const axios = axiosInit.create({
-  httpsAgent: new https.Agent({
-    rejectUnauthorized: false
-  })
-})
 
 export default class DailiesCommand extends commando.Command {
   constructor (client) {

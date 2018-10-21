@@ -1,14 +1,7 @@
 import { User as APIUser, GuildSettings, Guild as APIGuild } from 'machobot-database'
-import axiosInit from 'axios'
+import axios from 'axios'
 import { api } from '../config'
 import { User, Guild } from 'discord.js'
-import * as https from 'https'
-
-const axios = axiosInit.create({
-  httpsAgent: new https.Agent({
-    rejectUnauthorized: false
-  })
-})
 
 /**
   * Creates a user using MachoAPI.

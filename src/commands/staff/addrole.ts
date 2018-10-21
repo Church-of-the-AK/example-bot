@@ -1,7 +1,6 @@
 import * as commando from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import { log } from '../../util'
-import * as moment from 'moment'
 import { Message, TextChannel, Role, User, GuildChannel, RoleStore } from 'discord.js'
 
 export default class AddRoleCommand extends commando.Command {
@@ -68,7 +67,7 @@ export default class AddRoleCommand extends commando.Command {
       })
     }
 
-    const time = moment().format('YYYY-MM-DD HH:mm:ss Z')
+    const time = new Date()
     log(`\r\n[${time}] ${msg.author.tag} (${msg.author.id}) has added role ${role.name} (${role.id}) to ${user.tag} (${user.id}).`)
 
     return msg.reply(`Added role \`${role.name}\` to \`${user.tag}\`.`).catch(() => {

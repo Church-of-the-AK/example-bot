@@ -1,7 +1,6 @@
 import * as commando from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import { log } from '../../util'
-import * as moment from 'moment'
 import { Message, TextChannel, GuildChannel, Role, GuildMember, RoleStore } from 'discord.js'
 
 export default class RemoveRoleCommand extends commando.Command {
@@ -67,7 +66,7 @@ export default class RemoveRoleCommand extends commando.Command {
       })
     }
 
-    const time = moment().format('YYYY-MM-DD HH:mm:ss Z')
+    const time = new Date()
     log(`\r\n[${time}] ${msg.author.tag} (${msg.author.id}) has removed role ${role.name} (${role.id}) from ${member.user.tag} (${member.id}).`)
 
     return msg.reply(`Removed role \`${role.name}\` from \`${member.user.tag}\`.`).catch(() => {

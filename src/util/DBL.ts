@@ -1,13 +1,6 @@
-import axiosInit from 'axios'
-import { Agent } from 'https'
+import axios from 'axios'
 import { dblKey } from '../config'
 import { client } from '../index'
-
-const axios = axiosInit.create({
-  httpsAgent: new Agent({
-    rejectUnauthorized: false
-  })
-})
 
 export async function postServerCount (serverCount: number) {
   const response = await axios.post(`https://discordbots.org/api/bots/${client.user.id}/stats`, {

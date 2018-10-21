@@ -1,7 +1,6 @@
 import * as commando from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import { log } from '../../util'
-import * as moment from 'moment'
 import { Message, TextChannel, GuildChannel } from 'discord.js'
 
 export default class UnbanCommand extends commando.Command {
@@ -51,7 +50,7 @@ export default class UnbanCommand extends commando.Command {
       channel.send(`\`${msg.author.tag}\` (${msg.author.id}) has unbanned \`${id}\` from ${msg.guild.name}.`)
     }
 
-    const time = moment().format('YYYY-MM-DD HH:mm:ss Z')
+    const time = new Date()
     log(`\r\n[${time}] ${msg.author.tag} (${msg.author.id}) has unbanned ${id} from ${msg.guild.name} (${msg.guild.id}).`)
 
     return msg.reply('Member unbanned.').catch(() => {
