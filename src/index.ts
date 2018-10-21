@@ -4,7 +4,7 @@ import { oneLine } from 'common-tags'
 import * as sqlite from 'sqlite'
 import * as config from './config'
 import { ServerQueue } from './types/ServerQueue'
-import { handleMessage, handleGuildAdd } from './handlers'
+import { handleMessage, handleGuildAdd, handleVoiceStateUpdate } from './handlers'
 import { postServerCount } from './util'
 
 export const queue: Map<string, ServerQueue> = new Map()
@@ -92,6 +92,9 @@ Command: ${cmd.name}
   })
   .on('guildCreate', guild => {
     handleGuildAdd(guild)
+  })
+  .on('voiceStateUpdate', (oldMember, newMember) => {
+    handleVoiceStateUpdate(oldMember, newMember)
   })
   .setProvider(
     sqlite.open(path.join(__dirname, 'database.sqlite3')).then(db => new commando.SQLiteProvider(db))

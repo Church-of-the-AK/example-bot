@@ -91,7 +91,7 @@ export default class PlayCommand extends commando.Command {
         return null
       }) as Message
 
-      const videos = await playlist.getVideos()
+      const videos = await playlist.fetchVideos()
 
       for (let i = 0; i < videos.length; i++) {
         if (videos[i].private) {
