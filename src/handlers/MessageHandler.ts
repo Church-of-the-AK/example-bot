@@ -1,16 +1,9 @@
-import axiosInit from 'axios'
+import axios from 'axios'
 import { CommandMessage } from 'discord.js-commando'
 import { api } from '../config'
 import { TextChannel } from 'discord.js'
 import { User } from 'machobot-database'
 import * as API from '../util'
-import * as https from 'https'
-
-const axios = axiosInit.create({
-  httpsAgent: new https.Agent({
-    rejectUnauthorized: false
-  })
-})
 
 /**
  * Handles a message sent by a user. If that user is a bot, it does nothing.

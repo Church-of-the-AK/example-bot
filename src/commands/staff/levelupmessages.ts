@@ -2,15 +2,8 @@ import * as commando from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import { Message, TextChannel } from 'discord.js'
 import { getGuildSettings } from '../../util'
-import axiosInit from 'axios'
-import { Agent } from 'https'
+import axios from 'axios'
 import { api } from '../../config'
-
-const axios = axiosInit.create({
-  httpsAgent: new Agent({
-    rejectUnauthorized: false
-  })
-})
 
 export default class LevelUpMessagesCommand extends commando.Command {
   constructor (client) {
