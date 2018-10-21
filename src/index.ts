@@ -94,6 +94,7 @@ Command: ${cmd.name}
     handleGuildAdd(guild)
   })
   .on('voiceStateUpdate', (oldState, newState) => {
+    // @ts-ignore
     handleVoiceStateUpdate(oldState, newState)
   })
   .setProvider(

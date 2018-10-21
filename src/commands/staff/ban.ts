@@ -1,7 +1,6 @@
 import * as commando from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import { log } from '../../util'
-import * as moment from 'moment'
 import { Message, TextChannel, GuildChannel, User } from 'discord.js'
 
 export default class BanCommand extends commando.Command {
@@ -61,7 +60,7 @@ export default class BanCommand extends commando.Command {
       })
     }
 
-    let time = moment().format('YYYY-MM-DD HH:mm:ss Z')
+    let time = new Date()
     log(`\r\n[${time}] ${msg.author.tag} (${msg.author.id}) has banned ${member.user.tag} (${member.id}) from ${msg.guild.name} (${msg.guild.id}).`)
 
     return msg.reply(user.tag + ' has been banned!').catch(() => {

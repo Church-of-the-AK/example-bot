@@ -1,7 +1,6 @@
 import * as commando from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import { log } from '../../util'
-import * as moment from 'moment'
 import { Message } from 'discord.js'
 import { ownerId } from '../../config'
 
@@ -38,7 +37,7 @@ export default class ChangeUsernameCommand extends commando.Command {
 
     this.client.user.setUsername(name)
 
-    let time = moment().format('YYYY-MM-DD HH:mm:ss Z')
+    let time = new Date()
     log(`\r\n[${time}] ${msg.author.tag} (${msg.author.id}) has changed ${this.client.user.username}'s name to ${name}.`)
 
     return msg.reply(`Succesfully changed my username to \`${name}\`!`).catch(() => {

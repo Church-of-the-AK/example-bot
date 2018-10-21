@@ -1,7 +1,6 @@
 import { Command, CommandMessage } from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import { log } from '../../util'
-import * as moment from 'moment'
 import { Message, TextChannel, GuildChannel } from 'discord.js'
 
 export default class PurgeCommand extends Command {
@@ -66,7 +65,7 @@ export default class PurgeCommand extends Command {
       })
     }
 
-    const time = moment().format('YYYY-MM-DD HH:mm:ss Z')
+    const time = new Date()
     log(`\r\n[${time}] ${msg.author.username} (${msg.author.id}) has purged ${deleteCount} messages from ${channel.name} (${channel.id}).`)
   }
 }
