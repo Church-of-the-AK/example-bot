@@ -2,6 +2,7 @@ import { queue } from '../index'
 import { GuildMember } from 'discord.js'
 
 export function handleVoiceStateUpdate (oldMember: GuildMember, newMember: GuildMember) {
+  console.log(JSON.stringify(newMember, null, 2))
   if (newMember.user.bot) {
     return false
   }
