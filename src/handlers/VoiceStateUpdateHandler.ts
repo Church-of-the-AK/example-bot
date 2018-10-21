@@ -2,7 +2,7 @@ import { queue } from '../index'
 import { GuildMember } from 'discord.js'
 
 export function handleVoiceStateUpdate (oldMember: GuildMember, newMember: GuildMember) {
-  if (oldMember.user.bot) {
+  if (newMember.user.bot) {
     return false
   }
 
