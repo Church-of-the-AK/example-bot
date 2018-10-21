@@ -1,5 +1,5 @@
 import * as commando from 'discord.js-commando'
-import { Message, MessageEmbed, TextChannel } from 'discord.js'
+import { Message, MessageEmbed } from 'discord.js'
 
 export default class GuildsCommand extends commando.Command {
   constructor (client) {
