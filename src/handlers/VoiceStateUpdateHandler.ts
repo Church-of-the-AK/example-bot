@@ -2,6 +2,10 @@ import { queue } from '../index'
 import { GuildMember } from 'discord.js'
 
 export function handleVoiceStateUpdate (oldMember: GuildMember, newMember: GuildMember) {
+  if (oldMember.user.bot) {
+    return false
+  }
+
   if (oldMember.voice.channel && !(newMember.voice.channel) && oldMember.voice.channel.members.size <= 0) {
     const serverQueue = queue.get(oldMember.guild.id)
 
