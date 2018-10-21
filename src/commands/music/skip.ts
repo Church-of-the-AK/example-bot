@@ -22,6 +22,13 @@ export default class SkipCommand extends commando.Command {
 
   async run (msg: commando.CommandMessage): Promise<Message | Message[]> {
     const serverQueue = queue.get(msg.guild.id)
+
+    if (!serverQueue) {
+      return msg.channel.send('There is nothing that I can skip for you.').catch(() => {
+        return null
+      })
+    }
+
     const song = serverQueue.songs[0]
 
     if ((msg.member.id !== song.member.id) && !msg.member.hasPermission('MANAGE_MESSAGES')) {
@@ -32,12 +39,6 @@ export default class SkipCommand extends commando.Command {
 
     if (!msg.member.voice.channel) {
       return msg.channel.send('You are not in a voice channel!').catch(() => {
-        return null
-      })
-    }
-
-    if (!serverQueue) {
-      return msg.channel.send('There is nothing that I can skip for you.').catch(() => {
         return null
       })
     }
