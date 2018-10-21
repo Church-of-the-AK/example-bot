@@ -93,8 +93,8 @@ Command: ${cmd.name}
   .on('guildCreate', guild => {
     handleGuildAdd(guild)
   })
-  .on('voiceStateUpdate', (oldMember, newMember) => {
-    handleVoiceStateUpdate(oldMember, newMember)
+  .on('voiceStateUpdate', (oldState, newState) => {
+    handleVoiceStateUpdate(oldState, newState)
   })
   .setProvider(
     sqlite.open(path.join(__dirname, 'database.sqlite3')).then(db => new commando.SQLiteProvider(db))
