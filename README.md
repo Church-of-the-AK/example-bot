@@ -2,6 +2,7 @@
 [![Discord Bots](https://discordbots.org/api/widget/status/399794061059424257.svg)](https://discordbots.org/bot/399794061059424257)
 [![Discord Bots](https://discordbots.org/api/widget/upvotes/399794061059424257.svg)](https://discordbots.org/bot/399794061059424257)
 [![Discord Bots](https://discordbots.org/api/widget/owner/399794061059424257.svg)](https://discordbots.org/bot/399794061059424257)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/7da997fadc784ac88593bc5a758202bc)](https://www.codacy.com/app/jasonhaxstuff/bot?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=MachoBot/bot&amp;utm_campaign=Badge_Grade)
 
 # Machobot
 A bot I've made for Discord.
