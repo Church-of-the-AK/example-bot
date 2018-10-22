@@ -141,7 +141,7 @@ export default class PlaylistCommand extends commando.Command {
     }
 
     const songUrl = name.substring(0, name.indexOf(' to '))
-    const playlistName = name.substring(name.indexOf(' to ') + 3)
+    const playlistName = name.substring(name.indexOf(' to ') + 4)
 
     if (songUrl.length === 0 || playlistName.length === 0) {
       return { success: false, message: 'Proper format: `pl add <song link | "this"> to <playlist name>`' }
@@ -168,7 +168,7 @@ export default class PlaylistCommand extends commando.Command {
       return { success: false, message: 'Proper format: `pl delete <song link | "this"> from <playlist name>`' }
     }
 
-    return { success: true, message: `Added ${songName} to ${playlistName}` }
+    return { success: true, message: `Removed ${songName} from ${playlistName}` }
   }
 
   async delete (msg: commando.CommandMessage, nameArray: string[] | -1) {
