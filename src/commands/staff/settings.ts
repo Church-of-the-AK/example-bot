@@ -97,7 +97,10 @@ export default class LevelUpMessagesCommand extends commando.Command {
 
   async levelUpMessages (guildSettings: GuildSettings, msg: commando.CommandMessage, value: string | -1) {
     if (value === -1) {
-      await msg.channel.send(`The \`levelupmessages\` setting is currently set to \`${guildSettings.levelUpMessages}\`.`)
+      await msg.channel.send(`The \`levelupmessages\` setting is currently set to \`${guildSettings.levelUpMessages}\`.`).catch(() => {
+        return null
+      })
+
       return { success: true, respond: false }
     }
 
@@ -122,7 +125,10 @@ export default class LevelUpMessagesCommand extends commando.Command {
 
   async voteSkipEnabled (guildSettings: GuildSettings, msg: commando.CommandMessage, value: string | -1) {
     if (value === -1) {
-      await msg.channel.send(`The \`voteskipenabled\` setting is currently set to \`${guildSettings.voteSkipEnabled}\`.`)
+      await msg.channel.send(`The \`voteskipenabled\` setting is currently set to \`${guildSettings.voteSkipEnabled}\`.`).catch(() => {
+        return null
+      })
+
       return { success: true, respond: false }
     }
 
@@ -147,7 +153,10 @@ export default class LevelUpMessagesCommand extends commando.Command {
 
   async voteClearEnabled (guildSettings: GuildSettings, msg: commando.CommandMessage, value: string | -1) {
     if (value === -1) {
-      await msg.channel.send(`The \`voteclearenabled\` setting is currently set to \`${guildSettings.voteClearEnabled}\`.`)
+      await msg.channel.send(`The \`voteclearenabled\` setting is currently set to \`${guildSettings.voteClearEnabled}\`.`).catch(() => {
+        return null
+      })
+
       return { success: true, respond: false }
     }
 
@@ -187,7 +196,10 @@ export default class LevelUpMessagesCommand extends commando.Command {
       .setColor('BLUE')
       .setDescription(description)
 
-    await msg.channel.send(embed)
+    await msg.channel.send(embed).catch(() => {
+      return null
+    })
+
     return { success: true, respond: false }
   }
 }
