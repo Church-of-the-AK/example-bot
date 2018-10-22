@@ -68,12 +68,12 @@ export default class SkipCommand extends commando.Command {
       return null
     })
 
-    if (song.votes.length >= msg.member.voice.channel.members.size / 2) {
+    if (song.votes.length >= msg.member.voice.channel.members.filter(member => !member.user.bot).size / 2) {
       return this.skip(serverQueue, msg, song)
     }
 
     if (reply) {
-      return reply.edit(reply.content + 'You still need ' + Math.floor(msg.member.voice.channel.members.size / 2) + ' more votes to skip this song.').catch(() => {
+      return reply.edit(reply.content + 'You still need ' + Math.floor(msg.member.voice.channel.members.filter(member => !member.user.bot).size / 2 - song.votes.length) + ' more votes to skip this song.').catch(() => {
         return null
       })
     }

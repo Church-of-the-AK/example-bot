@@ -65,12 +65,12 @@ export default class ClearCommand extends commando.Command {
       return null
     })
 
-    if (serverQueue.votes.length >= msg.member.voice.channel.members.size / 2) {
+    if (serverQueue.votes.length >= msg.member.voice.channel.members.filter(member => !member.user.bot).size / 2) {
       return this.clear(serverQueue, msg)
     }
 
     if (reply) {
-      return reply.edit(reply.content + 'You still need ' + Math.floor(msg.member.voice.channel.members.size / 2) + ' more votes to clear the queue.').catch(() => {
+      return reply.edit(reply.content + 'You still need ' + Math.floor(msg.member.voice.channel.members.filter(member => !member.user.bot).size / 2) + ' more votes to clear the queue.').catch(() => {
         return null
       })
     }

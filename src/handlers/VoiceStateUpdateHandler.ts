@@ -14,6 +14,17 @@ export function handleVoiceStateUpdate (oldState: VoiceState, newState: VoiceSta
     }
 
     if (serverQueue.playing) {
+      const currentSongIndex = serverQueue.songs[0].votes.indexOf(newState.member.id)
+      const serverQueueIndex = serverQueue.votes.indexOf(newState.member.id)
+
+      if (currentSongIndex >= 0) {
+        serverQueue.songs[0].votes.splice(currentSongIndex, 1)
+      }
+
+      if (serverQueueIndex >= 0) {
+        serverQueue.votes.splice(serverQueueIndex, 1)
+      }
+
       serverQueue.playing = false
       serverQueue.connection.dispatcher.pause()
 
