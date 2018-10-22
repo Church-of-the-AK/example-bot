@@ -1,6 +1,6 @@
 import * as commando from 'discord.js-commando'
 import { oneLine } from 'common-tags'
-import { Message } from 'discord.js'
+import { Message, MessageEmbed } from 'discord.js'
 import { getGuildSettings } from '../../util'
 import axios from 'axios'
 import { api } from '../../config'
@@ -57,7 +57,10 @@ export default class LevelUpMessagesCommand extends commando.Command {
 
     let result: { success: boolean, message?: string, respond?: boolean }
 
-    switch (setting) {
+    switch (setting.toLowerCase()) {
+      case 'view':
+        result = await this.viewSettings(guildSettings, msg)
+        break
       case 'lum':
       case 'levelupmessages':
         result = await this.levelUpMessages(guildSettings, msg, value)
@@ -66,6 +69,14 @@ export default class LevelUpMessagesCommand extends commando.Command {
       case 'vs':
       case 'voteskipenabled':
         result = await this.voteSkipEnabled(guildSettings, msg, value)
+        break
+      case 'voteclear':
+      case 'vc':
+      case 'voteclearenabled':
+        result = await this.voteClearEnabled(guildSettings, msg, value)
+        break
+      default:
+        result = { success: false, message: setting + ' is not a valid setting.' }
         break
     }
 
@@ -139,5 +150,26 @@ export default class LevelUpMessagesCommand extends commando.Command {
     })
 
     return { success: true, message: `Users will ${value === 'true' ? 'now' : 'no longer'} be able to vote to clear the queue.` }
+  }
+
+  async viewSettings (guildSettings: GuildSettings, msg: commando.CommandMessage) {
+    let description = ''
+
+    for (let setting in guildSettings) {
+      if (setting !== 'id') {
+        description += `\`${setting}\` - \`${guildSettings[setting]}\`\n`
+      }
+    }
+
+    const embed = new MessageEmbed()
+      .setAuthor(msg.author.username, msg.author.displayAvatarURL(), `${api.url}/users/${msg.author.id}`)
+      .setTitle(`${msg.guild.name} Settings`)
+      .setFooter('Macho')
+      .setThumbnail(this.client.user.displayAvatarURL())
+      .setColor('BLUE')
+      .setDescription(description)
+
+    await msg.channel.send(embed)
+    return { success: true, respond: false }
   }
 }
