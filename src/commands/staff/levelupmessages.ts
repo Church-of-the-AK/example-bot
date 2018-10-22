@@ -1,4 +1,4 @@
-import * as commando from 'discord.js-commando'
+/* import * as commando from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import { Message, TextChannel } from 'discord.js'
 import { getGuildSettings } from '../../util'
@@ -61,4 +61,4 @@ export default class LevelUpMessagesCommand extends commando.Command {
       return null
     })
   }
-}
+} */
