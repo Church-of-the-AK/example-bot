@@ -6,7 +6,7 @@ import axios from 'axios'
 import { api } from '../../config'
 import { GuildSettings } from 'machobot-database'
 
-export default class LevelUpMessagesCommand extends commando.Command {
+export default class SettingsCommand extends commando.Command {
   constructor (client) {
     super(client, {
       name: 'settings',
