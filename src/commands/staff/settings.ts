@@ -85,12 +85,12 @@ export default class LevelUpMessagesCommand extends commando.Command {
     }
 
     if (!result.success) {
-      return msg.reply(`🆘 Invalid command format: ${result.message}`).catch(() => {
+      return msg.channel.send(`🆘 Invalid command format: ${result.message}`).catch(() => {
         return null
       })
     }
 
-    return msg.reply(`✅ Setting ${setting} has been set to ${value}. ${result.message}`).catch(() => {
+    return msg.channel.send(`✅ Setting ${setting} has been set to ${value}. ${result.message}`).catch(() => {
       return null
     })
   }
@@ -101,11 +101,17 @@ export default class LevelUpMessagesCommand extends commando.Command {
       return { success: true, respond: false }
     }
 
-    guildSettings.levelUpMessages = value === 'true' ? true : value === 'false' ? false : undefined
+    const setTo = value === 'true' ? true : value === 'false' ? false : undefined
 
-    if (typeof guildSettings.levelUpMessages === 'undefined') {
+    if (typeof setTo === 'undefined') {
       return { success: false, message: 'The setting `levelupmessages` can only be set to "true" or "false".' }
     }
+
+    if (guildSettings.levelUpMessages === setTo) {
+      return { success: false, message: 'The setting `levelupmessages` is already ' + value }
+    }
+
+    guildSettings.levelUpMessages = setTo
 
     await axios.put(`${api.url}/guilds/${msg.guild.id}/settings&code=${api.code}`, guildSettings).catch(error => {
       console.log(error)
@@ -120,11 +126,17 @@ export default class LevelUpMessagesCommand extends commando.Command {
       return { success: true, respond: false }
     }
 
-    guildSettings.voteSkipEnabled = value === 'true' ? true : value === 'false' ? false : undefined
+    const setTo = value === 'true' ? true : value === 'false' ? false : undefined
 
-    if (typeof guildSettings.voteSkipEnabled === 'undefined') {
+    if (typeof setTo === 'undefined') {
       return { success: false, message: 'The setting `voteskipenabled` can only be set to "true" or "false".' }
     }
+
+    if (guildSettings.voteSkipEnabled === setTo) {
+      return { success: false, message: 'The setting `voteskipenabled` is already ' + value }
+    }
+
+    guildSettings.voteSkipEnabled = setTo
 
     await axios.put(`${api.url}/guilds/${msg.guild.id}/settings&code=${api.code}`, guildSettings).catch(error => {
       console.log(error)
@@ -139,11 +151,17 @@ export default class LevelUpMessagesCommand extends commando.Command {
       return { success: true, respond: false }
     }
 
-    guildSettings.voteClearEnabled = value === 'true' ? true : value === 'false' ? false : undefined
+    const setTo = value === 'true' ? true : value === 'false' ? false : undefined
 
-    if (typeof guildSettings.voteClearEnabled === 'undefined') {
+    if (typeof setTo === 'undefined') {
       return { success: false, message: 'The setting `voteclearenabled` can only be set to "true" or "false".' }
     }
+
+    if (guildSettings.voteClearEnabled === setTo) {
+      return { success: false, message: 'The setting `voteclearenabled` is already ' + value }
+    }
+
+    guildSettings.voteClearEnabled = setTo
 
     await axios.put(`${api.url}/guilds/${msg.guild.id}/settings&code=${api.code}`, guildSettings).catch(error => {
       console.log(error)
