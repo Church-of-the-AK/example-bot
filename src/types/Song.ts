@@ -17,4 +17,8 @@ export interface Song {
    * The member that requested the song.
    */
   member: GuildMember
+  /**
+   * Number of votes to skip this song.
+   */
+  votes: string[]
 }

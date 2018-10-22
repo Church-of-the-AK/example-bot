@@ -26,4 +26,8 @@ export interface ServerQueue {
    * If the queue is playing music or not.
    */
   playing: boolean
+  /**
+   * The people voting to clear the queue.
+   */
+  votes: string[]
 }

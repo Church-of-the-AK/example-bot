@@ -174,7 +174,8 @@ async function handleVideo (video: Video, msg: commando.CommandMessage, voiceCha
     id: video.id,
     title: Util.escapeMarkdown(video.title),
     url: video.url,
-    member: msg.member
+    member: msg.member,
+    votes: []
   }
 
   if (!serverQueue) {
@@ -184,7 +185,8 @@ async function handleVideo (video: Video, msg: commando.CommandMessage, voiceCha
       connection: null,
       songs: [],
       volume: 5,
-      playing: true
+      playing: true,
+      votes: []
     }
 
     queue.set(msg.guild.id, queueConstruct)
