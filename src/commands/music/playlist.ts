@@ -1,12 +1,9 @@
 import * as commando from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import { Message, MessageEmbed } from 'discord.js'
-import { getGuildSettings } from '../../util'
-import axios from 'axios'
 import { api } from '../../config'
-import { GuildSettings } from 'machobot-database'
 
-export default class LevelUpMessagesCommand extends commando.Command {
+export default class PlaylistCommand extends commando.Command {
   constructor (client) {
     super(client, {
       name: 'playlist',
