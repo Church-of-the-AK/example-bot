@@ -2,13 +2,14 @@ import * as commando from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import { Message, MessageEmbed } from 'discord.js'
 import { api } from '../../config'
+import axios from 'axios'
 
 export default class PlaylistCommand extends commando.Command {
   constructor (client) {
     super(client, {
       name: 'playlist',
       aliases: [ 'pl' ],
-      group: 'staff',
+      group: 'music',
       memberName: 'playlist',
       description: 'Allows you to interact with your playlists.',
       details: oneLine`
