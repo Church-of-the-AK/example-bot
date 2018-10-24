@@ -27,7 +27,7 @@ export default class StatsCommand extends commando.Command {
 • Server count: ${this.client.guilds.size}
 • Channels: ${this.client.channels.size}
 • Discord.js-Commando version: v${version}
-• Node version: ${process.version})`
+• Node version: ${process.version}`
     const embed = new MessageEmbed()
       .setTitle(`${this.client.user.tag}'s Stats`)
       .setAuthor(msg.author.username, msg.author.displayAvatarURL(), api.url + '/users/' + msg.author.id)
