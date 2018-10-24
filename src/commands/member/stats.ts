@@ -19,10 +19,10 @@ export default class StatsCommand extends commando.Command {
   }
 
   async run (msg: commando.CommandMessage): Promise<Message | Message[]> {
-    const uptime = new Date(this.client.uptime)
+    const uptime = convertMS(this.client.uptime)
     const description = `
 • Memory Usage: ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB
-• Uptime: ${uptime.getHours()} hours, ${uptime.getMinutes()} minutes, and ${uptime.getSeconds()} seconds.
+• Uptime: ${uptime.days} days, ${uptime.hours} hours, ${uptime.minutes} minutes, and ${uptime.seconds} seconds.
 • User count: ${this.client.users.size}
 • Server count: ${this.client.guilds.size}
 • Channels: ${this.client.channels.size}
@@ -38,5 +38,23 @@ export default class StatsCommand extends commando.Command {
     return msg.channel.send(embed).catch(() => {
       return null
     })
+  }
+}
+
+function convertMS (milliseconds: number) {
+  let seconds = Math.floor(milliseconds / 1000)
+  let minutes = Math.floor(seconds / 60)
+  let hours = Math.floor(minutes / 60)
+  let days = Math.floor(hours / 24)
+
+  hours = hours % 24
+  seconds = seconds % 60
+  minutes = minutes % 60
+
+  return {
+    days: days,
+    hours: hours,
+    minutes: minutes,
+    seconds: seconds
   }
 }
