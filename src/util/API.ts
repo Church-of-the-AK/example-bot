@@ -164,6 +164,7 @@ export async function removeSong (playlist: MusicPlaylist, song: MusicSong) {
 }
 
 export async function addSong (playlist: MusicPlaylist, song: MusicSong) {
+  console.log(JSON.stringify(playlist))
   const exists = playlist.songs.find(song1 => song1.id === song.id)
 
   if (exists) {
