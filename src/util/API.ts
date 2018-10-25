@@ -82,7 +82,7 @@ export async function createPlaylist (name: string, user: APIUser) {
   playlist.user = user
   playlist.songs = []
 
-  const response = await axios.post(`${api.url}/api/music/playlist&code=${api.code}`, playlist).catch(error => {
+  const response = await axios.post(`${api.url}/music/playlist&code=${api.code}`, playlist).catch(error => {
     console.log(error)
   })
 
