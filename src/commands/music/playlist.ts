@@ -1,10 +1,12 @@
 import * as commando from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import { Message, MessageEmbed } from 'discord.js'
-import { api } from '../../config'
-import axios from 'axios'
-import { MusicPlaylist } from 'machobot-database'
-import { getUser, createPlaylist } from '../../util'
+import { api, youtubeKey } from '../../config'
+import { getUser, createPlaylist, deletePlaylist, addSong, getPlaylist, getSong, createSong, removeSong } from '../../util'
+import { YouTube } from 'better-youtube-api'
+import { queue } from '../..'
+
+const youtube = new YouTube(youtubeKey)
 
 export default class PlaylistCommand extends commando.Command {
   constructor (client) {
@@ -122,7 +124,7 @@ export default class PlaylistCommand extends commando.Command {
     const user = await getUser(msg.author.id)
 
     if (!user) {
-      return {  success: false, message: 'I seem to not have you in my database. Please try again.' }
+      return {  success: false, message: 'I don\'t seem to have you in my database. Please try again.' }
     }
 
     const name = nameArray.join(' ')
@@ -130,6 +132,10 @@ export default class PlaylistCommand extends commando.Command {
 
     if (!response) {
       return { success: false, message: 'Failed to create playlist `' + name + '`, please contact `JasonHaxStuff [num] 2546`.' }
+    }
+
+    if (response.error) {
+      return { success: false, message: response.error }
     }
 
     return { success: true, message: 'Created playlist `' + name + '`' }
@@ -155,14 +161,61 @@ export default class PlaylistCommand extends commando.Command {
       return { success: false, message: 'Proper format: `pl add <song link | "this"> to <playlist name>`' }
     }
 
-    const songUrl = name.substring(0, name.indexOf(' to '))
+    let songUrl = name.substring(0, name.indexOf(' to '))
     const playlistName = name.substring(name.indexOf(' to ') + 4)
 
     if (songUrl.length === 0 || playlistName.length === 0) {
       return { success: false, message: 'Proper format: `pl add <song link | "this"> to <playlist name>`' }
     }
 
-    return { success: true, message: `Added \`${songUrl}\` to \`${playlistName}\`.` }
+    if (songUrl.toLowerCase() === 'this') {
+      const serverQueue = queue.get(msg.guild.id)
+
+      if (!serverQueue || !serverQueue.playing) {
+        return { success: false, message: 'There is nothing playing in the server right now.' }
+      }
+
+      songUrl = serverQueue.songs[0].url
+    }
+
+    const video = await youtube.getVideoByUrl(songUrl).catch(() => {
+      return
+    })
+
+    if (!video) {
+      return { success: false, message: 'Couldn\'t quite find a song with that link.' }
+    }
+
+    const user = await getUser(msg.author.id)
+
+    if (!user) {
+      return { success: false, message: 'I don\'t seem have you in my database. Please try again.' }
+    }
+
+    const playlist = await getPlaylist(playlistName, user)
+
+    if (!playlist) {
+      return { success: false, message: 'I couldn\'t find that playlist.' }
+    }
+
+    let song = await getSong(video.id)
+
+    if (!song) {
+      await createSong(video.url, video.title, video.id)
+      song = await getSong(video.id)
+
+      if (!song) {
+        return { success: false, message: 'I couldn\'t create that song. Please try again.' }
+      }
+    }
+
+    const response = await addSong(playlist, song)
+
+    if (!response) {
+      return { success: false, message: 'The API failed to add the song to the playlist. Please contact `JasonHaxStuff [num] 2546`.' }
+    }
+
+    return { success: true, message: `Added \`${song.title}\` to \`${playlist.name}\`.` }
   }
 
   async remove (msg: commando.CommandMessage, nameArray: string[] | -1) {
@@ -176,14 +229,60 @@ export default class PlaylistCommand extends commando.Command {
       return { success: false, message: 'Proper format: `pl remove <song link | "this"> from <playlist name>`.' }
     }
 
-    const songName = name.substring(0, name.indexOf(' from '))
+    let songUrl = name.substring(0, name.indexOf(' from '))
     const playlistName = name.substring(name.indexOf(' from ') + 6)
 
-    if (songName.length === 0 || playlistName.length === 0) {
+    if (songUrl.length === 0 || playlistName.length === 0) {
       return { success: false, message: 'Proper format: `pl delete <song link | "this"> from <playlist name>`.' }
     }
 
-    return { success: true, message: `Removed \`${songName}\` from \`${playlistName}\`` }
+    if (songUrl.toLowerCase() === 'this') {
+      const serverQueue = queue.get(msg.guild.id)
+
+      if (!serverQueue || !serverQueue.playing) {
+        return { success: false, message: 'There is nothing playing in the server right now.' }
+      }
+
+      songUrl = serverQueue.songs[0].url
+    }
+
+    const video = await youtube.getVideoByUrl(songUrl).catch(() => {
+      return
+    })
+
+    if (!video) {
+      return { success: false, message: 'Couldn\'t quite find a song with that link.' }
+    }
+
+    const user = await getUser(msg.author.id)
+
+    if (!user) {
+      return { success: false, message: 'I don\'t seem have you in my database. Please try again.' }
+    }
+
+    const playlist = await getPlaylist(playlistName, user)
+
+    if (!playlist) {
+      return { success: false, message: 'I couldn\'t find that playlist.' }
+    }
+
+    const song = await getSong(video.id)
+
+    if (!song) {
+      return { success: false, message: 'That song isn\'t in that playlist.' }
+    }
+
+    const response = await removeSong(playlist, song)
+
+    if (!response) {
+      return { success: false, message: 'The API failed to remove the song from the playlist. Please contact `JasonHaxStuff [num] 2546`.' }
+    }
+
+    if (response.error) {
+      return { success: false, message: response.error }
+    }
+
+    return { success: true, message: `Removed \`${song.title}\` from \`${playlist.name}\`` }
   }
 
   async delete (msg: commando.CommandMessage, nameArray: string[] | -1) {
@@ -191,7 +290,19 @@ export default class PlaylistCommand extends commando.Command {
       return { success: false, message: 'Subcommand `delete` requires an argument `name`.' }
     }
 
+    const user = await getUser(msg.author.id)
+
+    if (!user) {
+      return { success: false, message: 'I don\'t seem to have you in my database. Please try again.' }
+    }
+
     const name = nameArray.join(' ')
+    const response = await deletePlaylist(name, user)
+
+    if (response.error) {
+      return { success: false, message: 'API returned an error: ' + response.error }
+    }
+
     return { success: true, message: 'Deleted playlist `' + name + '`.' }
   }
 }
