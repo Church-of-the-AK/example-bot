@@ -3,6 +3,8 @@ import { oneLine } from 'common-tags'
 import { Message, MessageEmbed } from 'discord.js'
 import { api } from '../../config'
 import axios from 'axios'
+import { MusicPlaylist } from 'machobot-database'
+import { getUser, createPlaylist } from '../../util'
 
 export default class PlaylistCommand extends commando.Command {
   constructor (client) {
@@ -80,7 +82,7 @@ export default class PlaylistCommand extends commando.Command {
     }
 
     if (!result.success) {
-      return msg.channel.send(`🆘 Invalid command format: ${result.message}`).catch(() => {
+      return msg.channel.send(`🆘 Failed to execute command: ${result.message}`).catch(() => {
         return null
       })
     }
@@ -117,8 +119,20 @@ export default class PlaylistCommand extends commando.Command {
       return { success: false, message: 'Subcommand `create` requires an argument `name`.' }
     }
 
+    const user = await getUser(msg.author.id)
+
+    if (!user) {
+      return {  success: false, message: 'I seem to not have you in my database. Please try again.' }
+    }
+
     const name = nameArray.join(' ')
-    return { success: true, message: 'Created playlist ' + name }
+    const response = await createPlaylist(name, user)
+
+    if (!response) {
+      return { success: false, message: 'Failed to create playlist `' + name + '`, please contact `JasonHaxStuff [num] 2546`.' }
+    }
+
+    return { success: true, message: 'Created playlist `' + name + '`' }
   }
 
   async play (msg: commando.CommandMessage, nameArray: string[] | -1) {
@@ -127,7 +141,7 @@ export default class PlaylistCommand extends commando.Command {
     }
 
     const name = nameArray.join(' ')
-    return { success: true, message: 'Started playing playlist ' + name }
+    return { success: true, message: 'Started playing playlist `' + name + '`.' }
   }
 
   async add (msg: commando.CommandMessage, nameArray: string[] | -1) {
@@ -148,7 +162,7 @@ export default class PlaylistCommand extends commando.Command {
       return { success: false, message: 'Proper format: `pl add <song link | "this"> to <playlist name>`' }
     }
 
-    return { success: true, message: `Added ${songUrl} to ${playlistName}` }
+    return { success: true, message: `Added \`${songUrl}\` to \`${playlistName}\`.` }
   }
 
   async remove (msg: commando.CommandMessage, nameArray: string[] | -1) {
@@ -159,17 +173,17 @@ export default class PlaylistCommand extends commando.Command {
     const name = nameArray.join(' ')
 
     if (!name.includes(' from ')) {
-      return { success: false, message: 'Proper format: `pl remove <song link | "this"> from <playlist name>`' }
+      return { success: false, message: 'Proper format: `pl remove <song link | "this"> from <playlist name>`.' }
     }
 
     const songName = name.substring(0, name.indexOf(' from '))
     const playlistName = name.substring(name.indexOf(' from ') + 6)
 
     if (songName.length === 0 || playlistName.length === 0) {
-      return { success: false, message: 'Proper format: `pl delete <song link | "this"> from <playlist name>`' }
+      return { success: false, message: 'Proper format: `pl delete <song link | "this"> from <playlist name>`.' }
     }
 
-    return { success: true, message: `Removed ${songName} from ${playlistName}` }
+    return { success: true, message: `Removed \`${songName}\` from \`${playlistName}\`` }
   }
 
   async delete (msg: commando.CommandMessage, nameArray: string[] | -1) {
@@ -178,6 +192,6 @@ export default class PlaylistCommand extends commando.Command {
     }
 
     const name = nameArray.join(' ')
-    return { success: true, message: 'Deleted playlist ' + name }
+    return { success: true, message: 'Deleted playlist `' + name + '`.' }
   }
 }

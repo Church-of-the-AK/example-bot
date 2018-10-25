@@ -1,4 +1,4 @@
-import { User as APIUser, GuildSettings, Guild as APIGuild } from 'machobot-database'
+import { User as APIUser, GuildSettings, Guild as APIGuild, MusicPlaylist } from 'machobot-database'
 import axios from 'axios'
 import { api } from '../config'
 import { User, Guild } from 'discord.js'
@@ -73,4 +73,28 @@ export async function createGuild (guild: Guild): Promise<APIGuild> {
   console.log(response ? `Created guild ${guild.name}` : `Failed to create guild ${guild.name}`)
 
   return response ? response.data : null
+}
+
+export async function createPlaylist (name: string, user: APIUser) {
+  const playlist = new MusicPlaylist()
+
+  playlist.name = name
+  playlist.user = user
+  playlist.songs = []
+
+  const response = await axios.post(`${api.url}/api/music/playlist&code=${api.code}`, playlist).catch(error => {
+    console.log(error)
+  })
+
+  console.log(response ? `Created playlist ${playlist.name}` : `Failed to create playlist ${playlist.name} for ${playlist.user.name}`)
+
+  return response ? response.data : null
+}
+
+export async function deletePlaylist (name: string, user: APIUser) {
+ // TODO: Add delete playlist function
+}
+
+export async function getPlaylist (name: string, userId: string) {
+  // TODO: Add get playlist function
 }
