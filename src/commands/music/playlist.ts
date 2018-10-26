@@ -72,7 +72,7 @@ export default class PlaylistCommand extends commando.Command {
         break
       case 's':
       case 'songs':
-        result = await this.list(msg, name)
+        result = await this.songList(msg, name)
         break
       default:
         result = { success: false, message: subcommand + ` is not a valid subcommand. Type \`${msg.guild.commandPrefix}pl help\` for help.` }
@@ -116,7 +116,7 @@ export default class PlaylistCommand extends commando.Command {
     return { success: true, respond: false }
   }
 
-  async list (msg: commando.CommandMessage, nameArray: string[] | -1) {
+  async songList (msg: commando.CommandMessage, nameArray: string[] | -1) {
     if (nameArray === -1) {
       return { success: false, message: 'Subcommand `list` requires an argument `name`.' }
     }
