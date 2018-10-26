@@ -123,10 +123,6 @@ export default class PlaylistCommand extends commando.Command {
   }
 
   async list (msg: commando.CommandMessage, nameArray: string[] | -1) {
-    if (nameArray === -1) {
-      return { success: false, message: 'Subcommand `list` requires an argument `name`.' }
-    }
-
     const playlists = await getUserPlaylists(msg.author.id)
 
     if (!playlists) {
