@@ -133,7 +133,7 @@ export default class PlaylistCommand extends commando.Command {
       playlists.splice(20, playlists.length - 20)
     }
 
-    const description = playlists.map(playlist => `- \`${playlist.name}\` - \`${playlist.songs.length}\` songs`).join('\n')
+    const description = playlists.map(playlist => `- \`${playlist.name}\``).join('\n')
 
     const embed = new MessageEmbed()
       .setTitle(`${msg.author.username}'s Playlists`)
