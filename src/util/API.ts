@@ -91,22 +91,6 @@ export async function createPlaylist (name: string, user: APIUser) {
   return response ? response.data : null
 }
 
-export async function deletePlaylist (name: string, user: APIUser) {
-  const playlist = await getPlaylist(name, user)
-
-  if (!playlist) {
-    return { error: 'Playlist doesn\'t exist' }
-  }
-
-  const response = await axios.delete(`${api.url}/music/playlist/${playlist.id}&code=${api.code}`).catch(error => {
-    console.log(error)
-  })
-
-  console.log(response ? `Deleted playlist ${playlist.name}` : `Failed to delete playlist ${playlist.name} for ${playlist.user.name}`)
-
-  return response ? response.data : null
-}
-
 export async function getPlaylist (name: string, user: APIUser) {
   const { data: playlist }: { data: MusicPlaylist | '' } = await axios.get(`${api.url}/search/playlists?userId=${user.id}&query=${name}`).catch(error => {
     console.log(error)

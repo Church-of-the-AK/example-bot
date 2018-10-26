@@ -2,7 +2,7 @@ import * as commando from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import { Message, MessageEmbed } from 'discord.js'
 import { api, youtubeKey } from '../../config'
-import { getUser, createPlaylist, deletePlaylist, addSong, getPlaylist, getSong, createSong, removeSong } from '../../util'
+import { getUser, createPlaylist, addSong, getPlaylist, getSong, createSong, removeSong } from '../../util'
 import { YouTube } from 'better-youtube-api'
 import { queue } from '../..'
 
@@ -65,10 +65,6 @@ export default class PlaylistCommand extends commando.Command {
       case 'a':
       case 'add':
         result = await this.add(msg, name)
-        break
-      case 'd':
-      case 'delete':
-        result = await this.delete(msg, name)
         break
       case 'r':
       case 'remove':
@@ -283,26 +279,5 @@ export default class PlaylistCommand extends commando.Command {
     }
 
     return { success: true, message: `Removed \`${song.title}\` from \`${playlist.name}\`` }
-  }
-
-  async delete (msg: commando.CommandMessage, nameArray: string[] | -1) {
-    if (nameArray === -1) {
-      return { success: false, message: 'Subcommand `delete` requires an argument `name`.' }
-    }
-
-    const user = await getUser(msg.author.id)
-
-    if (!user) {
-      return { success: false, message: 'I don\'t seem to have you in my database. Please try again.' }
-    }
-
-    const name = nameArray.join(' ')
-    const response = await deletePlaylist(name, user)
-
-    if (response.error) {
-      return { success: false, message: 'API returned an error: ' + response.error }
-    }
-
-    return { success: true, message: 'Deleted playlist `' + name + '`.' }
   }
 }
