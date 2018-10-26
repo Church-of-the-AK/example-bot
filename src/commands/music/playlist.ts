@@ -2,7 +2,7 @@ import * as commando from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import { Message, MessageEmbed } from 'discord.js'
 import { api, youtubeKey } from '../../config'
-import { getUser, createPlaylist, addSong, getPlaylist, getSong, createSong, removeSong } from '../../util'
+import { getUser, createPlaylist, addSong, getPlaylist, getSong, createSong, removeSong, getUserPlaylists } from '../../util'
 import { YouTube } from 'better-youtube-api'
 import { queue } from '../..'
 
@@ -74,6 +74,10 @@ export default class PlaylistCommand extends commando.Command {
       case 'songs':
         result = await this.songList(msg, name)
         break
+      case 'l':
+      case 'list':
+        result = await this.list(msg, name)
+        break
       default:
         result = { success: false, message: subcommand + ` is not a valid subcommand. Type \`${msg.guild.commandPrefix}pl help\` for help.` }
         break
@@ -99,7 +103,9 @@ export default class PlaylistCommand extends commando.Command {
       '`pl create <name>` - creates a playlist',
       '`pl play <name>` - plays a playlist',
       '`pl add <song link | "this"> to <playlist name>` - adds a song to a playlist',
-      '`pl remove <song link | "this"> from <playlist name>` - removes a song from a playlist'
+      '`pl remove <song link | "this"> from <playlist name>` - removes a song from a playlist',
+      '`pl songs <name>` - gets the first 20 songs of a playlist',
+      '`pl list` - gets the first 20 playlists that you own'
     ]
 
     const embed = new MessageEmbed()
@@ -113,6 +119,34 @@ export default class PlaylistCommand extends commando.Command {
       return null
     })
 
+    return { success: true, respond: false }
+  }
+
+  async list (msg: commando.CommandMessage, nameArray: string[] | -1) {
+    if (nameArray === -1) {
+      return { success: false, message: 'Subcommand `list` requires an argument `name`.' }
+    }
+
+    const playlists = await getUserPlaylists(msg.author.id)
+
+    if (!playlists) {
+      return {  success: false, message: 'I can\'t find any playlists to your name.' }
+    }
+
+    if (playlists.length > 20) {
+      playlists.splice(20, playlists.length - 20)
+    }
+
+    const description = playlists.map(playlist => `- \`${playlist.name}\` - \`${playlist.songs.length}\` songs`).join('\n')
+
+    const embed = new MessageEmbed()
+      .setTitle(`${msg.author.username}'s Playlists`)
+      .setAuthor(msg.author.username, msg.author.displayAvatarURL(), api.url + '/users/' + msg.author.id)
+      .setColor('BLUE')
+      .setFooter('Macho', this.client.user.displayAvatarURL())
+      .setDescription(description)
+
+    msg.channel.send(embed)
     return { success: true, respond: false }
   }
 
@@ -132,6 +166,10 @@ export default class PlaylistCommand extends commando.Command {
 
     if (!playlist) {
       return { success: false, message: 'I couldn\'t find that playlist.' }
+    }
+
+    if (playlist.songs.length > 20) {
+      playlist.songs.splice(20, playlist.songs.length - 20)
     }
 
     const description = playlist.songs.map(song => `- \`${song.title}\` - \`${song.url}\``).join('\n')

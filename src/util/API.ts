@@ -36,6 +36,17 @@ export async function getUser (id: string) {
   return user
 }
 
+export async function getUserPlaylists (id: string) {
+  const { data: playlists }: { data: MusicPlaylist[] | '' } = (await axios.get(`${api.url}/users/${id}/playlists`).catch(error => {
+    console.log(error)
+
+    const response: { data: '' } = { data: '' }
+    return response
+  }))
+
+  return playlists
+}
+
 export async function getGuildSettings (id: string) {
   const { data: guild }: { data: APIGuild | '' } = await axios.get(`${api.url}/guilds/${id}`).catch(error => {
     console.log(error)
@@ -153,6 +164,10 @@ export async function addSong (playlist: MusicPlaylist, song: MusicSong) {
 
   if (exists) {
     return { error: 'That song already exists in that playlist.' }
+  }
+
+  if (playlist.songs.length === 250) {
+    return { error: 'Playlists can only have up to 250 songs in them.' }
   }
 
   playlist.songs.push(song)
