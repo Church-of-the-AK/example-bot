@@ -70,6 +70,10 @@ export default class PlaylistCommand extends commando.Command {
       case 'remove':
         result = await this.remove(msg, name)
         break
+      case 's':
+      case 'songs':
+        result = await this.list(msg, name)
+        break
       default:
         result = { success: false, message: subcommand + ` is not a valid subcommand. Type \`${msg.guild.commandPrefix}pl help\` for help.` }
         break
@@ -108,6 +112,38 @@ export default class PlaylistCommand extends commando.Command {
     await msg.channel.send(embed).catch(() => {
       return null
     })
+
+    return { success: true, respond: false }
+  }
+
+  async list (msg: commando.CommandMessage, nameArray: string[] | -1) {
+    if (nameArray === -1) {
+      return { success: false, message: 'Subcommand `list` requires an argument `name`.' }
+    }
+
+    const user = await getUser(msg.author.id)
+
+    if (!user) {
+      return {  success: false, message: 'I don\'t seem to have you in my database. Please try again.' }
+    }
+
+    const playlistName = nameArray.join(' ')
+    const playlist = await getPlaylist(playlistName, user)
+
+    if (!playlist) {
+      return { success: false, message: 'I couldn\'t find that playlist.' }
+    }
+
+    const description = playlist.songs.map(song => `\`${song.title}\` - \`${song.url}\``).join('\n')
+
+    const embed = new MessageEmbed()
+      .setTitle(`Playlist Songs List for ${playlist.name}`)
+      .setAuthor(msg.author.username, msg.author.displayAvatarURL(), api.url + '/users/' + msg.author.id)
+      .setColor('BLUE')
+      .setFooter('Macho', this.client.user.displayAvatarURL())
+      .setDescription(description)
+
+    msg.channel.send(embed)
     return { success: true, respond: false }
   }
 
