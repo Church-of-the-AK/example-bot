@@ -23,7 +23,7 @@ export default class PlaylistCommand extends commando.Command {
       args: [{
         key: 'subcommand',
         label: 'subcommand',
-        prompt: 'Would you like to `create`/`play`/`delete` a playlist, or `add`/`remove` a song from a playlist?',
+        prompt: 'Would you like to `create`/`play` a playlist, or `add`/`remove` a song from a playlist?',
         type: 'string',
         infinite: false
       },
@@ -93,7 +93,6 @@ export default class PlaylistCommand extends commando.Command {
   async viewHelp (msg: commando.CommandMessage) {
     const commands = [
       '`pl create <name>` - creates a playlist',
-      '`pl delete <name>` - deletes a playlist',
       '`pl play <name>` - plays a playlist',
       '`pl add <song link | "this"> to <playlist name>` - adds a song to a playlist',
       '`pl remove <song link | "this"> from <playlist name>` - removes a song from a playlist'
