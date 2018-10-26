@@ -40,14 +40,6 @@ export default class PlaylistCommand extends commando.Command {
     })
   }
 
-  hasPermission (msg: commando.CommandMessage) {
-    if (this.client.isOwner(msg.author) || msg.member.hasPermission('MANAGE_MESSAGES')) {
-      return true
-    }
-
-    return false
-  }
-
   async run (msg: commando.CommandMessage, { subcommand, name }: { subcommand: string, name: string[] | -1 }): Promise<Message | Message[]> {
     let result: { success: boolean, message?: string, respond?: boolean }
 
