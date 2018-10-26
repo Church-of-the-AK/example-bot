@@ -168,7 +168,7 @@ export default class PlayCommand extends commando.Command {
   }
 }
 
-async function handleVideo (video: Video, msg: commando.CommandMessage, voiceChannel: VoiceChannel, playlist = false) {
+export async function handleVideo (video: Video, msg: commando.CommandMessage, voiceChannel: VoiceChannel, playlist = false) {
   const serverQueue = queue.get(msg.guild.id)
   const song: Song = {
     id: video.id,

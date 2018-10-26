@@ -2,9 +2,10 @@ import * as commando from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import { Message, MessageEmbed } from 'discord.js'
 import { api, youtubeKey } from '../../config'
-import { getUser, createPlaylist, addSong, getPlaylist, getSong, createSong, removeSong, getUserPlaylists } from '../../util'
+import { getUser, createPlaylist, addSong, getPlaylist, getSong, createSong, removeSong, getUserPlaylists, getGuildSettings } from '../../util'
 import { YouTube } from 'better-youtube-api'
 import { queue } from '../..'
+import { handleVideo } from './play'
 
 const youtube = new YouTube(youtubeKey)
 
@@ -134,7 +135,6 @@ export default class PlaylistCommand extends commando.Command {
     }
 
     const description = playlists.map(playlist => `- \`${playlist.name}\``).join('\n')
-
     const embed = new MessageEmbed()
       .setTitle(`${msg.author.username}'s Playlists`)
       .setAuthor(msg.author.username, msg.author.displayAvatarURL(), api.url + '/users/' + msg.author.id)
@@ -169,7 +169,6 @@ export default class PlaylistCommand extends commando.Command {
     }
 
     const description = playlist.songs.map(song => `- \`${song.title}\` - \`${song.url}\``).join('\n')
-
     const embed = new MessageEmbed()
       .setTitle(`Playlist Songs List for ${playlist.name}`)
       .setAuthor(msg.author.username, msg.author.displayAvatarURL(), api.url + '/users/' + msg.author.id)
@@ -211,8 +210,51 @@ export default class PlaylistCommand extends commando.Command {
       return { success: false, message: 'Subcommand `play` requires an argument `name`.' }
     }
 
-    const name = nameArray.join(' ')
-    return { success: true, message: 'Started playing playlist `' + name + '`.' }
+    if (!msg.member.voice.channel) {
+      return { success: false, message: 'You must be in a voice channel to use this command.' }
+    }
+
+    const settings = await getGuildSettings(msg.guild.id)
+
+    if (!settings) {
+      return { success: false, message: 'I couldn\'t find your guild\'s settings in my database. Try again.' }
+    }
+
+    if (settings.voteClearEnabled === false) {
+      return { success: false, message: 'This guild has vote clearing disabled, so I cannot allow you to play playlists.' }
+    }
+
+    const user = await getUser(msg.author.id)
+
+    if (!user) {
+      return {  success: false, message: 'I don\'t seem to have you in my database. Please try again.' }
+    }
+
+    const playlistName = nameArray.join(' ')
+    const playlist = await getPlaylist(playlistName, user)
+    const serverQueue = queue.get(msg.guild.id)
+
+    if (!playlist) {
+      return { success: false, message: 'I couldn\'t find that playlist.' }
+    }
+
+    const message = await msg.channel.send(`🕙 Adding ${playlist.name} (${playlist.songs.length} songs) to the queue...`) as Message
+
+    for (let i = 0; i < playlist.songs.length; i++) {
+      const video = await youtube.getVideo(playlist.songs[i].id).catch(() => {
+        // it's private
+      })
+
+      if (video) {
+        await handleVideo(video, msg, serverQueue ? serverQueue.voiceChannel : msg.member.voice.channel, true).catch(err => {
+          console.log(err)
+        })
+      }
+    }
+
+    message.edit(`✅ Playlist: **${playlist.name}** has been added to the queue!`)
+
+    return { success: true, respond: false }
   }
 
   async add (msg: commando.CommandMessage, nameArray: string[] | -1) {
