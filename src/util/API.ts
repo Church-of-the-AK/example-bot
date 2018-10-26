@@ -154,7 +154,7 @@ export async function removeSong (playlist: MusicPlaylist, song: MusicSong) {
 
   playlist.songs.splice(index, 1)
 
-  const response = await axios.put(`${api.url}/music/playlist/${playlist.id}`, playlist).catch(error => {
+  const response = await axios.put(`${api.url}/music/playlist/${playlist.id}&code=${api.code}`, playlist).catch(error => {
     console.log(error)
   })
 
@@ -173,7 +173,7 @@ export async function addSong (playlist: MusicPlaylist, song: MusicSong) {
 
   playlist.songs.push(song)
 
-  const response = await axios.put(`${api.url}/music/playlist/${playlist.id}`, playlist).catch(error => {
+  const response = await axios.put(`${api.url}/music/playlist/${playlist.id}&code=${api.code}`, playlist).catch(error => {
     console.log(error)
   })
 
