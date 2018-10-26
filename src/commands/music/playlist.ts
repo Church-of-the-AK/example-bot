@@ -134,7 +134,7 @@ export default class PlaylistCommand extends commando.Command {
       return { success: false, message: 'I couldn\'t find that playlist.' }
     }
 
-    const description = playlist.songs.map(song => `\`${song.title}\` - \`${song.url}\``).join('\n')
+    const description = playlist.songs.map(song => `- \`${song.title}\` - \`${song.url}\``).join('\n')
 
     const embed = new MessageEmbed()
       .setTitle(`Playlist Songs List for ${playlist.name}`)
