@@ -28,14 +28,14 @@ export default class TagCommand extends commando.Command {
         label: 'name',
         prompt: '',
         type: 'string',
-        infinite: true,
+        infinite: false,
         default: -1
       }],
       guildOnly: true
     })
   }
 
-  async run (msg: commando.CommandMessage, { subcommand, name }: { subcommand: string, name: string[] | -1 }): Promise<Message | Message[]> {
+  async run (msg: commando.CommandMessage, { subcommand, name }: { subcommand: string, name: string | -1 }): Promise<Message | Message[]> {
     let result: { success: boolean, message?: string, respond?: boolean }
 
     switch (subcommand.toLowerCase()) {
@@ -53,7 +53,7 @@ export default class TagCommand extends commando.Command {
         result = await this.view(msg, name)
         break
       default:
-        result = await this.view(msg, name)
+        result = await this.view(msg, subcommand)
         break
     }
 
@@ -93,8 +93,8 @@ export default class TagCommand extends commando.Command {
     return { success: true, respond: false }
   }
 
-  async view (msg: commando.CommandMessage, nameArray: string[] | -1) {
-    if (nameArray === -1 || nameArray.length < 1) {
+  async view (msg: commando.CommandMessage, name: string | -1) {
+    if (name === -1) {
       return { success: false, message: 'Subcommand `view` requires an argument `name`.' }
     }
 
@@ -104,7 +104,7 @@ export default class TagCommand extends commando.Command {
       return { success: false, message: 'I could not find your guild in my database. Please try again.' }
     }
 
-    const tag = await getTag(guild, nameArray[0])
+    const tag = await getTag(guild, name)
 
     if (!tag) {
       return { success: false, message: 'I couldn\'t find that tag. Typo much?' }
@@ -121,8 +121,8 @@ export default class TagCommand extends commando.Command {
     return { success: true, respond: false }
   }
 
-  async create (msg: commando.CommandMessage, nameArray: string[] | -1) {
-    if (nameArray === -1 || nameArray.length < 2) {
+  async create (msg: commando.CommandMessage, args: string | -1) {
+    if (args === -1 || args.length < 2) {
       return { success: false, message: 'Subcommand `create` requires an argument `name` and argument `content`.' }
     }
 
@@ -132,8 +132,8 @@ export default class TagCommand extends commando.Command {
       return {  success: false, message: 'I could not find your guild in my database. Please try again.' }
     }
 
-    const name = nameArray.splice(0, 1)[0]
-    const content = nameArray.join(' ')
+    const name = args.substring(0, args.indexOf(' '))
+    const content = args.substring(args.indexOf(' ') + 1, args.length)
     const response = await createTag(guild, name, content)
 
     if (!response) {
