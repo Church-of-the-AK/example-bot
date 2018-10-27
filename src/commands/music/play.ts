@@ -87,7 +87,7 @@ export default class PlayCommand extends commando.Command {
         })
       }
 
-      const responseMsg = await msg.channel.send(`🕙 Adding playlist **${playlist.title}** to the queue... ${playlist.itemCount >= 100 ? 'This may take a while.' : ''}`).catch(() => {
+      const responseMsg = await msg.channel.send(`🕙 Adding playlist **${playlist.title}** to the queue... ${playlist.length >= 100 ? 'This may take a while.' : ''}`).catch(() => {
         return null
       }) as Message
 
