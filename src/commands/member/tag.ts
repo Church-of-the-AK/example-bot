@@ -132,7 +132,7 @@ export default class TagCommand extends commando.Command {
       return {  success: false, message: 'I could not find your guild in my database. Please try again.' }
     }
 
-    const name = args.substring(0, args.indexOf(' '))
+    const name = args.substring(0, args.indexOf(' ') < args.indexOf('\n') ? args.indexOf(' ') : args.indexOf('\n'))
     const content = args.substring(args.indexOf(' ') + 1, args.length)
     const response = await createTag(guild, name, content)
 
