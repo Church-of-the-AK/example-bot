@@ -10,6 +10,4 @@ export async function postServerCount (serverCount: number) {
   }).catch(error => {
     console.log(error)
   })
-
-  console.log(response ? 'Successfully posted server count' : 'Server count couldn\'t be posted.')
 }

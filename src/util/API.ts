@@ -1,4 +1,4 @@
-import { User as APIUser, GuildSettings, Guild as APIGuild, MusicPlaylist, MusicSong } from 'machobot-database'
+import { User as APIUser, GuildSettings, Guild as APIGuild, MusicPlaylist, MusicSong, GuildTag } from 'machobot-database'
 import axios from 'axios'
 import { api } from '../config'
 import { User, Guild } from 'discord.js'
@@ -59,7 +59,7 @@ export async function getGuildSettings (id: string) {
 }
 
 export async function getGuild (id: string) {
-  const { data: guild }: { data: Guild | '' } = await axios.get(`${api.url}/guilds/${id}`).catch(error => {
+  const { data: guild }: { data: APIGuild | '' } = await axios.get(`${api.url}/guilds/${id}`).catch(error => {
     console.log(error)
 
     const response: { data: '' } = { data: '' }
@@ -178,4 +178,30 @@ export async function addSong (playlist: MusicPlaylist, song: MusicSong) {
   console.log(response ? `Added song ${song.title} to playlist ${playlist.name}` : `Failed to add song ${song.title} to playlist ${playlist.name}`)
 
   return response ? response.data : null
+}
+
+export async function createTag (guild: APIGuild, name: string, content: string) {
+  const tag = new GuildTag()
+
+  tag.name = name
+  tag.content = content
+
+  const response = await axios.put(`${api.url}/guilds/${guild.id}/tags&code=${api.code}`, tag).catch(error => {
+    console.log(error)
+  })
+
+  console.log(response ? `Created tag ${tag.name}` : `Failed to create tag ${tag.name}`)
+
+  return response ? response.data : null
+}
+
+export async function getTag (guild: APIGuild, name: string) {
+  const { data: tag }: { data: GuildTag | '' } = await axios.get(`${api.url}/search/tags?guildId=${guild.id}&query=${name}`).catch(error => {
+    console.log(error)
+
+    const response: { data: '' } = { data: '' }
+    return response
+  })
+
+  return tag
 }
