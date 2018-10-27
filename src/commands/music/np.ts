@@ -1,7 +1,7 @@
 import * as commando from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import { queue } from '../../index'
-import { Message } from 'discord.js'
+import { Message, MessageEmbed } from 'discord.js'
 
 export default class NowPlayingCommand extends commando.Command {
   constructor (client) {
@@ -30,8 +30,15 @@ export default class NowPlayingCommand extends commando.Command {
     }
 
     const song = serverQueue.songs[0]
+    const embed = new MessageEmbed()
+      .setTitle('🎶 Now Playing')
+      .setAuthor(msg.author.username, msg.author.displayAvatarURL())
+      .setColor('BLUE')
+      .setFooter('Macho', this.client.user.displayAvatarURL())
+      .setDescription(`**${song.title}** - ${song.member.user.tag}`)
+      .setThumbnail(song.thumbnail)
 
-    return msg.channel.send(`🎶 Now playing: **${song.title}** - ${song.member.user.tag}`).catch(() => {
+    return msg.channel.send(embed).catch(() => {
       return null
     })
   }

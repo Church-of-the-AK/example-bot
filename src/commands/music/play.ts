@@ -175,7 +175,8 @@ export async function handleVideo (video: Video, msg: commando.CommandMessage, v
     title: Util.escapeMarkdown(video.title),
     url: video.url,
     member: msg.member,
-    votes: []
+    votes: [],
+    thumbnail: video.thumbnails.default.url
   }
 
   if (!serverQueue) {
@@ -229,7 +230,4 @@ function play (guild: Guild, song: Song) {
     .on('error', error => console.error(error))
 
   dispatcher.setVolumeLogarithmic(serverQueue.volume / 5)
-  serverQueue.textChannel.send(`🎶 Started playing: **${song.title}**, requested by \`${song.member.user.tag}\`.`).catch(() => {
-    return
-  })
 }

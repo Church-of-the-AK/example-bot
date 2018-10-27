@@ -21,4 +21,8 @@ export interface Song {
    * Number of votes to skip this song.
    */
   votes: string[]
+  /**
+   * The URL to the default video thumbnail.
+   */
+  thumbnail: string
 }
