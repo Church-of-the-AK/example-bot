@@ -135,6 +135,11 @@ export default class TagCommand extends commando.Command {
     const index = args.indexOf(' ') < args.indexOf('\n') ? args.indexOf(' ') : args.indexOf('\n')
     const name = args.substring(0, index)
     const content = args.substring(index + 1, args.length)
+
+    if (!name || !content) {
+      return { success: false, message: 'Subcommand `create` requires an argument `name` and argument `content`.' }
+    }
+
     const response = await createTag(guild, name, content)
 
     if (!response) {
