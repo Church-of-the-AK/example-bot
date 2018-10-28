@@ -1,12 +1,13 @@
-import * as commando from 'discord.js-commando'
+import { CommandMessage } from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import { Message, MessageEmbed } from 'discord.js'
 import { getGuildSettings } from '../../util'
 import axios from 'axios'
 import { api } from '../../config'
 import { GuildSettings } from 'machobot-database'
+import { MachoCommand } from '../../types'
 
-export default class SettingsCommand extends commando.Command {
+export default class SettingsCommand extends MachoCommand {
   constructor (client) {
     super(client, {
       name: 'settings',
@@ -38,7 +39,7 @@ export default class SettingsCommand extends commando.Command {
     })
   }
 
-  hasPermission (msg: commando.CommandMessage) {
+  hasPermission (msg: CommandMessage) {
     if (this.client.isOwner(msg.author) || msg.member.hasPermission('MANAGE_MESSAGES')) {
       return true
     }
@@ -46,7 +47,7 @@ export default class SettingsCommand extends commando.Command {
     return false
   }
 
-  async run (msg: commando.CommandMessage, { setting, value }: { setting: string, value: string | -1 }): Promise<Message | Message[]> {
+  async run (msg: CommandMessage, { setting, value }: { setting: string, value: string | -1 }): Promise<Message | Message[]> {
     const guildSettings = await getGuildSettings(msg.guild.id)
 
     if (!guildSettings) {
@@ -95,7 +96,7 @@ export default class SettingsCommand extends commando.Command {
     })
   }
 
-  async levelUpMessages (guildSettings: GuildSettings, msg: commando.CommandMessage, value: string | -1) {
+  async levelUpMessages (guildSettings: GuildSettings, msg: CommandMessage, value: string | -1) {
     if (value === -1) {
       await msg.channel.send(`The \`levelupmessages\` setting is currently set to \`${guildSettings.levelUpMessages}\`.`).catch(() => {
         return null
@@ -123,7 +124,7 @@ export default class SettingsCommand extends commando.Command {
     return { success: true, message: `Users will ${value === 'true' ? 'now' : 'no longer'} receive level-up messages.` }
   }
 
-  async voteSkipEnabled (guildSettings: GuildSettings, msg: commando.CommandMessage, value: string | -1) {
+  async voteSkipEnabled (guildSettings: GuildSettings, msg: CommandMessage, value: string | -1) {
     if (value === -1) {
       await msg.channel.send(`The \`voteskipenabled\` setting is currently set to \`${guildSettings.voteSkipEnabled}\`.`).catch(() => {
         return null
@@ -151,7 +152,7 @@ export default class SettingsCommand extends commando.Command {
     return { success: true, message: `Users will ${value === 'true' ? 'now' : 'no longer'} be able to vote to skip songs/playlists.` }
   }
 
-  async voteClearEnabled (guildSettings: GuildSettings, msg: commando.CommandMessage, value: string | -1) {
+  async voteClearEnabled (guildSettings: GuildSettings, msg: CommandMessage, value: string | -1) {
     if (value === -1) {
       await msg.channel.send(`The \`voteclearenabled\` setting is currently set to \`${guildSettings.voteClearEnabled}\`.`).catch(() => {
         return null
@@ -179,7 +180,7 @@ export default class SettingsCommand extends commando.Command {
     return { success: true, message: `Users will ${value === 'true' ? 'now' : 'no longer'} be able to vote to clear the queue.` }
   }
 
-  async viewSettings (guildSettings: GuildSettings, msg: commando.CommandMessage) {
+  async viewSettings (guildSettings: GuildSettings, msg: CommandMessage) {
     let description = ''
 
     for (let setting in guildSettings) {

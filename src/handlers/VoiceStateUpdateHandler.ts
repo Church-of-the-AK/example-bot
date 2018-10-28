@@ -1,4 +1,4 @@
-import { queue } from '../index'
+import { client } from '../index'
 import { VoiceState } from 'discord.js'
 
 export function handleVoiceStateUpdate (oldState: VoiceState, newState: VoiceState) {
@@ -7,7 +7,7 @@ export function handleVoiceStateUpdate (oldState: VoiceState, newState: VoiceSta
   }
 
   if (oldState.channel && !(newState.channel) && oldState.channel.members.filter(member => !member.user.bot).size <= 0) {
-    const serverQueue = queue.get(oldState.guild.id)
+    const serverQueue = client.getQueue(oldState.guild.id)
 
     if (!serverQueue || oldState.channel.id !== serverQueue.voiceChannel.id) {
       return
@@ -37,7 +37,7 @@ export function handleVoiceStateUpdate (oldState: VoiceState, newState: VoiceSta
   }
 
   if (!(oldState.channel) && newState.channel && newState.channel.members.filter(member => !member.user.bot).size <= 1) {
-    const serverQueue = queue.get(oldState.guild.id)
+    const serverQueue = client.getQueue(oldState.guild.id)
 
     if (!serverQueue || newState.channel.id !== serverQueue.voiceChannel.id) {
       return

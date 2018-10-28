@@ -1,10 +1,11 @@
-import * as commando from 'discord.js-commando'
+import { CommandMessage } from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import axios from 'axios'
 import { AllHtmlEntities } from 'html-entities'
 import { Message } from 'discord.js'
+import { MachoCommand } from '../../types'
 
-export default class ChuckNorrisCommand extends commando.Command {
+export default class ChuckNorrisCommand extends MachoCommand {
   constructor (client) {
     super(client, {
       name: 'chucknorris',
@@ -20,7 +21,7 @@ export default class ChuckNorrisCommand extends commando.Command {
     })
   }
 
-  async run (msg: commando.CommandMessage): Promise<Message | Message[]> {
+  async run (msg: CommandMessage): Promise<Message | Message[]> {
     const { data: joke } = await axios.get('http://api.icndb.com/jokes/random').catch(error => {
       console.log(error)
       return { data: 'Error retrieving a joke from the database.' }

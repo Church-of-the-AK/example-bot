@@ -1,10 +1,10 @@
-import * as commando from 'discord.js-commando'
+import { CommandMessage } from 'discord.js-commando'
 import { oneLine, stripIndents } from 'common-tags'
-import { queue } from '../../index'
 import { Message, MessageEmbed } from 'discord.js'
 import { api } from '../../config'
+import { MachoCommand } from '../../types'
 
-export default class QueueCommand extends commando.Command {
+export default class QueueCommand extends MachoCommand {
   constructor (client) {
     super(client, {
       name: 'queue',
@@ -29,8 +29,8 @@ export default class QueueCommand extends commando.Command {
     })
   }
 
-  async run (msg: commando.CommandMessage, { pageNum }: { pageNum: number }): Promise<Message | Message[]> {
-    const serverQueue = queue.get(msg.guild.id)
+  async run (msg: CommandMessage, { pageNum }: { pageNum: number }): Promise<Message | Message[]> {
+    const serverQueue = this.client.getQueue(msg.guild.id)
 
     if (!serverQueue) {
       return msg.channel.send('There is nothing playing. Why don\'t *you* start the jam session?').catch(() => {

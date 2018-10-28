@@ -1,11 +1,11 @@
-import * as commando from 'discord.js-commando'
+import { CommandMessage } from 'discord.js-commando'
 import { oneLine } from 'common-tags'
-import { queue } from '../../index'
 import { Message } from 'discord.js'
 import { ServerQueue } from '../../types/ServerQueue'
 import { getGuildSettings } from '../../util'
+import { MachoCommand } from '../../types'
 
-export default class ClearCommand extends commando.Command {
+export default class ClearCommand extends MachoCommand {
   constructor (client) {
     super(client, {
       name: 'clear',
@@ -22,8 +22,8 @@ export default class ClearCommand extends commando.Command {
     })
   }
 
-  async run (msg: commando.CommandMessage): Promise<Message | Message[]> {
-    const serverQueue: ServerQueue = queue.get(msg.guild.id)
+  async run (msg: CommandMessage): Promise<Message | Message[]> {
+    const serverQueue: ServerQueue = this.client.getQueue(msg.guild.id)
     const guildSettings = await getGuildSettings(msg.guild.id)
 
     if (!guildSettings) {
@@ -76,7 +76,7 @@ export default class ClearCommand extends commando.Command {
     }
   }
 
-  clear (serverQueue: ServerQueue, msg: commando.CommandMessage) {
+  clear (serverQueue: ServerQueue, msg: CommandMessage) {
     serverQueue.songs = []
     serverQueue.connection.dispatcher.end('Clear command has been used.')
 

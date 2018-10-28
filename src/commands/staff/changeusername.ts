@@ -1,10 +1,11 @@
-import * as commando from 'discord.js-commando'
+import { CommandMessage } from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import { log } from '../../util'
 import { Message } from 'discord.js'
 import { ownerId } from '../../config'
+import { MachoCommand } from '../../types'
 
-export default class ChangeUsernameCommand extends commando.Command {
+export default class ChangeUsernameCommand extends MachoCommand {
   constructor (client) {
     super(client, {
       name: 'changeusername',
@@ -28,7 +29,7 @@ export default class ChangeUsernameCommand extends commando.Command {
     })
   }
 
-  async run (msg: commando.CommandMessage, { name }: { name: string }): Promise<Message | Message[]> {
+  async run (msg: CommandMessage, { name }: { name: string }): Promise<Message | Message[]> {
     if (msg.author.id !== ownerId) {
       return msg.reply("Sorry, but you can't do that.").catch(() => {
         return null

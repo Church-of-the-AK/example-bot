@@ -1,14 +1,13 @@
-import * as commando from 'discord.js-commando'
+import { CommandMessage, FriendlyError, SQLiteProvider } from 'discord.js-commando'
 import * as path from 'path'
 import { oneLine } from 'common-tags'
 import * as sqlite from 'sqlite'
 import * as config from './config'
-import { ServerQueue } from './types/ServerQueue'
+import { MachoClient } from './types'
 import { handleMessage, handleGuildAdd, handleVoiceStateUpdate } from './handlers'
 import { postServerCount } from './util'
 
-export const queue: Map<string, ServerQueue> = new Map()
-export const client = new commando.CommandoClient({
+export const client = new MachoClient({
   owner: config.ownerId,
   commandPrefix: config.prefix,
   unknownCommandResponse: false
@@ -57,7 +56,7 @@ Command: ${cmd.name}
     console.log(message)
   })
   .on('commandError', (cmd, err) => {
-    if (err instanceof commando.FriendlyError) return
+    if (err instanceof FriendlyError) return
     console.error(`Error in command ${cmd.groupID}:${cmd.memberName}`, err)
   })
   .on('commandBlocked', (msg, reason) => {
@@ -86,7 +85,7 @@ Command: ${cmd.name}
 			${guild ? `in guild ${guild.name} (${guild.id})` : 'globally'}.
 		`)
   })
-  .on('message', (msg: commando.CommandMessage) => {
+  .on('message', (msg: CommandMessage) => {
     handleMessage(msg)
   })
   .on('guildCreate', guild => {
@@ -96,7 +95,7 @@ Command: ${cmd.name}
     handleVoiceStateUpdate(oldState, newState)
   })
   .setProvider(
-    sqlite.open(path.join(__dirname, 'database.sqlite3')).then(db => new commando.SQLiteProvider(db))
+    sqlite.open(path.join(__dirname, 'database.sqlite3')).then(db => new SQLiteProvider(db))
   ).catch(console.error)
 
 client.registry

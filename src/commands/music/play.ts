@@ -1,15 +1,14 @@
-import * as commando from 'discord.js-commando'
+import { CommandMessage } from 'discord.js-commando'
 import { oneLine, stripIndents } from 'common-tags'
-import { queue } from '../../index'
 import { Util, VoiceChannel, TextChannel, Guild, MessageEmbed, Collection, Message } from 'discord.js'
 import * as ytdl from 'ytdl-core'
 import { YouTube, Video } from 'better-youtube-api'
 import { youtubeKey, api } from '../../config'
-import { ServerQueue, Song } from '../../types'
+import { ServerQueue, Song, MachoCommand, MachoClient } from '../../types'
 
 const youtube = new YouTube(youtubeKey)
 
-export default class PlayCommand extends commando.Command {
+export default class PlayCommand extends MachoCommand {
   constructor (client) {
     super(client, {
       name: 'play',
@@ -35,11 +34,11 @@ export default class PlayCommand extends commando.Command {
     })
   }
 
-  async run (msg: commando.CommandMessage, { link }: { link: string | number }): Promise<Message | Message[]> {
+  async run (msg: CommandMessage, { link }: { link: string | number }): Promise<Message | Message[]> {
     const url = link && typeof link === 'string' ? link.replace(/<(.+)>/g, '$1') : ''
     const searchString = link
     const voiceChannel = msg.member.voice.channel
-    const serverQueue = queue.get(msg.guild.id)
+    const serverQueue = this.client.getQueue(msg.guild.id)
 
     if (!voiceChannel) {
       return msg.channel.send('I\'m sorry, but you need to be in a voice channel to play music!').catch(() => {
@@ -101,7 +100,7 @@ export default class PlayCommand extends commando.Command {
         }
 
         if (!videos[i].private) {
-          await handleVideo(videos[i], msg, voiceChannel, true).catch(err => {
+          await handleVideo(videos[i], msg, voiceChannel, this.client, true).catch(err => {
             console.log(err)
           })
         }
@@ -119,7 +118,7 @@ export default class PlayCommand extends commando.Command {
     })
 
     if (video) {
-      handleVideo(video, msg, voiceChannel)
+      handleVideo(video, msg, voiceChannel, this.client)
       return
     }
 
@@ -164,12 +163,12 @@ export default class PlayCommand extends commando.Command {
     const videoIndex = parseInt(response.first().content)
     video = await youtube.getVideo(videos[videoIndex - 1].id)
 
-    handleVideo(video, msg, voiceChannel)
+    handleVideo(video, msg, voiceChannel, this.client)
   }
 }
 
-export async function handleVideo (video: Video, msg: commando.CommandMessage, voiceChannel: VoiceChannel, playlist = false) {
-  const serverQueue = queue.get(msg.guild.id)
+export async function handleVideo (video: Video, msg: CommandMessage, voiceChannel: VoiceChannel, client: MachoClient, playlist = false) {
+  const serverQueue = client.getQueue(msg.guild.id)
   const song: Song = {
     id: video.id,
     title: Util.escapeMarkdown(video.title),
@@ -190,13 +189,13 @@ export async function handleVideo (video: Video, msg: commando.CommandMessage, v
       votes: []
     }
 
-    queue.set(msg.guild.id, queueConstruct)
+    client.createQueue(msg.guild.id, queueConstruct)
     queueConstruct.songs.push(song)
 
     const connection = await voiceChannel.join()
     queueConstruct.connection = connection
 
-    play(msg.guild, queueConstruct.songs[0])
+    play(msg.guild, queueConstruct.songs[0], client)
   } else {
     serverQueue.songs.push(song)
 
@@ -210,12 +209,12 @@ export async function handleVideo (video: Video, msg: commando.CommandMessage, v
   }
 }
 
-function play (guild: Guild, song: Song) {
-  const serverQueue = queue.get(guild.id)
+function play (guild: Guild, song: Song, client: MachoClient) {
+  const serverQueue = client.getQueue(guild.id)
 
   if (!song) {
     serverQueue.voiceChannel.leave()
-    queue.delete(guild.id)
+    client.deleteQueue(guild.id)
 
     return
   }
@@ -225,7 +224,7 @@ function play (guild: Guild, song: Song) {
       if (reason) console.error(reason)
 
       serverQueue.songs.shift()
-      play(guild, serverQueue.songs[0])
+      play(guild, serverQueue.songs[0], client)
     })
     .on('error', error => console.error(error))
 

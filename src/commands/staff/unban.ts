@@ -1,9 +1,10 @@
-import * as commando from 'discord.js-commando'
+import { CommandMessage } from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import { log } from '../../util'
 import { Message, TextChannel, GuildChannel } from 'discord.js'
+import { MachoCommand } from '../../types'
 
-export default class UnbanCommand extends commando.Command {
+export default class UnbanCommand extends MachoCommand {
   constructor (client) {
     super(client, {
       name: 'unban',
@@ -28,7 +29,7 @@ export default class UnbanCommand extends commando.Command {
     })
   }
 
-  async run (msg: commando.CommandMessage, { id }: { id: string }): Promise<Message | Message[]> {
+  async run (msg: CommandMessage, { id }: { id: string }): Promise<Message | Message[]> {
     if (!msg.member.hasPermission('BAN_MEMBERS')) {
       return msg.reply("You can't unban members.").catch(() => {
         return null

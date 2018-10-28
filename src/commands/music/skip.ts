@@ -1,11 +1,10 @@
-import * as commando from 'discord.js-commando'
+import { CommandMessage } from 'discord.js-commando'
 import { oneLine } from 'common-tags'
-import { queue } from '../../index'
 import { Message } from 'discord.js'
 import { getGuildSettings } from '../../util'
-import { ServerQueue, Song } from '../../types'
+import { ServerQueue, Song, MachoCommand } from '../../types'
 
-export default class SkipCommand extends commando.Command {
+export default class SkipCommand extends MachoCommand {
   constructor (client) {
     super(client, {
       name: 'skip',
@@ -22,8 +21,8 @@ export default class SkipCommand extends commando.Command {
     })
   }
 
-  async run (msg: commando.CommandMessage): Promise<Message | Message[]> {
-    const serverQueue = queue.get(msg.guild.id)
+  async run (msg: CommandMessage): Promise<Message | Message[]> {
+    const serverQueue = this.client.getQueue(msg.guild.id)
 
     if (!serverQueue) {
       return msg.channel.send('There is nothing that I can skip for you.').catch(() => {
@@ -79,7 +78,7 @@ export default class SkipCommand extends commando.Command {
     }
   }
 
-  skip (serverQueue: ServerQueue, msg: commando.CommandMessage, song: Song) {
+  skip (serverQueue: ServerQueue, msg: CommandMessage, song: Song) {
     serverQueue.connection.dispatcher.end('Skip command has been used.')
 
     return msg.channel.send(`Skipped **${song.title}** - Requested by \`${song.member.user.tag}\``).catch(() => {

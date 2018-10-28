@@ -1,9 +1,9 @@
-import * as commando from 'discord.js-commando'
+import { CommandMessage } from 'discord.js-commando'
 import { oneLine } from 'common-tags'
-import { queue } from '../../index'
 import { Message } from 'discord.js'
+import { MachoCommand } from '../../types'
 
-export default class ResumeCommand extends commando.Command {
+export default class ResumeCommand extends MachoCommand {
   constructor (client) {
     super(client, {
       name: 'resume',
@@ -19,8 +19,8 @@ export default class ResumeCommand extends commando.Command {
     })
   }
 
-  async run (msg: commando.CommandMessage): Promise<Message | Message[]> {
-    const serverQueue = queue.get(msg.guild.id)
+  async run (msg: CommandMessage): Promise<Message | Message[]> {
+    const serverQueue = this.client.getQueue(msg.guild.id)
 
     if (!serverQueue || serverQueue.playing) {
       return msg.channel.send('There is nothing paused.').catch(() => {
