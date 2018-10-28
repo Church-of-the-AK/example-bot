@@ -1,15 +1,15 @@
-import * as commando from 'discord.js-commando'
+import { CommandMessage } from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import { Message, MessageEmbed } from 'discord.js'
 import { api, youtubeKey } from '../../config'
 import { getUser, createPlaylist, addSong, getPlaylist, getSong, createSong, removeSong, getUserPlaylists, getGuildSettings } from '../../util'
 import { YouTube } from 'better-youtube-api'
-import { queue } from '../..'
 import { handleVideo } from './play'
+import { MachoCommand } from '../../types'
 
 const youtube = new YouTube(youtubeKey)
 
-export default class PlaylistCommand extends commando.Command {
+export default class PlaylistCommand extends MachoCommand {
   constructor (client) {
     super(client, {
       name: 'playlist',
@@ -40,7 +40,7 @@ export default class PlaylistCommand extends commando.Command {
     })
   }
 
-  async run (msg: commando.CommandMessage, { subcommand, name }: { subcommand: string, name: string[] | -1 }): Promise<Message | Message[]> {
+  async run (msg: CommandMessage, { subcommand, name }: { subcommand: string, name: string[] | -1 }): Promise<Message | Message[]> {
     let result: { success: boolean, message?: string, respond?: boolean }
 
     switch (subcommand.toLowerCase()) {
@@ -91,7 +91,7 @@ export default class PlaylistCommand extends commando.Command {
     })
   }
 
-  async viewHelp (msg: commando.CommandMessage) {
+  async viewHelp (msg: CommandMessage) {
     const commands = [
       '`pl create <name>` - creates a playlist',
       '`pl play <name>` - plays a playlist',
@@ -115,7 +115,7 @@ export default class PlaylistCommand extends commando.Command {
     return { success: true, respond: false }
   }
 
-  async list (msg: commando.CommandMessage, nameArray: string[] | -1) {
+  async list (msg: CommandMessage, nameArray: string[] | -1) {
     const playlists = await getUserPlaylists(msg.author.id)
 
     if (!playlists) {
@@ -138,7 +138,7 @@ export default class PlaylistCommand extends commando.Command {
     return { success: true, respond: false }
   }
 
-  async songList (msg: commando.CommandMessage, nameArray: string[] | -1) {
+  async songList (msg: CommandMessage, nameArray: string[] | -1) {
     if (nameArray === -1) {
       return { success: false, message: 'Subcommand `list` requires an argument `name`.' }
     }
@@ -172,7 +172,7 @@ export default class PlaylistCommand extends commando.Command {
     return { success: true, respond: false }
   }
 
-  async create (msg: commando.CommandMessage, nameArray: string[] | -1) {
+  async create (msg: CommandMessage, nameArray: string[] | -1) {
     if (nameArray === -1) {
       return { success: false, message: 'Subcommand `create` requires an argument `name`.' }
     }
@@ -197,7 +197,7 @@ export default class PlaylistCommand extends commando.Command {
     return { success: true, message: 'Created playlist `' + name + '`' }
   }
 
-  async play (msg: commando.CommandMessage, nameArray: string[] | -1) {
+  async play (msg: CommandMessage, nameArray: string[] | -1) {
     if (nameArray === -1) {
       return { success: false, message: 'Subcommand `play` requires an argument `name`.' }
     }
@@ -224,7 +224,7 @@ export default class PlaylistCommand extends commando.Command {
 
     const playlistName = nameArray.join(' ')
     const playlist = await getPlaylist(playlistName, user)
-    const serverQueue = queue.get(msg.guild.id)
+    const serverQueue = this.client.getQueue(msg.guild.id)
 
     if (!playlist) {
       return { success: false, message: 'I couldn\'t find that playlist.' }
@@ -238,7 +238,7 @@ export default class PlaylistCommand extends commando.Command {
       })
 
       if (video) {
-        await handleVideo(video, msg, serverQueue ? serverQueue.voiceChannel : msg.member.voice.channel, true).catch(err => {
+        await handleVideo(video, msg, serverQueue ? serverQueue.voiceChannel : msg.member.voice.channel, this.client, true).catch(err => {
           console.log(err)
         })
       }
@@ -249,7 +249,7 @@ export default class PlaylistCommand extends commando.Command {
     return { success: true, respond: false }
   }
 
-  async add (msg: commando.CommandMessage, nameArray: string[] | -1) {
+  async add (msg: CommandMessage, nameArray: string[] | -1) {
     if (nameArray === -1) {
       return { success: false, message: 'Subcommand `add` requires an argument `name`.' }
     }
@@ -268,7 +268,7 @@ export default class PlaylistCommand extends commando.Command {
     }
 
     if (songUrl.toLowerCase() === 'this') {
-      const serverQueue = queue.get(msg.guild.id)
+      const serverQueue = this.client.getQueue(msg.guild.id)
 
       if (!serverQueue || !serverQueue.playing) {
         return { success: false, message: 'There is nothing playing in the server right now.' }
@@ -317,7 +317,7 @@ export default class PlaylistCommand extends commando.Command {
     return { success: true, message: `Added \`${song.title}\` to \`${playlist.name}\`.` }
   }
 
-  async remove (msg: commando.CommandMessage, nameArray: string[] | -1) {
+  async remove (msg: CommandMessage, nameArray: string[] | -1) {
     if (nameArray === -1) {
       return { success: false, message: 'Subcommand `delete` requires an argument `name`.' }
     }
@@ -336,7 +336,7 @@ export default class PlaylistCommand extends commando.Command {
     }
 
     if (songUrl.toLowerCase() === 'this') {
-      const serverQueue = queue.get(msg.guild.id)
+      const serverQueue = this.client.getQueue(msg.guild.id)
 
       if (!serverQueue || !serverQueue.playing) {
         return { success: false, message: 'There is nothing playing in the server right now.' }

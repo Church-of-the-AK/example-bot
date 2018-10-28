@@ -1,10 +1,11 @@
-import * as commando from 'discord.js-commando'
+import { CommandMessage } from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import { Message, MessageEmbed } from 'discord.js'
 import { api } from '../../config'
 import { getTag, getGuild, createTag } from '../../util'
+import { MachoCommand } from '../../types'
 
-export default class TagCommand extends commando.Command {
+export default class TagCommand extends MachoCommand {
   constructor (client) {
     super(client, {
       name: 'tag',
@@ -35,7 +36,7 @@ export default class TagCommand extends commando.Command {
     })
   }
 
-  async run (msg: commando.CommandMessage, { subcommand, name }: { subcommand: string, name: string | -1 }): Promise<Message | Message[]> {
+  async run (msg: CommandMessage, { subcommand, name }: { subcommand: string, name: string | -1 }): Promise<Message | Message[]> {
     let result: { success: boolean, message?: string, respond?: boolean }
 
     switch (subcommand.toLowerCase()) {
@@ -72,7 +73,7 @@ export default class TagCommand extends commando.Command {
     })
   }
 
-  async viewHelp (msg: commando.CommandMessage) {
+  async viewHelp (msg: CommandMessage) {
     const commands = [
       '`tag create | edit <name> <content>` - creates/edits a tag',
       '`tag view <name>` - views a tag\'s content',
@@ -93,7 +94,7 @@ export default class TagCommand extends commando.Command {
     return { success: true, respond: false }
   }
 
-  async view (msg: commando.CommandMessage, name: string | -1) {
+  async view (msg: CommandMessage, name: string | -1) {
     if (name === -1) {
       return { success: false, message: 'Subcommand `view` requires an argument `name`.' }
     }
@@ -121,7 +122,7 @@ export default class TagCommand extends commando.Command {
     return { success: true, respond: false }
   }
 
-  async create (msg: commando.CommandMessage, args: string | -1) {
+  async create (msg: CommandMessage, args: string | -1) {
     if (args === -1 || args.length < 2) {
       return { success: false, message: 'Subcommand `create` requires an argument `name` and argument `content`.' }
     }

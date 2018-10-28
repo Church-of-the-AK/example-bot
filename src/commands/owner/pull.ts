@@ -1,8 +1,9 @@
-import * as commando from 'discord.js-commando'
+import { CommandMessage } from 'discord.js-commando'
 import { Message } from 'discord.js'
 import { exec } from 'child_process'
+import { MachoCommand } from '../../types'
 
-export default class PullCommand extends commando.Command {
+export default class PullCommand extends MachoCommand {
   constructor (client) {
     super(client, {
       name: 'pull',
@@ -14,7 +15,7 @@ export default class PullCommand extends commando.Command {
     })
   }
 
-  hasPermission (msg: commando.CommandMessage) {
+  hasPermission (msg: CommandMessage) {
     if (this.client.isOwner(msg.author)) {
       return true
     }
@@ -22,7 +23,7 @@ export default class PullCommand extends commando.Command {
     return false
   }
 
-  async run (msg: commando.CommandMessage): Promise<Message | Message[]> {
+  async run (msg: CommandMessage): Promise<Message | Message[]> {
     const pulling = await msg.channel.send('🕙 Pulling from GitHub...') as Message
 
     exec('git pull', (error, stdout) => {

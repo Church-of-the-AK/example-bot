@@ -1,12 +1,13 @@
-import * as commando from 'discord.js-commando'
+import { CommandMessage } from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import { Message } from 'discord.js'
 import { api } from '../../config'
 import * as numeral from 'numeral'
 import axios from 'axios'
 import { getUser } from '../../util'
+import { MachoCommand } from '../../types'
 
-export default class DailiesCommand extends commando.Command {
+export default class DailiesCommand extends MachoCommand {
   constructor (client) {
     super(client, {
       name: 'dailies',
@@ -21,7 +22,7 @@ export default class DailiesCommand extends commando.Command {
     })
   }
 
-  async run (msg: commando.CommandMessage): Promise<Message | Message[]> {
+  async run (msg: CommandMessage): Promise<Message | Message[]> {
     const user = await getUser(msg.author.id)
     let diffHrs: number
 

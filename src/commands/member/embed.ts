@@ -1,9 +1,10 @@
-import * as commando from 'discord.js-commando'
+import { CommandMessage } from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import { Message, MessageEmbed, ColorResolvable } from 'discord.js'
 import { api } from '../../config'
+import { MachoCommand } from '../../types'
 
-export default class AddNumbersCommand extends commando.Command {
+export default class AddNumbersCommand extends MachoCommand {
   constructor (client) {
     super(client, {
       name: 'embed',
@@ -27,7 +28,7 @@ export default class AddNumbersCommand extends commando.Command {
     })
   }
 
-  async run (msg: commando.CommandMessage, { content }: { content: string }): Promise<Message | Message[]> {
+  async run (msg: CommandMessage, { content }: { content: string }): Promise<Message | Message[]> {
     const titleParam: number = content.toLowerCase().indexOf('--title')
     const descParam: number = content.toLowerCase().indexOf('--desc')
     const colorParam: number = content.toLowerCase().indexOf('--color')

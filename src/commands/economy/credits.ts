@@ -1,9 +1,10 @@
-import * as commando from 'discord.js-commando'
+import { CommandMessage } from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import { Message, User } from 'discord.js'
 import { getUser } from '../../util'
+import { MachoCommand } from '../../types'
 
-export default class CreditsCommand extends commando.Command {
+export default class CreditsCommand extends MachoCommand {
   constructor (client) {
     super(client, {
       name: 'credits',
@@ -28,7 +29,7 @@ export default class CreditsCommand extends commando.Command {
     })
   }
 
-  async run (msg: commando.CommandMessage, { mention }: { mention: User | number }): Promise<Message | Message[]> {
+  async run (msg: CommandMessage, { mention }: { mention: User | number }): Promise<Message | Message[]> {
     const user = await getUser(mention instanceof User ? mention.id : msg.author.id).catch(error => {
       console.log(error)
     })

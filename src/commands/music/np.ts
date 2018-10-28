@@ -1,9 +1,9 @@
-import * as commando from 'discord.js-commando'
+import { CommandMessage } from 'discord.js-commando'
 import { oneLine } from 'common-tags'
-import { queue } from '../../index'
 import { Message, MessageEmbed } from 'discord.js'
+import { MachoCommand } from '../../types'
 
-export default class NowPlayingCommand extends commando.Command {
+export default class NowPlayingCommand extends MachoCommand {
   constructor (client) {
     super(client, {
       name: 'np',
@@ -20,8 +20,8 @@ export default class NowPlayingCommand extends commando.Command {
     })
   }
 
-  async run (msg: commando.CommandMessage): Promise<Message | Message[]> {
-    const serverQueue = queue.get(msg.guild.id)
+  async run (msg: CommandMessage): Promise<Message | Message[]> {
+    const serverQueue = this.client.getQueue(msg.guild.id)
 
     if (!serverQueue) {
       return msg.channel.send('There is nothing playing. Why don\'t *you* start the party?').catch(() => {

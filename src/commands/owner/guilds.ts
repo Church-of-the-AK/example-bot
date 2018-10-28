@@ -1,7 +1,8 @@
-import * as commando from 'discord.js-commando'
+import { CommandMessage } from 'discord.js-commando'
 import { Message, MessageEmbed } from 'discord.js'
+import { MachoCommand } from '../../types'
 
-export default class GuildsCommand extends commando.Command {
+export default class GuildsCommand extends MachoCommand {
   constructor (client) {
     super(client, {
       name: 'guilds',
@@ -13,7 +14,7 @@ export default class GuildsCommand extends commando.Command {
     })
   }
 
-  hasPermission (msg: commando.CommandMessage) {
+  hasPermission (msg: CommandMessage) {
     if (this.client.isOwner(msg.author)) {
       return true
     }
@@ -21,7 +22,7 @@ export default class GuildsCommand extends commando.Command {
     return false
   }
 
-  async run (msg: commando.CommandMessage): Promise<Message | Message[]> {
+  async run (msg: CommandMessage): Promise<Message | Message[]> {
     const guildsPromises = await this.client.guilds.map(async (guild) => {
       const invite = await guild.channels.find(channel => channel.type === 'text').createInvite({ maxAge: 0, unique: false }).catch(() => {
         return

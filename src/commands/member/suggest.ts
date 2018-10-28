@@ -1,9 +1,10 @@
-import * as commando from 'discord.js-commando'
+import { CommandMessage } from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import { Message, TextChannel, MessageEmbed, GuildChannel } from 'discord.js'
 import { api } from '../../config'
+import { MachoCommand } from '../../types'
 
-export default class SuggestCommand extends commando.Command {
+export default class SuggestCommand extends MachoCommand {
   constructor (client) {
     super(client, {
       name: 'suggest',
@@ -27,7 +28,7 @@ export default class SuggestCommand extends commando.Command {
     })
   }
 
-  async run (msg: commando.CommandMessage, { suggestion }): Promise<Message | Message[]> {
+  async run (msg: CommandMessage, { suggestion }): Promise<Message | Message[]> {
     const channel = msg.guild.channels.find((channel: GuildChannel) => channel.name === 'suggestions') as TextChannel
 
     if (!channel) {

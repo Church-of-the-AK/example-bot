@@ -1,9 +1,9 @@
-import * as commando from 'discord.js-commando'
+import { CommandMessage } from 'discord.js-commando'
 import { oneLine } from 'common-tags'
-import { queue } from '../../index'
 import { Message } from 'discord.js'
+import { MachoCommand } from '../../types'
 
-export default class ShuffleCommand extends commando.Command {
+export default class ShuffleCommand extends MachoCommand {
   constructor (client) {
     super(client, {
       name: 'shuffle',
@@ -19,8 +19,8 @@ export default class ShuffleCommand extends commando.Command {
     })
   }
 
-  async run (msg: commando.CommandMessage): Promise<Message | Message[]> {
-    const serverQueue = queue.get(msg.guild.id)
+  async run (msg: CommandMessage): Promise<Message | Message[]> {
+    const serverQueue = this.client.getQueue(msg.guild.id)
 
     if (!serverQueue) {
       return msg.channel.send('There is no queue to shuffle. Why don\'t you play something?').catch(() => {

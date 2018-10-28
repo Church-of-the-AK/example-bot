@@ -1,9 +1,10 @@
-import * as commando from 'discord.js-commando'
+import { CommandMessage } from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import { log } from '../../util'
 import { Message, TextChannel, GuildChannel, Role, GuildMember, RoleStore } from 'discord.js'
+import { MachoCommand } from '../../types'
 
-export default class RemoveRoleCommand extends commando.Command {
+export default class RemoveRoleCommand extends MachoCommand {
   constructor (client) {
     super(client, {
       name: 'removerole',
@@ -36,7 +37,7 @@ export default class RemoveRoleCommand extends commando.Command {
     })
   }
 
-  async run (msg: commando.CommandMessage, { member, role }: { member: GuildMember, role: Role }): Promise<Message | Message[]> {
+  async run (msg: CommandMessage, { member, role }: { member: GuildMember, role: Role }): Promise<Message | Message[]> {
     if (!msg.member.hasPermission('MANAGE_ROLES')) {
       return msg.reply('You can\'t remove roles.').catch(() => {
         return null

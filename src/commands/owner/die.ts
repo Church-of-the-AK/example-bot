@@ -1,7 +1,8 @@
-import * as commando from 'discord.js-commando'
+import { CommandMessage } from 'discord.js-commando'
 import { Message } from 'discord.js'
+import { MachoCommand } from '../../types'
 
-export default class DieCommand extends commando.Command {
+export default class DieCommand extends MachoCommand {
   constructor (client) {
     super(client, {
       name: 'die',
@@ -14,7 +15,7 @@ export default class DieCommand extends commando.Command {
     })
   }
 
-  hasPermission (msg: commando.CommandMessage) {
+  hasPermission (msg: CommandMessage) {
     if (this.client.isOwner(msg.author)) {
       return true
     }
@@ -22,7 +23,7 @@ export default class DieCommand extends commando.Command {
     return false
   }
 
-  async run (msg: commando.CommandMessage): Promise<Message | Message[]> {
+  async run (msg: CommandMessage): Promise<Message | Message[]> {
     const response = await msg.channel.send('Killing the bot...')
 
     this.client.destroy()

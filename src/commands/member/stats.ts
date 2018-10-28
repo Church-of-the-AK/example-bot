@@ -1,9 +1,10 @@
-import * as commando from 'discord.js-commando'
+import { CommandMessage } from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import { Message, MessageEmbed, version } from 'discord.js'
 import { api } from '../../config'
+import { MachoCommand } from '../../types'
 
-export default class StatsCommand extends commando.Command {
+export default class StatsCommand extends MachoCommand {
   constructor (client) {
     super(client, {
       name: 'stats',
@@ -18,7 +19,7 @@ export default class StatsCommand extends commando.Command {
     })
   }
 
-  async run (msg: commando.CommandMessage): Promise<Message | Message[]> {
+  async run (msg: CommandMessage): Promise<Message | Message[]> {
     const uptime = convertMS(this.client.uptime)
     const description = `
 • Memory Usage: ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB

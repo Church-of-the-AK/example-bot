@@ -1,9 +1,10 @@
-import * as commando from 'discord.js-commando'
+import { CommandMessage } from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import { log } from '../../util'
 import { Message, TextChannel, GuildChannel, User } from 'discord.js'
+import { MachoCommand } from '../../types'
 
-export default class KickCommand extends commando.Command {
+export default class KickCommand extends MachoCommand {
   constructor (client) {
     super(client, {
       name: 'kick',
@@ -28,7 +29,7 @@ export default class KickCommand extends commando.Command {
     })
   }
 
-  async run (msg: commando.CommandMessage, { user }: { user: User }): Promise<Message | Message[]> {
+  async run (msg: CommandMessage, { user }: { user: User }): Promise<Message | Message[]> {
     if (!msg.member.hasPermission('KICK_MEMBERS')) {
       return msg.reply("You can't kick members.").catch(() => {
         return null

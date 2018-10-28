@@ -1,8 +1,9 @@
-import * as commando from 'discord.js-commando'
+import { CommandMessage } from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import { Message, TextChannel } from 'discord.js'
+import { MachoCommand } from '../../types'
 
-export default class InviteCommand extends commando.Command {
+export default class InviteCommand extends MachoCommand {
   constructor (client) {
     super(client, {
       name: 'invite',
@@ -18,7 +19,7 @@ export default class InviteCommand extends commando.Command {
     })
   }
 
-  async run (msg: commando.CommandMessage): Promise<Message | Message[]> {
+  async run (msg: CommandMessage): Promise<Message | Message[]> {
     const channel = msg.channel as TextChannel
     const invite = await channel.createInvite({ maxAge: 0, reason: `${msg.author.tag} asked for one.`, unique: false }).catch(() => {
       return
