@@ -66,12 +66,10 @@ Balance: { Balance: ${user.balance.balance}, Net worth: ${user.balance.netWorth}
 
 function applyText (canvas: Canvas.Canvas, text: string, maximum: number) {
   const ctx = canvas.getContext('2d')
-  let font = `${maximum}px sans-serif`
 
-  while (ctx.measureText(text).width > canvas.width - 300) {
-    maximum -= 10
-    font = `${maximum}px sans-serif`
-  }
+  do {
+    ctx.font = `${maximum -= 10}px sans-serif`
+  } while (ctx.measureText(text).width > canvas.width - 300)
 
-  return font
+  return ctx.font
 }
