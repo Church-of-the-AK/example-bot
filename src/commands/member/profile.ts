@@ -34,7 +34,7 @@ export default class ProfileCommand extends MachoCommand {
     const canvas = Canvas.createCanvas(700, 250)
     const ctx = canvas.getContext('2d')
     const background = await Canvas.loadImage('images/background.jpeg')
-    const avatar = await Canvas.loadImage(user.avatarUrl)
+    const avatar = await Canvas.loadImage(msg.author.displayAvatarURL({ format: 'png' }))
 
     ctx.drawImage(avatar, 25, 25, 200, 200)
     ctx.drawImage(background, 0, 0, canvas.width, canvas.height)
