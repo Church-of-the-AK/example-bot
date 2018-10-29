@@ -73,5 +73,5 @@ function applyText (canvas: Canvas.Canvas, text: string, maximum: number) {
     font = `${maximum}px sans-serif`
   }
 
-  return ctx.font
+  return font
 }
