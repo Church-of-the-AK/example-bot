@@ -34,7 +34,7 @@ export default class ProfileCommand extends MachoCommand {
 
     const canvas = Canvas.createCanvas(700, 250)
     const ctx = canvas.getContext('2d')
-    const background = await Canvas.loadImage('images/background.jpg')
+    const background = await Canvas.loadImage('images/background.jpeg')
     const { data: arrayBuffer }: { data: ArrayBuffer } = await axios.get(user.avatarUrl, { responseType: 'arraybuffer' })
     const buffer = Buffer.from(arrayBuffer)
     const avatar = await Canvas.loadImage(buffer)
