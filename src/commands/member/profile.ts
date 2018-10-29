@@ -30,7 +30,7 @@ export default class ProfileCommand extends MachoCommand {
       return msg.channel.send('I don\'t seem to have you in my database. Please try again.')
     }
 
-    await msg.channel.startTyping()
+    msg.channel.startTyping()
 
     const canvas = Canvas.createCanvas(700, 250)
     const ctx = canvas.getContext('2d')
