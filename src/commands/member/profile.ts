@@ -73,7 +73,7 @@ function applyText (canvas: Canvas.Canvas, text: string, x: number, maximum: num
 
   do {
     ctx.font = `${maximum -= 10}px sans-serif`
-  } while (ctx.measureText(text).width > canvas.width - x - 200)
+  } while (ctx.measureText(text).width > canvas.width - x)
 
   return ctx.font
 }
