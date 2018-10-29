@@ -51,7 +51,7 @@ export default class ProfileCommand extends MachoCommand {
     ctx.drawImage(avatar, 25, 25, 200, 200)
 
     ctx.fillStyle = '#ffffff'
-    ctx.font = applyText(canvas, user.name)
+    ctx.font = '50px sans-serif'
     ctx.fillText(user.name, canvas.width / 2.5, canvas.height / 1.8)
 
     const attachment = new MessageAttachment(canvas.toBuffer(), 'profile.png')
@@ -61,15 +61,4 @@ export default class ProfileCommand extends MachoCommand {
 Levels: { Level: ${user.level.level}, XP: ${user.level.xp}, Last message counted for XP: ${new Date(user.level.timestamp)} }
 Balance: { Balance: ${user.balance.balance}, Net worth: ${user.balance.netWorth}, Last claimed dailies: ${new Date(user.balance.dateClaimedDailies)} }`, attachment)
   }
-}
-
-function applyText (canvas: Canvas.Canvas, text: string) {
-  const ctx = canvas.getContext('2d')
-  let fontSize = 70
-
-  do {
-    ctx.font = `${fontSize -= 10}px sans-serif`
-  } while (ctx.measureText(text).width > canvas.width - 300)
-
-  return ctx.font
 }
