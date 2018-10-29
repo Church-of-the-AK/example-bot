@@ -43,7 +43,8 @@ export default class ProfileCommand extends MachoCommand {
 
     ctx.strokeStyle = '#74037b'
     ctx.fillStyle = '#74037b'
-    ctx.rect((canvas.width / 2.5) - 10, (canvas.height / 1.8) - 20, 300, 100)
+    ctx.strokeRect((canvas.width / 2.5) - 10, (canvas.height / 1.8) - 20, 300, 100)
+    ctx.fillRect((canvas.width / 2.5) - 10, (canvas.height / 1.8) - 20, 300, 100)
 
     ctx.fillStyle = '#ffffff'
     ctx.font = applyText(canvas, user.name, canvas.width / 2.5, 70)
