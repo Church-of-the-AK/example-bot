@@ -39,15 +39,15 @@ export default class ProfileCommand extends MachoCommand {
     const balanceText = `Balance: ${user.balance.balance}, Net worth: ${user.balance.netWorth}, Last claimed dailies: ${user.balance.dateClaimedDailies}`
 
     ctx.drawImage(avatar, 25, 25, 200, 200)
+    ctx.filter = 'blur(20px)'
     ctx.drawImage(background, 0, 0, canvas.width, canvas.height)
+    ctx.filter = 'none'
 
     ctx.strokeStyle = '#74037b'
     ctx.fillStyle = '#74037b'
     ctx.globalAlpha = 0.2
-    ctx.filter = 'blur(20px)'
     ctx.fillRect((canvas.width / 2.5) - 10, (canvas.height / 1.8) - 20, 375, 100)
 
-    ctx.filter = 'none'
     ctx.globalAlpha = 1.0
     ctx.fillStyle = '#ffffff'
     ctx.font = applyText(canvas, user.name, canvas.width / 2.5, 70)
