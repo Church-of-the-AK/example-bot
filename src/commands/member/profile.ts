@@ -42,9 +42,12 @@ export default class ProfileCommand extends MachoCommand {
     ctx.drawImage(background, 0, 0, canvas.width, canvas.height)
 
     ctx.strokeStyle = '#74037b'
-    ctx.fillStyle = '#ffffff'
-    blurredRect(canvas, (canvas.width / 2.5) - 10, (canvas.height / 1.8) - 20, 400, 100, 100)
+    ctx.fillStyle = '#74037b'
+    ctx.globalAlpha = 0.2
+    ctx.fillRect((canvas.width / 2.5) - 10, (canvas.height / 1.8) - 20, 400, 100)
 
+    ctx.globalAlpha = 1.0
+    ctx.fillStyle = '#ffffff'
     ctx.font = applyText(canvas, user.name, canvas.width / 2.5, 70)
     ctx.fillText(user.name, canvas.width / 2.5, canvas.height / 3)
     ctx.strokeText(user.name, canvas.width / 2.5, canvas.height / 3)
@@ -77,12 +80,4 @@ function applyText (canvas: Canvas.Canvas, text: string, x: number, maximum: num
   } while (ctx.measureText(text).width > canvas.width - x)
 
   return ctx.font
-}
-
-function blurredRect (canvas: Canvas.Canvas, x: number, y: number, w: number, h: number, blur: number) {
-  let ctx = canvas.getContext('2d')
-  ctx.shadowBlur = blur
-  ctx.shadowOffsetX = w
-  ctx.shadowOffsetY = h
-  ctx.fillRect(x,y, w - blur * 2, h - blur * 2)
 }
