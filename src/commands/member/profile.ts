@@ -40,6 +40,9 @@ export default class ProfileCommand extends MachoCommand {
     ctx.drawImage(background, 0, 0, canvas.width, canvas.height)
 
     ctx.strokeStyle = '#74037b'
+    ctx.fillStyle = '#ffffff'
+    ctx.font = '50px sans-serif'
+    ctx.fillText(user.name, canvas.width / 2.5, canvas.height / 1.8)
     ctx.strokeRect(0, 0, canvas.width, canvas.height)
     ctx.beginPath()
     ctx.arc(125, 125, 100, 0, Math.PI * 2, true)
@@ -47,15 +50,11 @@ export default class ProfileCommand extends MachoCommand {
     ctx.clip()
     ctx.drawImage(avatar, 25, 25, 200, 200)
 
-    ctx.fillStyle = '#ffffff'
-    ctx.font = '50px sans-serif'
-    ctx.fillText(user.name, canvas.width / 2.5, canvas.height / 1.8)
-
     const attachment = new MessageAttachment(canvas.toBuffer(), 'profile.png')
 
     msg.channel.stopTyping()
     return msg.channel.send(`${user.name}:
-Levels: { Level: ${user.level.level}, XP: ${user.level.xp}, Last message counted for XP: ${new Date(user.level.timestamp)} }
-Balance: { Balance: ${user.balance.balance}, Net worth: ${user.balance.netWorth}, Last claimed dailies: ${new Date(user.balance.dateClaimedDailies)} }`, attachment)
+Levels: { Level: ${user.level.level}, XP: ${user.level.xp}, Last message counted for XP: ${user.level.timestamp} }
+Balance: { Balance: ${user.balance.balance}, Net worth: ${user.balance.netWorth}, Last claimed dailies: ${user.balance.dateClaimedDailies} }`, attachment)
   }
 }
