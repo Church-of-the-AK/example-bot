@@ -52,7 +52,7 @@ export default class ProfileCommand extends MachoCommand {
     ctx.fillText(levelText, canvas.width / 2.5, canvas.height / 1.8)
 
     ctx.font = applyText(canvas, balanceText, canvas.width / 2.5, 60)
-    ctx.fillText(balanceText, canvas.width / 2.5, canvas.height / 0.6)
+    ctx.fillText(balanceText, canvas.width / 2.5, canvas.height / 1.2)
 
     ctx.strokeRect(0, 0, canvas.width, canvas.height)
     ctx.beginPath()
