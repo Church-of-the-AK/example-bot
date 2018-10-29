@@ -46,8 +46,8 @@ export default class ProfileCommand extends MachoCommand {
     ctx.font = applyText(canvas, user.name, 70)
     ctx.fillText(user.name, canvas.width / 2.5, canvas.height / 3)
 
-    ctx.font = applyText(canvas, levelText, 30)
-    ctx.fillText(levelText, canvas.width / 3, canvas.height / 2)
+    ctx.font = applyText(canvas, levelText, 40)
+    ctx.fillText(levelText, canvas.width / 2.5, canvas.height / 2)
 
     ctx.strokeRect(0, 0, canvas.width, canvas.height)
     ctx.beginPath()
@@ -66,10 +66,12 @@ Balance: { Balance: ${user.balance.balance}, Net worth: ${user.balance.netWorth}
 
 function applyText (canvas: Canvas.Canvas, text: string, maximum: number) {
   const ctx = canvas.getContext('2d')
+  let font = `${maximum}px sans-serif`
 
-  do {
-    ctx.font = `${maximum -= 10}px sans-serif`
-  } while (ctx.measureText(text).width > canvas.width - 300)
+  while (ctx.measureText(text).width > canvas.width - 300) {
+    maximum -= 10
+    font = `${maximum}px sans-serif`
+  }
 
   return ctx.font
 }
