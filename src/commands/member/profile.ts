@@ -36,6 +36,7 @@ export default class ProfileCommand extends MachoCommand {
     const background = await Canvas.loadImage('images/background.jpeg')
     const avatar = await Canvas.loadImage(msg.author.displayAvatarURL({ format: 'png' }))
     const levelText = `Level: ${user.level.level}, XP: ${user.level.xp}, Last message counted for XP: ${user.level.timestamp}`
+    const balanceText = `Balance: ${user.balance.balance}, Net worth: ${user.balance.netWorth}, Last claimed dailies: ${user.balance.dateClaimedDailies}`
 
     ctx.drawImage(avatar, 25, 25, 200, 200)
     ctx.drawImage(background, 0, 0, canvas.width, canvas.height)
@@ -47,9 +48,11 @@ export default class ProfileCommand extends MachoCommand {
     ctx.fillText(user.name, canvas.width / 2.5, canvas.height / 3)
     ctx.strokeText(user.name, canvas.width / 2.5, canvas.height / 3)
 
-    ctx.font = applyText(canvas, levelText, canvas.width / 2.5, 40)
-    ctx.fillText(levelText, canvas.width / 2.5, canvas.height / 2)
-    ctx.strokeText(levelText, canvas.width / 2.5, canvas.height / 2)
+    ctx.font = applyText(canvas, levelText, canvas.width / 2.5, 60)
+    ctx.fillText(levelText, canvas.width / 2.5, canvas.height / 1.8)
+
+    ctx.font = applyText(canvas, balanceText, canvas.width / 2.5, 60)
+    ctx.fillText(balanceText, canvas.width / 2.5, canvas.height / 0.6)
 
     ctx.strokeRect(0, 0, canvas.width, canvas.height)
     ctx.beginPath()
@@ -61,8 +64,7 @@ export default class ProfileCommand extends MachoCommand {
     const attachment = new MessageAttachment(canvas.toBuffer(), 'profile.png')
 
     msg.channel.stopTyping()
-    return msg.channel.send(`${user.name}:
-Balance: { Balance: ${user.balance.balance}, Net worth: ${user.balance.netWorth}, Last claimed dailies: ${user.balance.dateClaimedDailies} }`, attachment)
+    return msg.channel.send(attachment)
   }
 }
 
@@ -71,7 +73,7 @@ function applyText (canvas: Canvas.Canvas, text: string, x: number, maximum: num
 
   do {
     ctx.font = `${maximum -= 10}px sans-serif`
-  } while (ctx.measureText(text).width > canvas.width - x)
+  } while (ctx.measureText(text).width > canvas.width - x - 200)
 
   return ctx.font
 }
