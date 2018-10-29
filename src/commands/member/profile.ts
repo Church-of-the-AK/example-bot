@@ -43,7 +43,7 @@ export default class ProfileCommand extends MachoCommand {
 
     ctx.strokeStyle = '#74037b'
     ctx.fillStyle = '#74037b'
-    ctx.strokeRect((canvas.width / 2.5) + 10, (canvas.height / 1.8) + 20, 200, 150)
+    ctx.strokeRect((canvas.width / 2.5) - 10, (canvas.height / 1.8) - 20, 300, 150)
 
     ctx.fillStyle = '#ffffff'
     ctx.font = applyText(canvas, user.name, canvas.width / 2.5, 70)
@@ -65,11 +65,8 @@ export default class ProfileCommand extends MachoCommand {
 
     const attachment = new MessageAttachment(canvas.toBuffer(), 'profile.png')
 
-    const message = msg.channel.send(attachment)
-    await message
-
+    await msg.channel.send(attachment)
     msg.channel.stopTyping()
-    return message
   }
 }
 
