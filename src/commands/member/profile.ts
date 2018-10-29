@@ -41,7 +41,6 @@ export default class ProfileCommand extends MachoCommand {
     ctx.drawImage(avatar, 25, 25, 200, 200)
     ctx.filter = 'blur(20px)'
     ctx.drawImage(background, 0, 0, canvas.width, canvas.height)
-    ctx.drawImage(canvas, 0, 0)
     ctx.filter = 'none'
 
     ctx.strokeStyle = '#74037b'
