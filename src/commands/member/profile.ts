@@ -3,6 +3,7 @@ import * as Canvas from 'canvas'
 import { Message, MessageAttachment } from 'discord.js'
 import { MachoCommand } from '../../types'
 import { getUser } from '../../util'
+import axios from 'axios'
 
 export default class ProfileCommand extends MachoCommand {
   constructor (client) {
@@ -34,8 +35,11 @@ export default class ProfileCommand extends MachoCommand {
     const canvas = Canvas.createCanvas(700, 250)
     const ctx = canvas.getContext('2d')
     const background = await Canvas.loadImage('../../../images/background.jpg')
-    const avatar = await Canvas.loadImage(user.avatarUrl)
+    const { data: arrayBuffer }: { data: ArrayBuffer } = await axios.get(user.avatarUrl, { responseType: 'arraybuffer' })
+    const buffer = Buffer.from(arrayBuffer)
+    const avatar = await Canvas.loadImage(buffer)
 
+    ctx.drawImage(avatar, 25, 25, 200, 200)
     ctx.drawImage(background, 0, 0, canvas.width, canvas.height)
 
     ctx.strokeStyle = '#74037b'
@@ -52,7 +56,7 @@ export default class ProfileCommand extends MachoCommand {
 
     const attachment = new MessageAttachment(canvas.toBuffer(), 'profile.png')
 
-    await msg.channel.stopTyping()
+    msg.channel.stopTyping()
     return msg.channel.send(`${user.name}:
 Levels: { Level: ${user.level.level}, XP: ${user.level.xp}, Last message counted for XP: ${new Date(user.level.timestamp)} }
 Balance: { Balance: ${user.balance.balance}, Net worth: ${user.balance.netWorth}, Last claimed dailies: ${new Date(user.balance.dateClaimedDailies)} }`, attachment)
