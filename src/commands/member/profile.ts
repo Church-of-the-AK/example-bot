@@ -7,10 +7,10 @@ import { getUser } from '../../util'
 export default class ProfileCommand extends MachoCommand {
   constructor (client) {
     super(client, {
-      name: 'invite',
+      name: 'profile',
       aliases: [],
       group: 'member',
-      memberName: 'invite',
+      memberName: 'profile',
       description: 'Sends an image containing your profile information.',
       details: 'Sends an image containing your profile information.',
       examples: [ 'profile' ],
