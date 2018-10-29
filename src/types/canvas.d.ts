@@ -86,8 +86,8 @@ declare module 'canvas' {
     clearRect(x: number, y: number, width: number, height: number): void
     fillRect(x: number, y: number, width: number, height: number): void
     strokeRect(x: number, y: number, width: number, height: number): void
-    drawImage(image: Image, dx: number, dy: number, dWidth?: number, dHeight?: number): void
-    drawImage(image: Image, sx: number, sy: number, sWidth: number, sHeight: number, dx: number, dy: number, dWidth: number, dHeight: number): void
+    drawImage(image: Image | Canvas, dx: number, dy: number, dWidth?: number, dHeight?: number): void
+    drawImage(image: Image | Canvas, sx: number, sy: number, sWidth: number, sHeight: number, dx: number, dy: number, dWidth: number, dHeight: number): void
     fillText(text: string, x: number, y: number, maxWidth?: number): void
     strokeText(text: string, x: number, y: number, maxWidth?: number): void
     measureText(text: string): { width: number }
