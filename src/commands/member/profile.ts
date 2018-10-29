@@ -35,14 +35,20 @@ export default class ProfileCommand extends MachoCommand {
     const ctx = canvas.getContext('2d')
     const background = await Canvas.loadImage('images/background.jpeg')
     const avatar = await Canvas.loadImage(msg.author.displayAvatarURL({ format: 'png' }))
+    const levelText = `Level: ${user.level.level}, XP: ${user.level.xp}, Last message counted for XP: ${user.level.timestamp}`
 
     ctx.drawImage(avatar, 25, 25, 200, 200)
     ctx.drawImage(background, 0, 0, canvas.width, canvas.height)
 
     ctx.strokeStyle = '#74037b'
     ctx.fillStyle = '#ffffff'
-    ctx.font = applyText(canvas, user.name)
+
+    ctx.font = applyText(canvas, user.name, 70)
     ctx.fillText(user.name, canvas.width / 2.5, canvas.height / 3)
+
+    ctx.font = applyText(canvas, levelText, 20)
+    ctx.fillText(levelText, canvas.width / 1.5, canvas.height / 2)
+
     ctx.strokeRect(0, 0, canvas.width, canvas.height)
     ctx.beginPath()
     ctx.arc(125, 125, 100, 0, Math.PI * 2, true)
@@ -54,17 +60,15 @@ export default class ProfileCommand extends MachoCommand {
 
     msg.channel.stopTyping()
     return msg.channel.send(`${user.name}:
-Levels: { Level: ${user.level.level}, XP: ${user.level.xp}, Last message counted for XP: ${user.level.timestamp} }
 Balance: { Balance: ${user.balance.balance}, Net worth: ${user.balance.netWorth}, Last claimed dailies: ${user.balance.dateClaimedDailies} }`, attachment)
   }
 }
 
-function applyText (canvas: Canvas.Canvas, text: string) {
+function applyText (canvas: Canvas.Canvas, text: string, maximum: number) {
   const ctx = canvas.getContext('2d')
-  let fontSize = 70
 
   do {
-    ctx.font = `${fontSize -= 10}px sans-serif`
+    ctx.font = `${maximum -= 10}px sans-serif`
   } while (ctx.measureText(text).width > canvas.width - 300)
 
   return ctx.font
