@@ -36,8 +36,10 @@ export default class ProfileCommand extends MachoCommand {
     const ctx = canvas.getContext('2d')
     const background = await Canvas.loadImage('images/background.jpeg')
     const avatar = await Canvas.loadImage(msg.author.displayAvatarURL({ format: 'png' }))
-    const levelText = `Level: ${user.level.level}, XP: ${user.level.xp}, Last message counted for XP: ${user.level.timestamp}`
-    const balanceText = `Balance: ${user.balance.balance}, Net worth: ${user.balance.netWorth}, Last claimed dailies: ${user.balance.dateClaimedDailies}`
+    const timestamp = new Date(Number(user.level.timestamp))
+    const dateClaimedDailies = new Date(Number(user.balance.dateClaimedDailies))
+    const levelText = `Level: ${user.level.level}, Last message counted for XP: ${timestamp.toDateString() === new Date().toDateString() ? timestamp.toTimeString() : timestamp.toDateString()}`
+    const balanceText = `Balance: ${user.balance.balance}, Net worth: ${user.balance.netWorth}, Last claimed dailies: ${dateClaimedDailies.toDateString() === new Date().toDateString() ? dateClaimedDailies.toTimeString() : dateClaimedDailies.toDateString()}`
 
     ctx.drawImage(avatar, 25, 25, 200, 200)
     ctx.filter = 'blur(20px)'
