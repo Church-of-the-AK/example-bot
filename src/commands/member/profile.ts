@@ -63,7 +63,7 @@ export default class ProfileCommand extends MachoCommand {
     ctx.font = applyText(canvas, balanceText, canvas.width / 2.5, 60)
     ctx.fillText(balanceText, canvas.width / 2.5, canvas.height / 1.2)
 
-    createProgressBar(canvas, 'XP', canvas.width / 2.5, canvas.height / 1.5, 200, 20, user.level.xp, expToLevelUp(user.level.level))
+    createProgressBar(canvas, 'XP', canvas.width / 3, canvas.height / 1.55, 200, 20, user.level.xp, expToLevelUp(user.level.level))
 
     ctx.strokeRect(0, 0, canvas.width, canvas.height)
     ctx.beginPath()
