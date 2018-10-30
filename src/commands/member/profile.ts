@@ -99,7 +99,7 @@ function createProgressBar (canvas: Canvas.Canvas, text: string, x: number, y: n
   ctx.fillRect(x, y, Math.floor(width * filled / max), height)
 
   ctx.fillStyle = '#ffffff'
-  ctx.fillText(`${text}: ${filled} / ${max}`, x + (width / 2), y - (height / 2) - 10)
+  ctx.fillText(`${text}: ${filled} / ${max}`, x + (width / 2), y + (height / 2))
 
   ctx.strokeStyle = prevStroke
   ctx.fillStyle = prevFill
