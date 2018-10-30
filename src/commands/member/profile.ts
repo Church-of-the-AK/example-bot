@@ -3,6 +3,7 @@ import * as Canvas from 'canvas'
 import { Message, MessageAttachment } from 'discord.js'
 import { MachoCommand } from '../../types'
 import { getUser } from '../../util'
+import { expToLevelUp } from '../../handlers'
 
 export default class ProfileCommand extends MachoCommand {
   constructor (client) {
@@ -60,6 +61,8 @@ export default class ProfileCommand extends MachoCommand {
     ctx.font = applyText(canvas, balanceText, canvas.width / 2.5, 60)
     ctx.fillText(balanceText, canvas.width / 2.5, canvas.height / 1.2)
 
+    createProgressBar(canvas, 'XP', canvas.width / 2.5, canvas.height / 2.15, 200, 20, user.level.xp, expToLevelUp(user.level.level))
+
     ctx.strokeRect(0, 0, canvas.width, canvas.height)
     ctx.beginPath()
     ctx.arc(125, 125, 100, 0, Math.PI * 2, true)
@@ -82,4 +85,20 @@ function applyText (canvas: Canvas.Canvas, text: string, x: number, maximum: num
   } while (ctx.measureText(text).width > canvas.width - x)
 
   return ctx.font
+}
+
+function createProgressBar (canvas: Canvas.Canvas, text: string, x: number, y: number, width: number, height: number, filled: number, max: number) {
+  const ctx = canvas.getContext('2d')
+  const prevStroke = ctx.strokeStyle
+  const prevFill = ctx.fillStyle
+
+  ctx.strokeStyle = '#ffffff'
+  ctx.strokeRect(x, y, width, height)
+
+  ctx.fillStyle = '#74037b'
+  ctx.fillRect(x, y, width * Math.floor(filled / max), height)
+  ctx.fillText(`${text}: ${filled} / ${max}`, x, y)
+
+  ctx.strokeStyle = prevStroke
+  ctx.fillStyle = prevFill
 }

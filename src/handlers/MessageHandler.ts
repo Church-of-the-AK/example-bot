@@ -97,7 +97,7 @@ async function handleUserExp (user: User, msg: CommandMessage) {
   return user
 }
 
-function expToLevelUp (level: number): number {
+export function expToLevelUp (level: number): number {
   return 5 * level * level + 50 * level + 100
 }
 
