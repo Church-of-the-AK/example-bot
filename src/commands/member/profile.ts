@@ -17,7 +17,7 @@ export default class ProfileCommand extends MachoCommand {
       examples: [ 'profile' ],
       guildOnly: false,
       throttling: {
-        duration: 10,
+        duration: 20,
         usages: 1
       }
     })
