@@ -8,14 +8,14 @@ export default class ShuffleCommand extends MachoCommand {
   constructor (client) {
     super(client, {
       name: 'shuffle',
-      aliases: ['shufflesongs', 'mix'],
+      aliases: [ 'shufflesongs', 'mix' ],
       group: 'music',
       memberName: 'shuffle',
       description: 'Shuffle the queue for the server.',
       details: oneLine`
         This command is used to shuffle the current queue.
 			`,
-      examples: ['shuffle', 'shufflesongs', 'mix'],
+      examples: [ 'shuffle', 'shufflesongs', 'mix' ],
       guildOnly: true
     })
   }
