@@ -1,4 +1,4 @@
-import speedTest from 'speedtest-net'
+import * as speedTest from 'speedtest-net'
 import { CommandMessage } from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import { Message } from 'discord.js'
