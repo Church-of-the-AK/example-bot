@@ -29,14 +29,14 @@ export default class SpeedTestCommand extends MachoCommand {
 
     test.on('data', speedInfo => {
       const message = `Speeds:
-      Download: ${speedInfo.speeds.download} mbps
-      Upload: ${speedInfo.speeds.upload} mbps
-    Client:
-      ISP: ${speedInfo.client.isp} (${speedInfo.client.isprating}/5 stars)
-    Hosting:
-      Host: ${speedInfo.server.sponsor}
-      Location: ${speedInfo.server.location} (${speedInfo.server.distance} km)
-      Ping: ${speedInfo.server.ping} ms`
+  Download: ${speedInfo.speeds.download} mbps
+  Upload: ${speedInfo.speeds.upload} mbps
+Client:
+  ISP: ${speedInfo.client.isp} (${speedInfo.client.isprating}/5 stars)
+Hosting:
+  Host: ${speedInfo.server.sponsor}
+  Location: ${speedInfo.server.location} (${speedInfo.server.distance} km)
+  Ping: ${speedInfo.server.ping} ms`
 
       return result.edit(message)
     })
