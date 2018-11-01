@@ -2,6 +2,7 @@ import { CommandMessage } from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import { Message } from 'discord.js'
 import { MachoCommand } from '../../types'
+import { shuffle } from '../../util'
 
 export default class ShuffleCommand extends MachoCommand {
   constructor (client) {
@@ -28,13 +29,7 @@ export default class ShuffleCommand extends MachoCommand {
       })
     }
 
-    let shuffled = []
-
-    for (let i = 1; i < serverQueue.songs.length; i++) {
-      shuffled.push(serverQueue.songs[i])
-    }
-
-    shuffled = shuffle(shuffled)
+    const shuffled = shuffle(serverQueue.songs.splice(1, serverQueue.songs.length - 1))
     shuffled.unshift(serverQueue.songs[0])
     serverQueue.songs = shuffled
 
@@ -42,18 +37,4 @@ export default class ShuffleCommand extends MachoCommand {
       return null
     })
   }
-}
-
-function shuffle (a: any[]) {
-  let j
-  let x
-  let i
-
-  for (i = a.length - 1; i > 0; i--) {
-    j = Math.floor(Math.random() * (i + 1))
-    x = a[i]
-    a[i] = a[j]
-    a[j] = x
-  }
-  return a
 }

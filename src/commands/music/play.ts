@@ -197,7 +197,11 @@ export async function handleVideo (video: Video, msg: CommandMessage, voiceChann
 
     play(msg.guild, queueConstruct.songs[0], client)
   } else {
-    serverQueue.songs.push(song)
+    try {
+      client.addSong(msg.guild.id, song)
+    } catch (error) {
+      return msg.channel.send(`🆘 Error: ${error.message}`)
+    }
 
     if (playlist) {
       return true
@@ -214,9 +218,7 @@ function play (guild: Guild, song: Song, client: MachoClient) {
 
   if (!song) {
     serverQueue.voiceChannel.leave()
-    client.deleteQueue(guild.id)
-
-    return
+    return client.deleteQueue(guild.id)
   }
 
   const dispatcher = serverQueue.connection.play(ytdl(song.url))

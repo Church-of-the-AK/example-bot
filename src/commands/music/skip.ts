@@ -16,7 +16,7 @@ export default class SkipCommand extends MachoCommand {
         This command is used to skip a song in the current queue
         of songs.
 			`,
-      examples: ['skip'],
+      examples: [ 'skip' ],
       guildOnly: true
     })
   }

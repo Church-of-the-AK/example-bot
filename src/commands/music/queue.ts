@@ -3,6 +3,7 @@ import { oneLine, stripIndents } from 'common-tags'
 import { Message, MessageEmbed } from 'discord.js'
 import { api } from '../../config'
 import { MachoCommand } from '../../types'
+import { paginate } from '../../util'
 
 export default class QueueCommand extends MachoCommand {
   constructor (client) {
@@ -24,7 +25,8 @@ export default class QueueCommand extends MachoCommand {
         label: 'page',
         prompt: 'What page would you like to look at?',
         type: 'integer',
-        default: 1
+        default: 1,
+        validate: page => page > 0
       }]
     })
   }
@@ -45,20 +47,8 @@ export default class QueueCommand extends MachoCommand {
 
       return `**-** ${song.title} - \`${song.member.user.tag}\``
     })
-    const pages: Map<number, string> = new Map()
-    let page = 1
 
-    for (let i = 0; i < songs.length; i++) {
-      if (pages.has(page)) {
-        pages.set(page, pages.get(page) + songs[i] + '\n')
-      } else {
-        pages.set(page, songs[i] + '\n')
-      }
-
-      if ((i + 1) % 10 === 0) {
-        page++
-      }
-    }
+    const pages: Map<number, string> = paginate(songs)
 
     if (!pages.get(pageNum)) {
       return msg.channel.send(`There are only ${pages.size} pages.`).catch(() => {

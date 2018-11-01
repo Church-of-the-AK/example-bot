@@ -119,7 +119,7 @@ export default class PlaylistCommand extends MachoCommand {
     const playlists = await getUserPlaylists(msg.author.id)
 
     if (!playlists) {
-      return {  success: false, message: 'I can\'t find any playlists to your name.' }
+      return { success: false, message: 'I can\'t find any playlists to your name.' }
     }
 
     if (playlists.length > 20) {

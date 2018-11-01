@@ -7,14 +7,13 @@ export default class ResumeCommand extends MachoCommand {
   constructor (client) {
     super(client, {
       name: 'resume',
-      aliases: ['start', 'resume'],
       group: 'music',
       memberName: 'resume',
       description: 'Resume the queue for the server.',
       details: oneLine`
         This command is used to resume the current queue.
 			`,
-      examples: ['resume', 'start'],
+      examples: [ 'resume' ],
       guildOnly: true
     })
   }
