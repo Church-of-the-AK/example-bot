@@ -2,7 +2,7 @@ import { CommandMessage } from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import { Message, MessageAttachment } from 'discord.js'
 import { MachoCommand } from '../../types'
-import { parse, Node } from 'node-html-parser'
+import { parse, Node, HTMLElement, TextNode, NodeType } from 'node-html-parser'
 import axios from 'axios'
 import { randomItem } from '../../util'
 
@@ -47,16 +47,18 @@ export default class R34Command extends MachoCommand {
       // @ts-ignore
       link = image.rawAttrs.substring(image.rawAttrs.indexOf('src="') + 5, image.rawAttrs.indexOf('"', image.rawAttrs.indexOf('src="') + 5))
     } else {
-      const thumbnail: Node = randomItem(html.childNodes.filter(node => {
-        // @ts-ignore
-        const has = node.rawAttrs.includes('class="preview"')
-        // @ts-ignore
-        process.stdout.write(has ? '' : node.rawAttrs + '\n')
-        return has
-      }))
+      const nodes = getChildNodes(html)
+      const elements = getElements(nodes)
+      const images = getImages(elements)
 
-      // @ts-ignore
+      if (images.length === 0) {
+        return msg.channel.send('🆘 I couldn\'t find any images with that tag.')
+      }
+
+      const thumbnail: HTMLElement = randomItem(images)
+
       link = thumbnail.rawAttrs.substring(thumbnail.rawAttrs.indexOf('src="') + 5, thumbnail.rawAttrs.indexOf('"', thumbnail.rawAttrs.indexOf('src="') + 5))
+
       const { data } = await axios.get(link.substring(link.indexOf('?') + 1, link.length), { responseType: 'text' })
       const newHtml = parse(data)
       const image = newHtml.querySelector('#image')
@@ -69,4 +71,50 @@ export default class R34Command extends MachoCommand {
 
     return msg.channel.send(attachment)
   }
+}
+
+function getImages (elements: HTMLElement[]) {
+  const results: string[] = []
+
+  elements.forEach(element => {
+    if (element.tagName === 'img') {
+      const attributes = element.rawAttributes
+
+      if (attributes.src && attributes.class === 'preview') {
+        results.push(attributes.src)
+      }
+    }
+  })
+
+  return results
+}
+
+function getChildNodes (data: Node | TextNode) {
+  const nodes: Node[] = []
+
+  if (data.childNodes.length > 0) {
+    for (const node of data.childNodes) {
+      if (node.childNodes.length > 0) {
+        nodes.push(...getChildNodes(node))
+      } else {
+        nodes.push(node)
+      }
+    }
+  }
+
+  return nodes
+}
+
+function getElements (nodes: Node[]) {
+  const results: HTMLElement[] = []
+
+  nodes.forEach(node => {
+    if (node.nodeType === NodeType.ELEMENT_NODE) {
+      results.push(node as HTMLElement)
+    } else {
+      nodes.push(...getChildNodes(node as TextNode))
+    }
+  })
+
+  return results
 }
