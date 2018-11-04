@@ -27,9 +27,9 @@ export default class R34Command extends MachoCommand {
     const html = parse(data)
     const image = html.querySelector('#image')
     // @ts-ignore
-    console.log(image)
-    // @ts-ignore
-    const attachment = new MessageAttachment(image.src)
+    const link = image.rawAttrs.substring(image.rawAttrs.indexOf('src="') + 5, image.rawAttrs.indexOf('"', image.rawAttrs.indexOf('src="') + 5))
+    console.log(link)
+    const attachment = new MessageAttachment(link)
 
     return msg.channel.send(attachment)
   }
