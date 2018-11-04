@@ -52,7 +52,7 @@ export default class R34Command extends MachoCommand {
 
       // @ts-ignore
       link = thumbnail.rawAttrs.substring(thumbnail.rawAttrs.indexOf('src="') + 5, thumbnail.rawAttrs.indexOf('"', thumbnail.rawAttrs.indexOf('src="') + 5))
-      const { data } = await axios.get(link.substring(link.indexOf('?') + 1, link.length))
+      const { data } = await axios.get(link.substring(link.indexOf('?') + 1, link.length), { responseType: 'text' })
       const newHtml = parse(data)
       const image = newHtml.querySelector('#image')
 
