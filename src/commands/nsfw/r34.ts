@@ -55,11 +55,8 @@ export default class R34Command extends MachoCommand {
         return msg.channel.send('🆘 I couldn\'t find any images with that tag.')
       }
 
-      const thumbnail: HTMLElement = randomItem(images)
-
-      link = thumbnail.rawAttrs.substring(thumbnail.rawAttrs.indexOf('src="') + 5, thumbnail.rawAttrs.indexOf('"', thumbnail.rawAttrs.indexOf('src="') + 5))
-
-      const { data } = await axios.get(link.substring(link.indexOf('?') + 1, link.length), { responseType: 'text' })
+      const thumbnail: string = randomItem(images)
+      const { data } = await axios.get(thumbnail.substring(thumbnail.indexOf('?') + 1, link.length), { responseType: 'text' })
       const newHtml = parse(data)
       const image = newHtml.querySelector('#image')
 
