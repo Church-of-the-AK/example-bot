@@ -56,7 +56,7 @@ export default class R34Command extends MachoCommand {
       }
 
       const thumbnail: string = randomItem(images)
-      const { data } = await axios.get(thumbnail.substring(thumbnail.indexOf('?') + 1, link.length), { responseType: 'text' })
+      const { data } = await axios.get(thumbnail.substring(thumbnail.indexOf('?') + 1, thumbnail.length), { responseType: 'text' })
       const newHtml = parse(data)
       const image = newHtml.querySelector('#image')
 
