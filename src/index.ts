@@ -100,11 +100,12 @@ Command: ${cmd.name}
 
 client.registry
   .registerGroups([
-    ['staff', 'Staff Commands'],
-    ['member', 'Member Commands'],
-    ['music', 'Music Commands'],
-    ['economy', 'Money Commands'],
-    ['owner', 'Owner-only Commands.']
+    [ 'staff', 'Staff Commands' ],
+    [ 'member', 'Member Commands' ],
+    [ 'music', 'Music Commands' ],
+    [ 'economy', 'Money Commands' ],
+    [ 'owner', 'Owner-only Commands.' ],
+    [ 'nsfw', 'NSFW Commands' ]
   ])
   .registerDefaults()
   .registerCommandsIn(path.join(__dirname, 'commands'))
