@@ -30,3 +30,7 @@ export function shuffle (items: any[]) {
   }
   return items
 }
+
+export function randomItem (arr: any[]) {
+  return arr[Math.floor(Math.random() * arr.length)]
+}
