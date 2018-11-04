@@ -2,7 +2,7 @@ import { CommandMessage } from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import { Message, MessageAttachment } from 'discord.js'
 import { MachoCommand } from '../../types'
-import { parse, Node } from 'node-html-parser'
+import { parse } from 'node-html-parser'
 import axios from 'axios'
 import { randomItem } from '../../util'
 
