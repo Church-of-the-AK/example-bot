@@ -51,7 +51,7 @@ export default class R34Command extends MachoCommand {
         // @ts-ignore
         const has = node.rawAttrs.includes('class="preview"')
         // @ts-ignore
-        process.stdout.write(has ? node.rawAttrs + '\n' : '')
+        process.stdout.write(has ? '' : node.rawAttrs + '\n')
         return has
       }))
 
