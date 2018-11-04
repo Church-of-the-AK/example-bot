@@ -2,7 +2,7 @@ import { CommandMessage } from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import { Message, MessageAttachment } from 'discord.js'
 import { MachoCommand } from '../../types'
-import { parse } from 'node-html-parser'
+import { parse, Node } from 'node-html-parser'
 import axios from 'axios'
 import { randomItem } from '../../util'
 
@@ -47,8 +47,13 @@ export default class R34Command extends MachoCommand {
       // @ts-ignore
       link = image.rawAttrs.substring(image.rawAttrs.indexOf('src="') + 5, image.rawAttrs.indexOf('"', image.rawAttrs.indexOf('src="') + 5))
     } else {
-      // @ts-ignore
-      const thumbnail = randomItem(html.childNodes.filter(node => node.rawAttrs.includes('class="preview"')))
+      const thumbnail: Node = randomItem(html.childNodes.filter(node => {
+        // @ts-ignore
+        const has = node.rawAttrs.includes('class="preview"')
+        // @ts-ignore
+        process.stdout.write(has ? node.rawAttrs + '\n' : '')
+        return has
+      }))
 
       // @ts-ignore
       link = thumbnail.rawAttrs.substring(thumbnail.rawAttrs.indexOf('src="') + 5, thumbnail.rawAttrs.indexOf('"', thumbnail.rawAttrs.indexOf('src="') + 5))
