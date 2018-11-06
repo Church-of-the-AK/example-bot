@@ -35,7 +35,7 @@ export default class NowPlayingCommand extends MachoCommand {
       .setAuthor(msg.author.username, msg.author.displayAvatarURL())
       .setColor('BLUE')
       .setFooter('Macho', this.client.user.displayAvatarURL())
-      .setDescription(`**${song.title}** - ${song.member.user.tag}`)
+      .setDescription(`[${song.title}](${song.url}) - ${song.member.user.tag}`)
       .setThumbnail(song.thumbnail)
 
     return msg.channel.send(embed).catch(() => {

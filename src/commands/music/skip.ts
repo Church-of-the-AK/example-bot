@@ -17,11 +17,19 @@ export default class SkipCommand extends MachoCommand {
         of songs.
 			`,
       examples: [ 'skip' ],
-      guildOnly: true
+      guildOnly: true,
+      args: [{
+        key: 'amount',
+        label: 'amount',
+        prompt: '',
+        type: 'integer',
+        default: 1,
+        validate: amount => amount > 0
+      }]
     })
   }
 
-  async run (msg: CommandMessage): Promise<Message | Message[]> {
+  async run (msg: CommandMessage, { amount }: { amount: number }): Promise<Message | Message[]> {
     const serverQueue = this.client.getQueue(msg.guild.id)
 
     if (!serverQueue) {
@@ -38,8 +46,8 @@ export default class SkipCommand extends MachoCommand {
 
     const song = serverQueue.songs[0]
 
-    if ((msg.member.id === song.member.id) || msg.member.hasPermission('MANAGE_MESSAGES')) {
-      return this.skip(serverQueue, msg, song)
+    if ((msg.member.id === song.member.id) || msg.member.hasPermission('MANAGE_MESSAGES') || this.client.isOwner(msg.author)) {
+      return this.skip(serverQueue, msg, song, amount)
     }
 
     const guildSettings = await getGuildSettings(msg.guild.id)
@@ -68,7 +76,7 @@ export default class SkipCommand extends MachoCommand {
     })
 
     if (song.votes.length >= msg.member.voice.channel.members.filter(member => !member.user.bot).size / 2) {
-      return this.skip(serverQueue, msg, song)
+      return this.skip(serverQueue, msg, song, 1)
     }
 
     if (reply) {
@@ -78,10 +86,17 @@ export default class SkipCommand extends MachoCommand {
     }
   }
 
-  skip (serverQueue: ServerQueue, msg: CommandMessage, song: Song) {
+  skip (serverQueue: ServerQueue, msg: CommandMessage, song: Song, amount: number) {
+    serverQueue.songs = serverQueue.songs.filter((song, index) => index - amount >= 0)
     serverQueue.connection.dispatcher.end('Skip command has been used.')
 
-    return msg.channel.send(`Skipped **${song.title}** - Requested by \`${song.member.user.tag}\``).catch(() => {
+    if (amount > 1) {
+      return msg.channel.send(`Skipped **${song.title}** - Requested by \`${song.member.user.tag}\` + ${amount - 1} more songs.`).catch(() => {
+        return null
+      })
+    }
+
+    return msg.channel.send(`Skipped **${song.title}** - Requested by \`${song.member.user.tag}\`.`).catch(() => {
       return null
     })
   }
