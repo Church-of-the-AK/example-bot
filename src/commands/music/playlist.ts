@@ -160,7 +160,7 @@ export default class PlaylistCommand extends MachoCommand {
       playlist.songs.splice(20, playlist.songs.length - 20)
     }
 
-    const description = playlist.songs.map(song => `- \`${song.title}\` - \`${song.url}\``).join('\n')
+    const description = playlist.songs.map(song => `- [${song.title}](${song.url})`).join('\n')
     const embed = new MessageEmbed()
       .setTitle(`Playlist Songs List for ${playlist.name}`)
       .setAuthor(msg.author.username, msg.author.displayAvatarURL(), api.url + '/users/' + msg.author.id)

@@ -9,7 +9,7 @@ export default class QueueCommand extends MachoCommand {
   constructor (client) {
     super(client, {
       name: 'queue',
-      aliases: ['songs'],
+      aliases: [ 'songs' ],
       group: 'music',
       memberName: 'queue',
       description: 'Lists every song in the current queue.',
@@ -45,7 +45,7 @@ export default class QueueCommand extends MachoCommand {
         return ''
       }
 
-      return `**-** ${song.title} - \`${song.member.user.tag}\``
+      return `**-** [${song.title}](${song.url}) - \`${song.member.user.tag}\``
     })
 
     const pages: Map<number, string> = paginate(songs)
@@ -60,7 +60,7 @@ export default class QueueCommand extends MachoCommand {
 
     const description = stripIndents`
 			${pages.get(pageNum)}
-      **Now playing:** ${nowPlaying.title} - \`${nowPlaying.member.user.tag}\`
+      **Now playing:** [${nowPlaying.title}](${nowPlaying.url}) - \`${nowPlaying.member.user.tag}\`
     `
 
     const embed = new MessageEmbed()
