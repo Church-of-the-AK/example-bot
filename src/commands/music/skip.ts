@@ -87,7 +87,7 @@ export default class SkipCommand extends MachoCommand {
   }
 
   skip (serverQueue: ServerQueue, msg: CommandMessage, song: Song, amount: number) {
-    serverQueue.songs = serverQueue.songs.filter((song, index) => index - amount >= 0)
+    serverQueue.songs = serverQueue.songs.filter((song, index) => index - amount >= -1)
     serverQueue.connection.dispatcher.end('Skip command has been used.')
 
     if (amount > 1) {
