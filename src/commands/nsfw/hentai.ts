@@ -47,12 +47,11 @@ export default class HentaiCommand extends MachoCommand {
     }
 
     const thumbnail: string = randomItem(images)
-    const { data: one } = await axios.get('https://konachan.com' + thumbnail, { responseType: 'text' })
+    /* const { data: one } = await axios.get('https://konachan.com' + thumbnail, { responseType: 'text' })
     const newHtml = parse(one)
-    const image = newHtml.querySelector('#image')
+    const image = newHtml.querySelector('#image') */
 
-    // @ts-ignore
-    const link: string = image.rawAttrs.substring(image.rawAttrs.indexOf('src="') + 5, image.rawAttrs.indexOf('"', image.rawAttrs.indexOf('src="') + 5))
+    const link: string = thumbnail
     const attachment = new MessageAttachment(link)
 
     return msg.channel.send(attachment)
@@ -63,12 +62,11 @@ function getImages (elements: HTMLElement[]) {
   const results: string[] = []
 
   elements.forEach(element => {
-    if (element.tagName === 'span') {
+    if (element.tagName === 'img') {
       const attributes = element.rawAttributes
-      console.log(element)
 
-      if (element.text && attributes.class && attributes.class.includes('plid')) {
-        results.push(element.text)
+      if (attributes.src && attributes.class && attributes.class.includes('preview')) {
+        results.push(attributes.src)
       }
     }
   })
