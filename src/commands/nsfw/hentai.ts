@@ -66,7 +66,7 @@ function getImages (elements: HTMLElement[]) {
     if (element.tagName === 'img') {
       const attributes = element.rawAttributes
 
-      if (attributes.src && attributes.class.includes('preview')) {
+      if (attributes.src && attributes.class && attributes.class.includes('preview')) {
         results.push(attributes.src)
       }
     }
