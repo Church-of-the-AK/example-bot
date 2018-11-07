@@ -23,7 +23,7 @@ export default class RankCommand extends MachoCommand {
           prompt: "Who's level would you like to view?",
           type: 'user',
           infinite: false,
-          default: 1
+          default: -1
         }
       ]
     })

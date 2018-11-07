@@ -23,7 +23,7 @@ export default class CreditsCommand extends MachoCommand {
           prompt: "Who's credits would you like to view?",
           type: 'user',
           infinite: false,
-          default: 1
+          default: -1
         }
       ]
     })
