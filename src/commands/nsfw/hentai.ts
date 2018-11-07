@@ -63,9 +63,9 @@ function getImages (elements: HTMLElement[]) {
   const results: string[] = []
 
   elements.forEach(element => {
-    console.log(element.tagName)
     if (element.tagName === 'a') {
       const attributes = element.rawAttributes
+      console.log(attributes)
 
       if (attributes.href && attributes.class && attributes.class.includes('thumb')) {
         results.push(attributes.href)
