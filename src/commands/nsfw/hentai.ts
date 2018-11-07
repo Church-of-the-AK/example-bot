@@ -65,10 +65,10 @@ function getImages (elements: HTMLElement[]) {
   elements.forEach(element => {
     if (element.tagName === 'span') {
       const attributes = element.rawAttributes
+      console.log(element)
 
       if (element.text && attributes.class && attributes.class.includes('plid')) {
         results.push(element.text)
-        console.log(element.text)
       }
     }
   })
