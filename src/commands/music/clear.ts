@@ -77,7 +77,6 @@ export default class ClearCommand extends MachoCommand {
   }
 
   clear (serverQueue: ServerQueue, msg: CommandMessage) {
-    serverQueue.connection.dispatcher.end('Clear command has been used.')
     serverQueue.voiceChannel.leave()
     this.client.deleteQueue(msg.guild.id)
 
