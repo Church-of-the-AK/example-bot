@@ -6,18 +6,17 @@ import { parse, Node, HTMLElement, TextNode, NodeType } from 'node-html-parser'
 import axios from 'axios'
 import { randomItem } from '../../util'
 
-export default class R34Command extends MachoCommand {
+export default class HentaiCommand extends MachoCommand {
   constructor (client) {
     super(client, {
-      name: 'r34',
-      aliases: [ 'rule34' ],
+      name: 'hentai',
       group: 'nsfw',
-      memberName: 'r34',
-      description: 'Sends a random image from the Rule 34 website.',
+      memberName: 'hentai',
+      description: 'Sends a random image from the Konachan website.',
       details: oneLine`
-        Sends a random image from the Rule 34 website.
+        Sends a random image from the Konachan website.
       `,
-      examples: [ 'r34', 'r34 sans' ],
+      examples: [ 'hentai breasts', 'hentai' ],
       guildOnly: false,
       nsfw: true,
       args: [{
@@ -36,34 +35,24 @@ export default class R34Command extends MachoCommand {
       search = search.replace(' ', '_')
     }
 
-    const { data } = await axios.get(`https://rule34.xxx/index.php?page=post&s=${search === -1 ? 'random' : `list&tags=${search}`}`, { responseType: 'text' })
-    const html = parse(data)
+    const { data: all } = await axios.get(`https://konachan.com/post?tags=${search === -1 ? 'order%3Arandom' : `${search}`}`, { responseType: 'text' })
+    const html = parse(all)
 
-    let link: string
+    const nodes = getChildNodes(html)
+    const elements = getElements(nodes)
+    const images = getImages(elements)
 
-    if (search === -1) {
-      const image = html.querySelector('#image')
-
-      // @ts-ignore
-      link = image.rawAttrs.substring(image.rawAttrs.indexOf('src="') + 5, image.rawAttrs.indexOf('"', image.rawAttrs.indexOf('src="') + 5))
-    } else {
-      const nodes = getChildNodes(html)
-      const elements = getElements(nodes)
-      const images = getImages(elements)
-
-      if (images.length === 0) {
-        return msg.channel.send('🆘 I couldn\'t find any images with that tag.')
-      }
-
-      const thumbnail: string = randomItem(images)
-      const { data } = await axios.get('https://rule34.xxx/index.php?page=post&s=view&id=' + thumbnail.substring(thumbnail.indexOf('?') + 1, thumbnail.length), { responseType: 'text' })
-      const newHtml = parse(data)
-      const image = newHtml.querySelector('#image')
-
-      // @ts-ignore
-      link = image.rawAttrs.substring(image.rawAttrs.indexOf('src="') + 5, image.rawAttrs.indexOf('"', image.rawAttrs.indexOf('src="') + 5))
+    if (images.length === 0) {
+      return msg.channel.send('🆘 I couldn\'t find any images with that tag.')
     }
 
+    const thumbnail: string = randomItem(images)
+    const { data: one } = await axios.get('https://rule34.xxx/index.php?page=post&s=view&id=' + thumbnail.substring(thumbnail.indexOf('?') + 1, thumbnail.length), { responseType: 'text' })
+    const newHtml = parse(one)
+    const image = newHtml.querySelector('#image')
+
+    // @ts-ignore
+    const link: string = image.rawAttrs.substring(image.rawAttrs.indexOf('src="') + 5, image.rawAttrs.indexOf('"', image.rawAttrs.indexOf('src="') + 5))
     const attachment = new MessageAttachment(link)
 
     return msg.channel.send(attachment)
@@ -77,7 +66,7 @@ function getImages (elements: HTMLElement[]) {
     if (element.tagName === 'img') {
       const attributes = element.rawAttributes
 
-      if (attributes.src && attributes.class === 'preview') {
+      if (attributes.src && attributes.class.includes('preview')) {
         results.push(attributes.src)
       }
     }

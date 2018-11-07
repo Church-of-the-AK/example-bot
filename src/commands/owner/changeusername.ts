@@ -10,7 +10,7 @@ export default class ChangeUsernameCommand extends MachoCommand {
     super(client, {
       name: 'changeusername',
       aliases: ['changename', 'changebotname'],
-      group: 'staff',
+      group: 'owner',
       memberName: 'changeusername',
       description: 'Changes the username of the bot.',
       details: oneLine`
@@ -18,6 +18,7 @@ export default class ChangeUsernameCommand extends MachoCommand {
 				Only usable by the owner, JasonHaxStuff.
 			`,
       examples: ['changeusername ILikeDogs', 'changename KillMeNow'],
+      ownerOnly: true,
 
       args: [{
         key: 'name',
@@ -30,11 +31,6 @@ export default class ChangeUsernameCommand extends MachoCommand {
   }
 
   async run (msg: CommandMessage, { name }: { name: string }): Promise<Message | Message[]> {
-    if (msg.author.id !== ownerId) {
-      return msg.reply("Sorry, but you can't do that.").catch(() => {
-        return null
-      })
-    }
 
     this.client.user.setUsername(name)
 

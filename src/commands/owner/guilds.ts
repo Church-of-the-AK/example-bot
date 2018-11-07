@@ -10,16 +10,9 @@ export default class GuildsCommand extends MachoCommand {
       memberName: 'guilds',
       description: '',
       details: ``,
-      examples: [ 'guilds' ]
+      examples: [ 'guilds' ],
+      ownerOnly: true
     })
-  }
-
-  hasPermission (msg: CommandMessage) {
-    if (this.client.isOwner(msg.author)) {
-      return true
-    }
-
-    return false
   }
 
   async run (msg: CommandMessage): Promise<Message | Message[]> {

@@ -12,6 +12,7 @@ export default class ExecCommand extends MachoCommand {
       description: 'Executes a command in the system\'s terminal.',
       details: 'Executes a command in the system\'s terminal.',
       examples: [ 'exec ls' ],
+      ownerOnly: true,
       args: [{
         key: 'command',
         label: 'command',
@@ -20,14 +21,6 @@ export default class ExecCommand extends MachoCommand {
         infinite: false
       }]
     })
-  }
-
-  hasPermission (msg: CommandMessage) {
-    if (this.client.isOwner(msg.author)) {
-      return true
-    }
-
-    return false
   }
 
   async run (msg: CommandMessage, { command }: { command: string }): Promise<Message | Message[]> {

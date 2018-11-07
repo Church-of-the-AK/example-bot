@@ -11,16 +11,9 @@ export default class DieCommand extends MachoCommand {
       description: 'Kills the bot.',
       details: `Kills the bot.`,
       aliases: [ 'kill', 'restart' ],
-      examples: [ 'die', 'kill', 'restart' ]
+      examples: [ 'die', 'kill', 'restart' ],
+      ownerOnly: true
     })
-  }
-
-  hasPermission (msg: CommandMessage) {
-    if (this.client.isOwner(msg.author)) {
-      return true
-    }
-
-    return false
   }
 
   async run (msg: CommandMessage): Promise<Message | Message[]> {

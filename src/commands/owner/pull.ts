@@ -11,16 +11,9 @@ export default class PullCommand extends MachoCommand {
       memberName: 'pull',
       description: 'Pulls from the bot\'s repo.',
       details: 'Pulls from the bot\'s repo.',
-      examples: [ 'pull' ]
+      examples: [ 'pull' ],
+      ownerOnly: true
     })
-  }
-
-  hasPermission (msg: CommandMessage) {
-    if (this.client.isOwner(msg.author)) {
-      return true
-    }
-
-    return false
   }
 
   async run (msg: CommandMessage): Promise<Message | Message[]> {
