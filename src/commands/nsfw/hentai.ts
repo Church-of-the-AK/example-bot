@@ -63,6 +63,7 @@ function getImages (elements: HTMLElement[]) {
   const results: string[] = []
 
   elements.forEach(element => {
+    console.log(element.tagName)
     if (element.tagName === 'a') {
       const attributes = element.rawAttributes
 
