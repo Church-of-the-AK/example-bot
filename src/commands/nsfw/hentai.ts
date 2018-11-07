@@ -63,12 +63,12 @@ function getImages (elements: HTMLElement[]) {
   const results: string[] = []
 
   elements.forEach(element => {
-    if (element.tagName === 'a') {
+    if (element.tagName === 'span') {
       const attributes = element.rawAttributes
-      console.log(attributes)
 
-      if (attributes.href && attributes.class && attributes.class.includes('thumb')) {
-        results.push(attributes.href)
+      if (element.text && attributes.class && attributes.class.includes('plid')) {
+        results.push(element.text)
+        console.log(element.text)
       }
     }
   })
