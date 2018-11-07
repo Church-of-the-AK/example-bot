@@ -47,15 +47,16 @@ export default class HentaiCommand extends MachoCommand {
     }
 
     const thumbnail: string = randomItem(images)
-    const { data: one } = await axios.get('https://rule34.xxx/index.php?page=post&s=view&id=' + thumbnail.substring(thumbnail.indexOf('?') + 1, thumbnail.length), { responseType: 'text' })
+    const { data: one } = await axios.get(thumbnail, { responseType: 'text' })
     const newHtml = parse(one)
     const image = newHtml.querySelector('#image')
 
     // @ts-ignore
-    const link: string = image.rawAttrs.substring(image.rawAttrs.indexOf('src="') + 5, image.rawAttrs.indexOf('"', image.rawAttrs.indexOf('src="') + 5))
-    const attachment = new MessageAttachment(link)
+    console.log(image)
+    // const link: string = image.rawAttrs.substring(image.rawAttrs.indexOf('src="') + 5, image.rawAttrs.indexOf('"', image.rawAttrs.indexOf('src="') + 5))
+    // const attachment = new MessageAttachment(link)
 
-    return msg.channel.send(attachment)
+    // return msg.channel.send(attachment)
   }
 }
 
@@ -63,11 +64,11 @@ function getImages (elements: HTMLElement[]) {
   const results: string[] = []
 
   elements.forEach(element => {
-    if (element.tagName === 'img') {
+    if (element.tagName === 'a') {
       const attributes = element.rawAttributes
 
-      if (attributes.src && attributes.class && attributes.class.includes('preview')) {
-        results.push(attributes.src)
+      if (attributes.href && attributes.class && attributes.class.includes('thumb')) {
+        results.push(attributes.href)
       }
     }
   })
