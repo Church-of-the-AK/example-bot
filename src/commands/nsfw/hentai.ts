@@ -35,7 +35,7 @@ export default class HentaiCommand extends MachoCommand {
       search = search.replace(' ', '_')
     }
 
-    const { data: all } = await axios.get(`https://konachan.com/post?tags=${search === -1 ? 'order%3Arandom+breasts' : `${search}`}`, { responseType: 'text' })
+    const { data: all } = await axios.get(`https://konachan.com/post?tags=${'order%3Arandom+' + (search === -1 ? 'nude' : search)}`, { responseType: 'text' })
     const html = parse(all)
 
     const nodes = getChildNodes(html)
