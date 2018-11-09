@@ -39,7 +39,10 @@ export default class ProfileCommand extends MachoCommand {
     const timestamp = new Date(Number(user.level.timestamp))
     const dateClaimedDailies = new Date(Number(user.balance.dateClaimedDailies))
     const levelText = `Level: ${user.level.level}, Last message counted for XP: ${timestamp.toDateString() === new Date().toDateString() ? timestamp.toTimeString() : timestamp.toDateString()}`
-    const balanceText = `Balance: ${user.balance.balance}, Net worth: ${user.balance.netWorth}, Last claimed dailies: ${dateClaimedDailies.toDateString() === new Date().toDateString() ? dateClaimedDailies.toTimeString() : dateClaimedDailies.toDateString()}`
+    const balanceText = `Balance: ${user.balance.balance}, Net worth: ${user.balance.netWorth}, Last claimed dailies: ${dateClaimedDailies.getFullYear() < new Date().getFullYear() ?
+      'Not this year' :
+      dateClaimedDailies.toDateString() === new Date().toDateString() ?
+      dateClaimedDailies.toTimeString() : dateClaimedDailies.toDateString()}`
 
     ctx.drawImage(avatar, 25, 25, 200, 200)
     ctx.filter = 'blur(20px)'
