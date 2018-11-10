@@ -10,6 +10,7 @@
   "license": "GPL-3.0",
   "dependencies": {
     "axios": "^0.18.0",
+    "better-soundcloud-api": "https://github.com/jasonhaxstuff/soundcloud",
     "better-youtube-api": "0.3.4",
     "canvas": "^2.0.1",
     "common-tags": "^1.8.0",

@@ -9,3 +9,5 @@ export let api = {
   url: '',
   code: ''
 }
+
+export let soundcloudKey = ''

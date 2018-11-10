@@ -277,6 +277,7 @@ export default class PlaylistCommand extends MachoCommand {
       songUrl = serverQueue.songs[0].url
     }
 
+    songUrl = songUrl.replace(/<(.+)>/g, '$1')
     const video = await youtube.getVideoByUrl(songUrl).catch(() => {
       return
     })

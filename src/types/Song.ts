@@ -25,4 +25,12 @@ export interface Song {
    * The URL to the default video thumbnail.
    */
   thumbnail: string
+  /**
+   * Whether or not this song is from SoundCloud.
+   */
+  soundcloud: boolean
+  /**
+   * The stream of the song.
+   */
+  streamUrl: string
 }
