@@ -18,7 +18,6 @@ export default class R34Command extends MachoCommand {
         Sends a random image from the Rule 34 website.
       `,
       examples: [ 'r34', 'r34 sans' ],
-      guildOnly: false,
       nsfw: true,
       args: [{
         key: 'search',

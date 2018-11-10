@@ -17,7 +17,6 @@ export default class HentaiCommand extends MachoCommand {
         Sends a random image from the Konachan website.
       `,
       examples: [ 'hentai breasts', 'hentai' ],
-      guildOnly: false,
       nsfw: true,
       args: [{
         key: 'search',
