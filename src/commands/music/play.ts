@@ -162,7 +162,7 @@ export default class PlayCommand extends MachoCommand {
       }
 
       if (response) {
-        return response.edit('')
+        return response.edit(`✅ Playlist: **${playlist.title}** has been added to the queue!`)
       }
 
       return
@@ -263,11 +263,11 @@ export async function handleTrack (track: Track, msg: CommandMessage, voiceChann
     if (playlist) {
       return true
     }
-
-    return msg.channel.send(`✅ **${song.title}** has been added to the queue!`).catch(() => {
-      return null
-    })
   }
+
+  return msg.channel.send(`✅ **${song.title}** has been added to the queue!`).catch(() => {
+    return null
+  })
 }
 
 export async function handleVideo (video: Video, msg: CommandMessage, voiceChannel: VoiceChannel, client: MachoClient, playlist = false) {
@@ -311,11 +311,11 @@ export async function handleVideo (video: Video, msg: CommandMessage, voiceChann
     if (playlist) {
       return true
     }
-
-    return msg.channel.send(`✅ **${song.title}** has been added to the queue!`).catch(() => {
-      return null
-    })
   }
+
+  return msg.channel.send(`✅ **${song.title}** has been added to the queue!`).catch(() => {
+    return null
+  })
 }
 
 async function play (guild: Guild, song: Song, client: MachoClient) {
