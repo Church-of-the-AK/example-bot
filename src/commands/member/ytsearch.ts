@@ -42,13 +42,27 @@ export default class YtSearchCommand extends MachoCommand {
     const video = await videos[0].fetch()
     const desc = video.description.slice(0, 250)
     const description = `${desc.length < video.description.length ? `${desc}...` : desc}`
+    const channel = await youtube.getChannel(video.channelId)
+
+    const stats = `Views: ${video.views}
+Likes: ${video.likes}
+Dislikes: ${video.dislikes}
+Date published: ${video.datePublished.toString()}
+Length: ${video.minutes}m and ${video.seconds}s`
+
+    const channelInfo = `Channel: [${channel.name}](${channel.url})
+Date created: ${channel.dateCreated.toString()}
+Total Views: ${channel.views}`
+
     const embed = new MessageEmbed()
       .setTitle(`Video Information`)
-      .setAuthor(video.title, video.url)
+      .setAuthor(video.title, null, video.url)
       .setColor('BLUE')
       .setThumbnail(video.thumbnails.default.url)
       .setFooter('Macho', this.client.user.displayAvatarURL())
-      .setDescription(description)
+      .addField('Desciption', description)
+      .addField('Stats', stats)
+      .addField('Channel', channelInfo)
 
     return msg.channel.send(embed).catch(() => {
       return null
