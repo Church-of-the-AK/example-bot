@@ -13,7 +13,7 @@ export default class YtSearchCommand extends MachoCommand {
       name: 'ytsearch',
       aliases: [ 'yt' ],
       group: 'member',
-      memberName: 'stats',
+      memberName: 'ytsearch',
       description: 'Searches for a video on YouTube.',
       details: oneLine`
         Searches for a video on YouTube.
