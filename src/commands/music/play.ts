@@ -88,7 +88,7 @@ export default class PlayCommand extends MachoCommand {
     }
 
     if (url.match(/^https?:\/\/(www.soundcloud.com|soundcloud.com)\/(.*)\/[a-zA-Z](.*)$/)) {
-      this.soundcloud(msg, url, voiceChannel)
+      return this.soundcloud(msg, url, voiceChannel)
     }
 
     const videos = await youtube.searchVideos(searchString as string).catch(() => {

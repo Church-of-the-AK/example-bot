@@ -4,10 +4,9 @@ export let prefix = 'm!'
 export let twitch = ''
 export let youtubeKey = ''
 export let dblKey = ''
+export let soundcloudKey = ''
 
 export let api = {
   url: '',
   code: ''
 }
-
-export let soundcloudKey = ''
