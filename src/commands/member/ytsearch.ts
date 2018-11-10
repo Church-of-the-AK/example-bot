@@ -52,7 +52,8 @@ Length: ${video.minutes}m and ${video.seconds}s`
 
     const channelInfo = `Channel: [${channel.name}](${channel.url})
 Date created: ${channel.dateCreated.toString()}
-Total Views: ${numberWithCommas(channel.views)}`
+Total Views: ${numberWithCommas(channel.views)}
+Subscribers: ${channel.subCount !== -1 ? numberWithCommas(channel.subCount) : 'Hidden'}`
 
     const embed = new MessageEmbed()
       .setTitle(`Video Information`)
