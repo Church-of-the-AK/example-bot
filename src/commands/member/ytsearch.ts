@@ -44,15 +44,15 @@ export default class YtSearchCommand extends MachoCommand {
     const description = `${desc.length < video.description.length ? `${desc}...` : desc}`
     const channel = await youtube.getChannel(video.channelId)
 
-    const stats = `Views: ${video.views}
-Likes: ${video.likes}
-Dislikes: ${video.dislikes}
+    const stats = `Views: ${numberWithCommas(video.views)}
+Likes: ${numberWithCommas(video.likes)}
+Dislikes: ${numberWithCommas(video.dislikes)}
 Date published: ${video.datePublished.toString()}
 Length: ${video.minutes}m and ${video.seconds}s`
 
     const channelInfo = `Channel: [${channel.name}](${channel.url})
 Date created: ${channel.dateCreated.toString()}
-Total Views: ${channel.views}`
+Total Views: ${numberWithCommas(channel.views)}`
 
     const embed = new MessageEmbed()
       .setTitle(`Video Information`)
@@ -68,4 +68,8 @@ Total Views: ${channel.views}`
       return null
     })
   }
+}
+
+function numberWithCommas (num: number) {
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 }
