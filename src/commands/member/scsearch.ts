@@ -52,9 +52,9 @@ Length: ${track.minutes}m and ${track.seconds.toFixed(0)}s`
     const authorInfo = `Username: [${author.username}](${author.url})
 Followers: ${author.followersCount}
 Following: ${author.followingsCount}
-Full name: ${author.firstName} ${author.lastName}
+Full name: ${`${author.firstName} ${author.lastName}` || 'None'}
 Last modified: ${author.lastModified.toString()}
-Website: ${author.website}
+Website: ${author.website.title ? `[${author.website.title}](${author.website.url})` : 'None'}
 Tracks: ${author.trackCount}
 Playlists: ${author.playlistCount}
 Plan: ${author.plan}`
