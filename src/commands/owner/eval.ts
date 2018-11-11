@@ -127,6 +127,7 @@ export default class EvalCommand extends MachoCommand {
       }
     } else {
       return {
+        none: `*Callback executed after ${hrDiff[0] > 0 ? `${hrDiff[0]}s ` : ''}${hrDiff[1] / 1000000}ms.*`,
         input: `\`\`\`js\n${input}\n\`\`\``,
         longOutput: inspected,
         options: { prepend, append }
