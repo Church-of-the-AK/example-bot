@@ -50,7 +50,7 @@ Pornstars: ${video.pornstars.map(star => star.pornstar_name).join(', ')}`
     const embed = new MessageEmbed()
       .setTitle('Video Information')
       .setAuthor(video.title, null, video.url)
-      .setColor('BLUE')
+      .setColor('ORANGE')
       .setFooter('Macho', this.client.user.displayAvatarURL())
       .setThumbnail(video.default_thumb)
       .addField('Stats', stats)

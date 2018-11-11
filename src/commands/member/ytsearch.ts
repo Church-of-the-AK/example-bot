@@ -1,7 +1,7 @@
 import { CommandMessage } from 'discord.js-commando'
 import { oneLine } from 'common-tags'
 import { Message, MessageEmbed } from 'discord.js'
-import { api, youtubeKey } from '../../config'
+import { youtubeKey } from '../../config'
 import { MachoCommand } from '../../types'
 import { YouTube } from 'better-youtube-api'
 
@@ -58,7 +58,7 @@ Subscribers: ${channel.subCount !== -1 ? numberWithCommas(channel.subCount) : 'H
     const embed = new MessageEmbed()
       .setTitle(`Video Information`)
       .setAuthor(video.title, null, video.url)
-      .setColor('BLUE')
+      .setColor('RED')
       .setThumbnail(video.thumbnails.default.url)
       .setFooter('Macho', this.client.user.displayAvatarURL())
       .addField('Desciption', description)
