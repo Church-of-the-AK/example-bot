@@ -14,7 +14,7 @@ const soundcloud = new SoundCloud(soundcloudKey)
 const nl = '!!NL!!'
 const nlPattern = new RegExp(nl, 'g')
 
-export class EvalCommand extends MachoCommand {
+export default class EvalCommand extends MachoCommand {
   public lastResult: any
   public hrStart: [ number, number ]
 
