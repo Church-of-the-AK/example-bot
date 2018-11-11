@@ -14,9 +14,9 @@ export default class ScSearchCommand extends MachoCommand {
       aliases: [ 'sc' ],
       group: 'member',
       memberName: 'scsearch',
-      description: 'Searches for a video on SoundCloud.',
+      description: 'Searches for a track on SoundCloud.',
       details: oneLine`
-        Searches for a video on SoundCloud.
+        Searches for a track on SoundCloud.
 			`,
       examples: ['scsearch gangnam style', 'sc never gonna give you up'],
       args: [{
@@ -47,14 +47,14 @@ export default class ScSearchCommand extends MachoCommand {
     const stats = `Favorites: ${numberWithCommas(track.favorites)}
 Likes: ${numberWithCommas(track.likes)}
 Tags: ${track.tags.join(', ')}
-Date published: ${track.datePublished.toString()}
+Date published: ${track.datePublished}
 Length: ${track.minutes}m and ${track.seconds.toFixed(0)}s`
 
     const authorInfo = `Username: [${author.username}](${author.url})
 Followers: ${author.followersCount}
 Following: ${author.followingsCount}
 Full name: ${author.firstName} ${author.lastName}
-Last modified: ${author.lastModified.toString()}
+Last modified: ${author.lastModified}
 Website: ${author.website}
 Tracks: ${author.trackCount}
 Playlists: ${author.playlistCount}
