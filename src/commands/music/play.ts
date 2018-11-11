@@ -307,10 +307,10 @@ export async function handleVideo (video: Video, msg: CommandMessage, voiceChann
     } catch (error) {
       return msg.channel.send(`🆘 Error: ${error.message}`)
     }
+  }
 
-    if (playlist) {
-      return true
-    }
+  if (playlist) {
+    return true
   }
 
   return msg.channel.send(`✅ **${song.title}** has been added to the queue!`).catch(() => {
