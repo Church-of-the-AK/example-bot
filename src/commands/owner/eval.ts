@@ -111,13 +111,15 @@ export default class EvalCommand extends MachoCommand {
   }
 
   get sensitivePattern () {
-    if (!this.sensitivePattern) {
+    // @ts-ignore
+    if (!this._sensitivePattern) {
       const client = this.client
       let pattern = ''
       if (client.token) pattern += escapeRegex(client.token)
       Object.defineProperty(this, '_sensitivePattern', { value: new RegExp(pattern, 'gi') })
     }
-    return this.sensitivePattern
+    // @ts-ignore
+    return this._sensitivePattern
   }
 }
 
