@@ -77,7 +77,9 @@ export default class EvalCommand extends MachoCommand {
       const fields = [ { name: 'Output', value: result.output } ]
 
       if (result.input) {
+        const output = fields.pop()
         fields.push({ name: 'Input', value: result.input })
+        fields.push(output)
       }
 
       const embed = new MessageEmbed({ description: result.none, fields })
