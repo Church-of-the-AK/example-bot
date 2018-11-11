@@ -75,8 +75,20 @@ export default class EvalCommand extends MachoCommand {
 
     if (Array.isArray(result)) {
       result.map(item => msg.reply(item))
-    } else {
+    } else if (result.output) {
       const fields = [ { name: 'Output', value: result.output } ]
+
+      if (result.input) {
+        const output = fields.pop()
+        fields.push({ name: 'Input', value: result.input })
+        fields.push(output)
+      }
+
+      const embed = new MessageEmbed({ description: result.none, fields })
+      return msg.channel.send(`<@${msg.author.id}>`, { split: result.options, embed })
+    } else {
+      const haste = await Util.createHaste(result.longOutput, 'js')
+      const fields = [ { name: 'Output', value: haste } ]
 
       if (result.input) {
         const output = fields.pop()
@@ -101,16 +113,23 @@ export default class EvalCommand extends MachoCommand {
 			inspected[last]
     const prepend = `\`\`\`js\n${prependPart}\n`
     const append = `\n${appendPart}\n\`\`\``
-    if (input) {
+    if (input && inspected.length <= 1000) {
       return {
         none: `*Executed in ${hrDiff[0] > 0 ? `${hrDiff[0]}s ` : ''}${hrDiff[1] / 1000000}ms.*`,
         input: `\`\`\`js\n${input}\n\`\`\``,
         output: `\`\`\`js\n${inspected}\n\`\`\``,
-        options: { maxLength: 2400, prepend, append } }
-    } else {
+        options: { prepend, append } }
+    } else if (!input) {
       return {
         none: `*Callback executed after ${hrDiff[0] > 0 ? `${hrDiff[0]}s ` : ''}${hrDiff[1] / 1000000}ms.*`,
-        output: `\`\`\`js\n${inspected}\n\`\`\``, options: { maxLength: 2400, prepend, append }
+        output: `\`\`\`js\n${inspected}\n\`\`\``,
+        options: { prepend, append }
+      }
+    } else {
+      return {
+        input: `\`\`\`js\n${input}\n\`\`\``,
+        longOutput: inspected,
+        options: { prepend, append }
       }
     }
   }
