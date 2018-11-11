@@ -45,7 +45,6 @@ export default class ScSearchCommand extends MachoCommand {
     const description = `${desc.length < track.description.length ? `${desc}...` : desc}`
 
     const stats = `Favorites: ${numberWithCommas(track.favorites)}
-Likes: ${track.likes ? numberWithCommas(track.likes) : '0'}
 Tags: ${track.tags.join(', ')}
 Date published: ${track.datePublished.toString()}
 Length: ${track.minutes}m and ${track.seconds.toFixed(0)}s`
