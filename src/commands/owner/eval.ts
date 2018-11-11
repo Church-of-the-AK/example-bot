@@ -2,11 +2,11 @@ import { inspect } from 'util'
 import { MachoCommand } from '../../types'
 import { CommandMessage } from 'discord.js-commando'
 import { MessageEmbed } from 'discord.js'
-import axios from 'axios'
+import Axios from 'axios'
 import { YouTube } from 'better-youtube-api'
 import { SoundCloud } from 'better-soundcloud-api'
 import { youtubeKey, soundcloudKey } from '../../config'
-import * as util from '../../util'
+import * as Util from '../../util'
 
 const youtube = new YouTube(youtubeKey)
 const soundcloud = new SoundCloud(soundcloudKey)
@@ -44,6 +44,8 @@ export default class EvalCommand extends MachoCommand {
     const client = this.client
     const objects = client.registry.evalObjects
     const lastResult = this.lastResult
+    const axios = Axios
+    const util = Util
     const doReply = val => {
       if (val instanceof Error) {
         msg.reply(`Callback error: \`${val}\``)
