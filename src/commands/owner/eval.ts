@@ -80,7 +80,7 @@ export default class EvalCommand extends MachoCommand {
         fields.push({ name: 'Input', value: result.input })
       }
 
-      return msg.reply(new MessageEmbed({ description: result.none, fields }), { split: result.options })
+      return msg.channel.send(new MessageEmbed({ description: result.none, fields }), { split: result.options })
     }
   }
 
