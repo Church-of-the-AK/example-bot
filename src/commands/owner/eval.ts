@@ -61,7 +61,7 @@ export default class EvalCommand extends MachoCommand {
 
     try {
       const hrStart = process.hrtime()
-      this.lastResult = eval(args.script)
+      this.lastResult = await Promise.resolve(eval(args.script))
 
       hrDiff = process.hrtime(hrStart)
     } catch (err) {
