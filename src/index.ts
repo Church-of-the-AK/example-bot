@@ -107,7 +107,9 @@ client.registry
     [ 'owner', 'Owner-only Commands.' ],
     [ 'nsfw', 'NSFW Commands' ]
   ])
-  .registerDefaults()
+  .registerDefaultTypes()
+  .registerDefaultGroups()
+  .registerDefaultCommands({ eval: false })
   .registerCommandsIn(path.join(__dirname, 'commands'))
 
 client.login(config.token)

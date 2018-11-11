@@ -10,7 +10,8 @@
     "space-before-function-paren": true,
     "jsdoc-format": false,
     "radix": false,
-    "arrow-parens": false
+    "arrow-parens": false,
+    "no-eval": false
   },
   "rulesDirectory": [
   ]
