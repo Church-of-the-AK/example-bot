@@ -17,11 +17,13 @@ export default class DieCommand extends MachoCommand {
   }
 
   async run (msg: CommandMessage): Promise<Message | Message[]> {
-    const response = await msg.channel.send('Killing the bot...')
+    const response = await msg.channel.send('Killing the bot...').catch(error => console.log(error))
 
     this.client.destroy()
     process.exit()
 
-    return response
+    if (response) {
+      return response
+    }
   }
 }

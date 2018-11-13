@@ -34,8 +34,8 @@ export default class ProfileCommand extends MachoCommand {
 
     const canvas = Canvas.createCanvas(700, 250)
     const ctx = canvas.getContext('2d')
-    const background = await Canvas.loadImage('images/background.jpeg')
-    const avatar = await Canvas.loadImage(msg.author.displayAvatarURL({ format: 'png' }))
+    const background = await Canvas.loadImage('images/background.jpeg').catch(error => console.log(error))
+    const avatar = await Canvas.loadImage(msg.author.displayAvatarURL({ format: 'png' })).catch(error => console.log(error))
     const timestamp = new Date(Number(user.level.timestamp))
     const dateClaimedDailies = new Date(Number(user.balance.dateClaimedDailies))
     const levelText = `Level: ${user.level.level}, Last message counted for XP: ${timestamp.toDateString() === new Date().toDateString() ? timestamp.toTimeString() : timestamp.toDateString()}`
@@ -43,6 +43,10 @@ export default class ProfileCommand extends MachoCommand {
       'Not this year' :
       dateClaimedDailies.toDateString() === new Date().toDateString() ?
       dateClaimedDailies.toTimeString() : dateClaimedDailies.toDateString()}`
+
+    if (!background || !avatar) {
+      return msg.channel.send('🆘 Error loading images.')
+    }
 
     ctx.drawImage(avatar, 25, 25, 200, 200)
     ctx.filter = 'blur(20px)'
@@ -77,7 +81,12 @@ export default class ProfileCommand extends MachoCommand {
 
     const attachment = new MessageAttachment(canvas.toBuffer(), 'profile.png')
 
-    await msg.channel.send(attachment)
+    const message = await msg.channel.send(attachment).catch(error => console.log(error))
+
+    if (!message) {
+      return msg.channel.send('🆘 I can\'t send attachments.')
+    }
+
     msg.channel.stopTyping()
   }
 }

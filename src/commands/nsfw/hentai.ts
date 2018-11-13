@@ -34,24 +34,24 @@ export default class HentaiCommand extends MachoCommand {
       search = search.replace(' ', '_')
     }
 
-    const { data: all } = await axios.get(`https://konachan.com/post?tags=${'order%3Arandom+' + (search === -1 ? 'nude' : search)}`, { responseType: 'text' })
-    const html = parse(all)
+    const response = await axios.get(`https://konachan.com/post?tags=${'order%3Arandom+' + (search === -1 ? 'nude' : search)}`, { responseType: 'text' }).catch(error => console.log(error))
+
+    if (!response) {
+      return msg.channel.send('🆘 Error searching for hentai, not on my end.')
+    }
+
+    const html = parse(response.data)
 
     const nodes = getChildNodes(html)
     const elements = getElements(nodes)
     const images = getImages(elements)
 
     if (images.length === 0) {
-      return msg.channel.send('🆘 I couldn\'t find any images with that tag.')
+      return msg.channel.send(' I couldn\'t find any images with that tag.')
     }
 
     const thumbnail: string = randomItem(images)
-    /* const { data: one } = await axios.get('https://konachan.com' + thumbnail, { responseType: 'text' })
-    const newHtml = parse(one)
-    const image = newHtml.querySelector('#image') */
-
-    const link: string = thumbnail
-    const attachment = new MessageAttachment(link)
+    const attachment = new MessageAttachment(thumbnail)
 
     return msg.channel.send(attachment)
   }

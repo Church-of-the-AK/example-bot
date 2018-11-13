@@ -39,10 +39,15 @@ export default class YtSearchCommand extends MachoCommand {
       })
     }
 
-    const video = await videos[0].fetch()
+    const video = await videos[0].fetch().catch(error => console.log(error))
+
+    if (!video) {
+      return msg.channel.send('🆘 Error fetching video.')
+    }
+
     const desc = video.description.slice(0, 250)
     const description = `${desc.length < video.description.length ? `${desc}...` : desc}`
-    const channel = await youtube.getChannel(video.channelId)
+    const channel = await youtube.getChannel(video.channelId).catch(error => console.log(error))
 
     const stats = Util.escapeMarkdown(`Views: ${numberWithCommas(video.views)}
 Likes: ${numberWithCommas(video.likes)}
@@ -50,10 +55,10 @@ Dislikes: ${numberWithCommas(video.dislikes)}
 Date published: ${video.datePublished.toString()}
 Length: ${video.minutes}m and ${video.seconds}s`)
 
-    const channelInfo = `Channel: [${channel.name}](${channel.url})\n` +
+    const channelInfo = channel ? `Channel: [${channel.name}](${channel.url})\n` +
 Util.escapeMarkdown(`Date created: ${channel.dateCreated.toString()}
 Total Views: ${numberWithCommas(channel.views)}
-Subscribers: ${channel.subCount !== -1 ? numberWithCommas(channel.subCount) : 'Hidden'}`)
+Subscribers: ${channel.subCount !== -1 ? numberWithCommas(channel.subCount) : 'Hidden'}`) : 'Error obtaining channel.'
 
     const embed = new MessageEmbed()
       .setTitle(`Video Information`)

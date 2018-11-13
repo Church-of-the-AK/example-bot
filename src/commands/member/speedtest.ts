@@ -25,7 +25,7 @@ export default class SpeedTestCommand extends MachoCommand {
 
   async run (msg: CommandMessage): Promise<Message | Message[]> {
     const test = speedTest({ maxTime: 5000 })
-    const result = await msg.channel.send('🕙 Getting results...') as Message
+    const result = await msg.channel.send('🕙 Getting results...').catch(error => console.log(error)) as Message
 
     test.on('data', speedInfo => {
       const message = `Speeds:

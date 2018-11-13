@@ -29,9 +29,13 @@ export default class PhSearchCommand extends MachoCommand {
   }
 
   async run (msg: CommandMessage, { search }: { search: string }): Promise<Message | Message[]> {
-    const videos = (await Videos.searchVideos({ search, thumbsize: 'medium' })).videos
+    const videos = await Videos.searchVideos({ search, thumbsize: 'medium' }).catch(error => console.log(error))
 
-    if (videos.length === 0) {
+    if (!videos) {
+      return msg.channel.send('🆘 Error getting videos. Not on my end, must be PornHub\'s fault.')
+    }
+
+    if (videos.videos.length === 0) {
       return msg.channel.send('🆘 I couldn\'t find that video.')
     }
 

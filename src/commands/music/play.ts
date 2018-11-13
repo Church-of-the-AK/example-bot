@@ -1,4 +1,4 @@
-import { CommandMessage, Command } from 'discord.js-commando'
+import { CommandMessage } from 'discord.js-commando'
 import { oneLine, stripIndents } from 'common-tags'
 import { Util, VoiceChannel, TextChannel, Guild, MessageEmbed, Collection, Message } from 'discord.js'
 import * as ytdl from 'ytdl-core'
@@ -130,7 +130,11 @@ export default class PlayCommand extends MachoCommand {
     }
 
     const videoIndex = parseInt(response.first().content)
-    const video = await youtube.getVideo(videos[videoIndex - 1].id)
+    const video = await youtube.getVideo(videos[videoIndex - 1].id).catch(error => console.log(error))
+
+    if (!video) {
+      return msg.channel.send('🆘 Error fetching video.')
+    }
 
     handleVideo(video, msg, voiceChannel, this.client)
   }
@@ -153,7 +157,11 @@ export default class PlayCommand extends MachoCommand {
         return
       }) as Message
 
-      await playlist.fetchTracks()
+      const tracks = await playlist.fetchTracks().catch(error => console.log(error))
+
+      if (!tracks) {
+        return msg.channel.send('🆘 Error fetching playlist tracks.')
+      }
 
       for (let i = 0; i < playlist.tracks.length; i++) {
         await handleTrack(playlist.tracks[i], msg, voiceChannel, this.client, true).catch(err => {
@@ -198,7 +206,11 @@ export default class PlayCommand extends MachoCommand {
       return null
     }) as Message
 
-    const videos = await playlist.fetchVideos()
+    const videos = await playlist.fetchVideos().catch(error => console.log(error))
+
+    if (!videos) {
+      return msg.channel.send('🆘 Error fetching playlist videos.')
+    }
 
     for (let i = 0; i < videos.length; i++) {
       if (videos[i].private) {
@@ -215,7 +227,7 @@ export default class PlayCommand extends MachoCommand {
     }
 
     if (responseMsg) {
-      await responseMsg.edit(`✅ Playlist: **${playlist.title}** has been added to the queue!`)
+      await responseMsg.edit(`✅ Playlist: **${playlist.title}** has been added to the queue!`).catch(error => console.log(error))
     }
 
     return
@@ -249,7 +261,12 @@ export async function handleTrack (track: Track, msg: CommandMessage, voiceChann
     client.createQueue(msg.guild.id, queueConstruct)
     queueConstruct.songs.push(song)
 
-    const connection = await voiceChannel.join()
+    const connection = await voiceChannel.join().catch(error => console.log(error))
+
+    if (!connection) {
+      return msg.channel.send('🆘 Error joining your voice channel.')
+    }
+
     queueConstruct.connection = connection
 
     play(msg.guild, queueConstruct.songs[0], client)
@@ -297,7 +314,12 @@ export async function handleVideo (video: Video, msg: CommandMessage, voiceChann
     client.createQueue(msg.guild.id, queueConstruct)
     queueConstruct.songs.push(song)
 
-    const connection = await voiceChannel.join()
+    const connection = await voiceChannel.join().catch(error => console.log(error))
+
+    if (!connection) {
+      return msg.channel.send('🆘 Error joining your voice channel.')
+    }
+
     queueConstruct.connection = connection
 
     play(msg.guild, queueConstruct.songs[0], client)
@@ -329,7 +351,13 @@ async function play (guild: Guild, song: Song, client: MachoClient) {
   let stream: Readable
 
   if (song.soundcloud) {
-    stream = (await axios.get(song.streamUrl, { responseType: 'stream' })).data
+    const response = await axios.get(song.streamUrl, { responseType: 'stream' }).catch(error => console.log(error))
+
+    if (!response) {
+      return serverQueue.textChannel.send('🆘 Error playing song: ' + song.title + ' from SoundCloud.')
+    }
+
+    stream = response.data
   } else {
     stream = ytdl(song.url)
   }

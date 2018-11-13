@@ -39,8 +39,8 @@ export default class ScSearchCommand extends MachoCommand {
       })
     }
 
-    const track = await tracks[0].fetch()
-    const author = await soundcloud.getUser(`${track.user.id}`)
+    const track = tracks[0]
+    const author = await soundcloud.getUser(`${track.user.id}`).catch(error => console.log(error))
     const desc = track.description.slice(0, 250) || 'None'
     const description = Util.escapeMarkdown(`${desc.length < track.description.length ? `${desc}...` : desc}`)
 
@@ -49,7 +49,7 @@ Tags: ${track.tags.join(', ') || 'None'}
 Date published: ${track.datePublished.toString()}
 Length: ${track.minutes}m and ${track.seconds.toFixed(0)}s`)
 
-    const authorInfo = `Username: [${Util.escapeMarkdown(author.username)}](${Util.escapeMarkdown(author.url)})\n` +
+    const authorInfo = author ? `Username: [${Util.escapeMarkdown(author.username)}](${Util.escapeMarkdown(author.url)})\n` +
 Util.escapeMarkdown(`Followers: ${author.followersCount}
 Following: ${author.followingsCount}
 Full name: ${author.firstName ? `${author.firstName} ${author.lastName}` : 'None'}
@@ -57,7 +57,7 @@ Last modified: ${author.lastModified.toString()}\n`) +
 `Website: ${author.website.title ? `[${Util.escapeMarkdown(author.website.title)}](${Util.escapeMarkdown(author.website.url)})` : 'None'}\n` +
 Util.escapeMarkdown(`Tracks: ${author.trackCount}
 Playlists: ${author.playlistCount}
-Plan: ${author.plan}`)
+Plan: ${author.plan}`) : 'Error obtaining author'
 
     const embed = new MessageEmbed()
       .setTitle(`Track Information`)

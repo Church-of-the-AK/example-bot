@@ -88,6 +88,11 @@ export default class EvalCommand extends MachoCommand {
       return msg.channel.send(`<@${msg.author.id}>`, { split: result.options, embed })
     } else {
       const haste = await Util.createHaste(result.longOutput, 'js')
+
+      if (!haste) {
+        return msg.channel.send('🆘 Error posting haste to hastebin. Not my fault, I swear.')
+      }
+
       const fields = [ { name: 'Output', value: haste } ]
 
       if (result.input) {

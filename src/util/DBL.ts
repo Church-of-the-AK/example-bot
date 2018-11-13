@@ -3,7 +3,7 @@ import { dblKey } from '../config'
 import { client } from '../index'
 
 export async function postServerCount (serverCount: number) {
-  const response = await axios.post(`https://discordbots.org/api/bots/${client.user.id}/stats`, {
+  await axios.post(`https://discordbots.org/api/bots/${client.user.id}/stats`, {
     server_count: serverCount
   }, {
     headers: { Authorization: dblKey }

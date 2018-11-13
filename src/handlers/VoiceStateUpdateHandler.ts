@@ -2,7 +2,11 @@ import { client } from '../index'
 import { VoiceState } from 'discord.js'
 
 export async function handleVoiceStateUpdate (oldState: VoiceState, newState: VoiceState) {
-  const newMember = newState.member || await newState.guild.members.fetch(newState.id)
+  const newMember = newState.member || await newState.guild.members.fetch(newState.id).catch(error => console.log(error))
+
+  if (!newMember) {
+    return
+  }
 
   if (newMember.user.bot) {
     return false

@@ -17,7 +17,7 @@ export default class PullCommand extends MachoCommand {
   }
 
   async run (msg: CommandMessage): Promise<Message | Message[]> {
-    const pulling = await msg.channel.send('🕙 Pulling from GitHub...') as Message
+    const pulling = await msg.channel.send('🕙 Pulling from GitHub...').catch(error => console.log(error)) as Message
 
     exec('git pull', (error, stdout) => {
       if (error) {

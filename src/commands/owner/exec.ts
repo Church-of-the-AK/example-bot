@@ -24,7 +24,7 @@ export default class ExecCommand extends MachoCommand {
   }
 
   async run (msg: CommandMessage, { command }: { command: string }): Promise<Message | Message[]> {
-    const running = await msg.channel.send(`🕙 Running \`${command}\``) as Message
+    const running = await msg.channel.send(`🕙 Running \`${command}\``).catch(error => console.log(error)) as Message
 
     exec(command, (error, stdout) => {
       if (error) {

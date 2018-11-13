@@ -35,8 +35,13 @@ export default class R34Command extends MachoCommand {
       search = search.replace(' ', '_')
     }
 
-    const { data } = await axios.get(`https://rule34.xxx/index.php?page=post&s=${search === -1 ? 'random' : `list&tags=${search}`}`, { responseType: 'text' })
-    const html = parse(data)
+    const response = await axios.get(`https://rule34.xxx/index.php?page=post&s=${search === -1 ? 'random' : `list&tags=${search}`}`, { responseType: 'text' }).catch(error => console.log(error))
+
+    if (!response) {
+      return msg.channel.send('🆘 Error searching for r34 stuff. Not on my end.')
+    }
+
+    const html = parse(response.data)
 
     let link: string
 
@@ -55,12 +60,17 @@ export default class R34Command extends MachoCommand {
       }
 
       const thumbnail: string = randomItem(images)
-      const { data } = await axios.get('https://rule34.xxx/index.php?page=post&s=view&id=' + thumbnail.substring(thumbnail.indexOf('?') + 1, thumbnail.length), { responseType: 'text' })
-      const newHtml = parse(data)
-      const image = newHtml.querySelector('#image')
+      const response = await axios.get('https://rule34.xxx/index.php?page=post&s=view&id=' + thumbnail.substring(thumbnail.indexOf('?') + 1, thumbnail.length), { responseType: 'text' }).catch(error => console.log(error))
 
-      // @ts-ignore
-      link = image.rawAttrs.substring(image.rawAttrs.indexOf('src="') + 5, image.rawAttrs.indexOf('"', image.rawAttrs.indexOf('src="') + 5))
+      if (!response) {
+        link = thumbnail
+      } else {
+        const newHtml = parse(response.data)
+        const image = newHtml.querySelector('#image')
+
+        // @ts-ignore
+        link = image.rawAttrs.substring(image.rawAttrs.indexOf('src="') + 5, image.rawAttrs.indexOf('"', image.rawAttrs.indexOf('src="') + 5))
+      }
     }
 
     const attachment = new MessageAttachment(link)
