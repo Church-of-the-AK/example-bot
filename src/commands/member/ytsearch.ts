@@ -1,6 +1,6 @@
 import { CommandMessage } from 'discord.js-commando'
 import { oneLine } from 'common-tags'
-import { Message, MessageEmbed } from 'discord.js'
+import { Message, MessageEmbed, Util } from 'discord.js'
 import { youtubeKey } from '../../config'
 import { MachoCommand } from '../../types'
 import { YouTube } from 'better-youtube-api'
@@ -44,16 +44,16 @@ export default class YtSearchCommand extends MachoCommand {
     const description = `${desc.length < video.description.length ? `${desc}...` : desc}`
     const channel = await youtube.getChannel(video.channelId)
 
-    const stats = `Views: ${numberWithCommas(video.views)}
+    const stats = Util.escapeMarkdown(`Views: ${numberWithCommas(video.views)}
 Likes: ${numberWithCommas(video.likes)}
 Dislikes: ${numberWithCommas(video.dislikes)}
 Date published: ${video.datePublished.toString()}
-Length: ${video.minutes}m and ${video.seconds}s`
+Length: ${video.minutes}m and ${video.seconds}s`)
 
-    const channelInfo = `Channel: [${channel.name}](${channel.url})
-Date created: ${channel.dateCreated.toString()}
+    const channelInfo = `Channel: [${channel.name}](${channel.url})\n` +
+Util.escapeMarkdown(`Date created: ${channel.dateCreated.toString()}
 Total Views: ${numberWithCommas(channel.views)}
-Subscribers: ${channel.subCount !== -1 ? numberWithCommas(channel.subCount) : 'Hidden'}`
+Subscribers: ${channel.subCount !== -1 ? numberWithCommas(channel.subCount) : 'Hidden'}`)
 
     const embed = new MessageEmbed()
       .setTitle(`Video Information`)

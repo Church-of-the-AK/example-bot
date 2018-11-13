@@ -1,6 +1,6 @@
 import { CommandMessage } from 'discord.js-commando'
 import { oneLine } from 'common-tags'
-import { Message, MessageEmbed } from 'discord.js'
+import { Message, MessageEmbed, Util } from 'discord.js'
 import { soundcloudKey } from '../../config'
 import { MachoCommand } from '../../types'
 import { SoundCloud } from 'better-soundcloud-api'
@@ -41,23 +41,23 @@ export default class ScSearchCommand extends MachoCommand {
 
     const track = await tracks[0].fetch()
     const author = await soundcloud.getUser(`${track.user.id}`)
-    const desc = track.description.slice(0, 250)
-    const description = `${desc.length < track.description.length ? `${desc}...` : desc}`
+    const desc = track.description.slice(0, 250) || 'None'
+    const description = Util.escapeMarkdown(`${desc.length < track.description.length ? `${desc}...` : desc}`)
 
-    const stats = `Favorites: ${numberWithCommas(track.favorites)}
+    const stats = Util.escapeMarkdown(`Favorites: ${numberWithCommas(track.favorites)}
 Tags: ${track.tags.join(', ') || 'None'}
 Date published: ${track.datePublished.toString()}
-Length: ${track.minutes}m and ${track.seconds.toFixed(0)}s`
+Length: ${track.minutes}m and ${track.seconds.toFixed(0)}s`)
 
-    const authorInfo = `Username: [${author.username}](${author.url})
-Followers: ${author.followersCount}
+    const authorInfo = `Username: [${Util.escapeMarkdown(author.username)}](${Util.escapeMarkdown(author.url)})\n` +
+Util.escapeMarkdown(`Followers: ${author.followersCount}
 Following: ${author.followingsCount}
 Full name: ${author.firstName ? `${author.firstName} ${author.lastName}` : 'None'}
-Last modified: ${author.lastModified.toString()}
-Website: ${author.website.title ? `[${author.website.title}](${author.website.url})` : 'None'}
-Tracks: ${author.trackCount}
+Last modified: ${author.lastModified.toString()}\n`) +
+`Website: ${author.website.title ? `[${Util.escapeMarkdown(author.website.title)}](${Util.escapeMarkdown(author.website.url)})` : 'None'}\n` +
+Util.escapeMarkdown(`Tracks: ${author.trackCount}
 Playlists: ${author.playlistCount}
-Plan: ${author.plan}`
+Plan: ${author.plan}`)
 
     const embed = new MessageEmbed()
       .setTitle(`Track Information`)
