@@ -22,7 +22,7 @@ export default class LegalCommand extends MachoCommand {
   async run (msg: CommandMessage): Promise<Message | Message[]> {
     const description = oneLine`
 "The Bot" refers to ${this.client.user.tag} and "The Developer" refers to ${this.client.owners[0].tag}.
-The Bot stores non-identifying information publicly, via The Developer's [API](${api.url}/users/${msg.author.id})
+The Bot stores non-identifying information publicly, via The Developer's [API](${api.url}/users/${msg.author.id}).
 At any time, you can use the \`${msg.guild.commandPrefix}forget\` command to delete any user data The Bot has of you.
 By being a member of a guild with The Bot in it, you agree to have this non-identifying information stored publicly.` + '\n\n' +
 oneLine`
