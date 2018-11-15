@@ -1,3 +1,5 @@
+import { TextChannel, User, DMChannel, GroupDMChannel } from 'discord.js'
+
 export function paginate (items: any[]) {
   const pages: Map<number, any> = new Map()
   let page = 1
@@ -33,4 +35,29 @@ export function shuffle (items: any[]) {
 
 export function randomItem (arr: any[]) {
   return arr[Math.floor(Math.random() * arr.length)]
+}
+
+export async function confirm (message: string, channel: TextChannel | DMChannel | GroupDMChannel, user: User) {
+  await channel.send(`${user}, ${message} (\`y\`)es/(\`n\`)o`)
+
+  const response = await channel.awaitMessages(msg2 => (msg2.content.toLowerCase() === 'y' || msg2.content.toLowerCase() === 'n')
+    && msg2.author.id === user.id, {
+      time: 10000,
+      errors: [ 'time' ],
+      max: 1
+    }).catch(() => {
+      return
+    })
+
+  if (!response) {
+    return false
+  }
+
+  const answer = response.first().content.toLowerCase()
+
+  if (answer === 'n') {
+    return false
+  }
+
+  return true
 }

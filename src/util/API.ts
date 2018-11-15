@@ -36,6 +36,21 @@ export async function getUser (id: string) {
   return user
 }
 
+export async function deleteUser (id: string) {
+  const { data: response } = await axios.delete(`${api.url}/users/${id}&code=${api.code}`).catch(error => {
+    console.log(error)
+
+    const response = { data: '' }
+    return response
+  })
+
+  if (!response.raw) {
+    return ''
+  }
+
+  return response as { raw: any }
+}
+
 export async function getUserPlaylists (id: string) {
   const { data: playlists }: { data: MusicPlaylist[] | '' } = (await axios.get(`${api.url}/users/${id}/playlists`).catch(error => {
     console.log(error)
