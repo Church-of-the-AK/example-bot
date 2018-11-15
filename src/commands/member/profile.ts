@@ -32,7 +32,7 @@ export default class ProfileCommand extends MachoCommand {
     })
   }
 
-  async run (msg: CommandMessage, { disUser }: { disUser: User | -1 }): Promise<Message | Message[]> {
+  async run (msg: CommandMessage, { user: disUser }: { user: User | -1 }): Promise<Message | Message[]> {
     let user: ApiUser | ''
 
     if (disUser !== -1) {
