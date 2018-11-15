@@ -50,7 +50,8 @@ export default class ProfileCommand extends MachoCommand {
     const canvas = Canvas.createCanvas(700, 250)
     const ctx = canvas.getContext('2d')
     const background = await Canvas.loadImage('images/background.jpeg').catch(error => console.log(error))
-    const avatar = await Canvas.loadImage(msg.author.displayAvatarURL({ format: 'png' })).catch(error => console.log(error))
+    const avatar = await Canvas.loadImage(disUser !== -1 ? disUser.displayAvatarURL({ format: 'png' })
+    : msg.author.displayAvatarURL({ format: 'png' })).catch(error => console.log(error))
     const timestamp = new Date(Number(user.level.timestamp))
     const dateClaimedDailies = new Date(Number(user.balance.dateClaimedDailies))
     const levelText = `Level: ${user.level.level}, Last message counted for XP: ${timestamp.toDateString() === new Date().toDateString() ? timestamp.toTimeString() : timestamp.toDateString()}`
