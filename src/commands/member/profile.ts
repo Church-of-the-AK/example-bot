@@ -56,7 +56,7 @@ export default class ProfileCommand extends MachoCommand {
     ctx.strokeStyle = '#74037b'
     ctx.fillStyle = '#74037b'
     ctx.globalAlpha = 0.2
-    ctx.fillRect((canvas.width / 2.5) - 10, (canvas.height / 1.8) - 20, 375, 100)
+    ctx.fillRect((canvas.width / 2.5) - 10, (canvas.height / 1.8) - 20, 400, 100)
 
     ctx.globalAlpha = 1.0
     ctx.fillStyle = '#ffffff'
