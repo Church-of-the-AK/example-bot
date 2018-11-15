@@ -66,7 +66,7 @@ Subscribers: ${channel.subCount !== -1 ? numberWithCommas(channel.subCount) : 'H
       .setColor('RED')
       .setThumbnail(video.thumbnails.default.url)
       .setFooter('Macho', this.client.user.displayAvatarURL())
-      .addField('Desciption', description)
+      .addField('Description', description)
       .addField('Stats', stats)
       .addField('Channel', channelInfo)
 
