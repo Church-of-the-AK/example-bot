@@ -7,14 +7,14 @@ import { confirm, deleteUser } from '../../util'
 export default class DeleteCommand extends MachoCommand {
   constructor (client) {
     super(client, {
-      name: 'delete',
+      name: 'forget',
       group: 'member',
-      memberName: 'delete',
-      description: 'Delete\'s your Macho profile.',
+      memberName: 'forget',
+      description: 'Forget\'s your Macho profile.',
       details: oneLine`
-        Delete's your Macho profile.
+        Forget's your Macho profile.
 			`,
-      examples: [ 'delete' ]
+      examples: [ 'forget' ]
     })
   }
 
