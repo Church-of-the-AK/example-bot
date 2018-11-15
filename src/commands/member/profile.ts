@@ -1,9 +1,10 @@
 import { CommandMessage } from 'discord.js-commando'
 import * as Canvas from 'canvas'
-import { Message, MessageAttachment } from 'discord.js'
+import { Message, MessageAttachment, User } from 'discord.js'
 import { MachoCommand } from '../../types'
 import { getUser } from '../../util'
 import { expToLevelUp } from '../../handlers'
+import { User as ApiUser } from 'machobot-database'
 
 export default class ProfileCommand extends MachoCommand {
   constructor (client) {
@@ -19,12 +20,26 @@ export default class ProfileCommand extends MachoCommand {
       throttling: {
         duration: 20,
         usages: 1
-      }
+      },
+
+      args: [{
+        key: 'user',
+        label: 'user',
+        prompt: '',
+        type: 'user',
+        default: -1
+      }]
     })
   }
 
-  async run (msg: CommandMessage): Promise<Message | Message[]> {
-    const user = await getUser(msg.author.id)
+  async run (msg: CommandMessage, { disUser }: { disUser: User | -1 }): Promise<Message | Message[]> {
+    let user: ApiUser | ''
+
+    if (disUser !== -1) {
+      user = await getUser(disUser.id)
+    } else {
+      user = await getUser(msg.author.id)
+    }
 
     if (!user) {
       return msg.channel.send('I don\'t seem to have you in my database. Please try again.')
