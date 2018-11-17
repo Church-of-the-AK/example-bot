@@ -29,13 +29,13 @@ export default class StatsCommand extends MachoCommand {
     const member = msg.guild.member(user)
     const lastMessage = member.lastMessage ? member.lastMessage.content.substring(0, 250) : ''
     const roles = member.roles.map(role => {
-      return `${role.name}`
+      return `${role.name === '@everyone' ? 'everyone' : role.name}`
     }).join(', ')
 
-    const userInfo = `Bot: ${user.bot}
-ID: ${user.id}
+    const userInfo = `ID: ${user.id}
+Bot: ${user.bot}
 Status: ${user.presence.status}
-Playing: ${user.presence.activity.name}
+Playing: ${user.presence.activity ? user.presence.activity.name : 'None'}
 Date created: ${user.createdAt}`
 
     const memberInfo = `Nickname: ${member.displayName === user.username ? 'None' : member.displayName}
@@ -44,7 +44,7 @@ Last message: ${lastMessage ? lastMessage + (lastMessage.length < member.lastMes
 Roles: ${roles}`
 
     const embed = new MessageEmbed()
-      .setTitle(`${this.client.user.tag}'s Stats`)
+      .setTitle(`Info about ${user.tag}`)
       .setAuthor(msg.author.username, msg.author.displayAvatarURL(), api.url + '/users/' + msg.author.id)
       .setColor('BLUE')
       .setFooter('Macho', this.client.user.displayAvatarURL())
