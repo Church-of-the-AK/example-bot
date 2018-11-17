@@ -38,6 +38,7 @@ export default class TagCommand extends MachoCommand {
 
   async run (msg: CommandMessage, { subcommand, name }: { subcommand: string, name: string | -1 }): Promise<Message | Message[]> {
     let result: { success: boolean, message?: string, respond?: boolean }
+    console.log(subcommand + ' ' + name)
 
     switch (subcommand.toLowerCase()) {
       case 'help':
@@ -123,7 +124,7 @@ export default class TagCommand extends MachoCommand {
   }
 
   async create (msg: CommandMessage, args: string | -1) {
-    if (args === -1 || (!args.includes(' ') && !args.includes('\n'))) {
+    if (args === -1 || args.length < 2) {
       return { success: false, message: 'Subcommand `create` requires an argument `name` and argument `content`.' }
     }
 
@@ -133,7 +134,7 @@ export default class TagCommand extends MachoCommand {
       return {  success: false, message: 'I could not find your guild in my database. Please try again.' }
     }
 
-    const index = args.indexOf(' ', 1) < args.indexOf('\n') ? args.indexOf(' ', 1) : args.indexOf('\n')
+    const index = args.indexOf(' ') < args.indexOf('\n') ? args.indexOf(' ') : args.indexOf('\n')
     const name = args.substring(0, index)
     const content = args.substring(index + 1, args.length)
 
