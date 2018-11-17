@@ -48,6 +48,7 @@ Roles: ${roles}`
       .setAuthor(msg.author.username, msg.author.displayAvatarURL(), api.url + '/users/' + msg.author.id)
       .setColor('BLUE')
       .setFooter('Macho', this.client.user.displayAvatarURL())
+      .setThumbnail(user.displayAvatarURL())
       .addField('User Info', userInfo)
       .addField('Member Info', memberInfo)
 
