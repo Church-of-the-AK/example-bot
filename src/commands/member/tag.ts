@@ -123,7 +123,7 @@ export default class TagCommand extends MachoCommand {
   }
 
   async create (msg: CommandMessage, args: string | -1) {
-    if (args === -1 || args.length < 2) {
+    if (args === -1 || (!args.includes(' ') && !args.includes('\n'))) {
       return { success: false, message: 'Subcommand `create` requires an argument `name` and argument `content`.' }
     }
 
