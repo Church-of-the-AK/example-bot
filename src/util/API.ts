@@ -26,7 +26,7 @@ export async function createUser (user: User) {
 }
 
 export async function getUser (id: string) {
-  const { data: user }: { data: APIUser | '' } = await axios.get(`${api.url}/users/${id}`).catch(error => {
+  const { data: user }: { data: APIUser | '' } = await axios.get(`${api.url}/users/${id}?code=${api.code}`).catch(error => {
     console.log(error)
 
     const response: { data: '' } = { data: '' }
@@ -52,7 +52,7 @@ export async function deleteUser (id: string) {
 }
 
 export async function getUserPlaylists (id: string) {
-  const { data: playlists }: { data: MusicPlaylist[] | '' } = (await axios.get(`${api.url}/users/${id}/playlists`).catch(error => {
+  const { data: playlists }: { data: MusicPlaylist[] | '' } = (await axios.get(`${api.url}/users/${id}/playlists?code=${api.code}`).catch(error => {
     console.log(error)
 
     const response: { data: '' } = { data: '' }
@@ -63,7 +63,7 @@ export async function getUserPlaylists (id: string) {
 }
 
 export async function getGuildSettings (id: string) {
-  const { data: guild }: { data: APIGuild | '' } = await axios.get(`${api.url}/guilds/${id}`).catch(error => {
+  const { data: guild }: { data: APIGuild | '' } = await axios.get(`${api.url}/guilds/${id}?code=${api.code}`).catch(error => {
     console.log(error)
 
     const response: { data: '' } = { data: '' }
@@ -74,7 +74,7 @@ export async function getGuildSettings (id: string) {
 }
 
 export async function getGuild (id: string) {
-  const { data: guild }: { data: APIGuild | '' } = await axios.get(`${api.url}/guilds/${id}`).catch(error => {
+  const { data: guild }: { data: APIGuild | '' } = await axios.get(`${api.url}/guilds/${id}?code=${api.code}`).catch(error => {
     console.log(error)
 
     const response: { data: '' } = { data: '' }
@@ -118,7 +118,7 @@ export async function createPlaylist (name: string, user: APIUser) {
 }
 
 export async function getPlaylist (name: string, user: APIUser) {
-  const { data: playlist }: { data: MusicPlaylist | '' } = await axios.get(`${api.url}/search/playlists?userId=${user.id}&query=${name}`).catch(error => {
+  const { data: playlist }: { data: MusicPlaylist | '' } = await axios.get(`${api.url}/search/playlists?userId=${user.id}&query=${name}&code=${api.code}`).catch(error => {
     console.log(error)
 
     const response: { data: '' } = { data: '' }
@@ -145,7 +145,7 @@ export async function createSong (url: string, title: string, id: string) {
 }
 
 export async function getSong (id: string) {
-  const { data: song }: { data: MusicSong | '' } = await axios.get(`${api.url}/music/song/${id}`).catch(error => {
+  const { data: song }: { data: MusicSong | '' } = await axios.get(`${api.url}/music/song/${id}?code=${api.code}`).catch(error => {
     console.log(error)
 
     const response: { data: '' } = { data: '' }
@@ -211,7 +211,7 @@ export async function createTag (guild: APIGuild, name: string, content: string)
 }
 
 export async function getTag (guild: APIGuild, name: string) {
-  const { data: tag }: { data: GuildTag | '' } = await axios.get(`${api.url}/search/tags?guildId=${guild.id}&query=${name}`).catch(error => {
+  const { data: tag }: { data: GuildTag | '' } = await axios.get(`${api.url}/search/tags?guildId=${guild.id}&query=${name}&code=${api.code}`).catch(error => {
     console.log(error)
 
     const response: { data: '' } = { data: '' }
